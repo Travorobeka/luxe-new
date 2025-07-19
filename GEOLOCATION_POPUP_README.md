@@ -59,6 +59,11 @@ The feature adds a new "Geolocation Popup" section to your theme settings with t
 - Geolocation timeout settings
 - Analytics tracking toggle
 
+**Preview Mode:**
+- Enable/disable preview mode for design testing
+- Select preview country for testing different markets
+- Shows popup immediately with sample data
+
 ### 2. Shopify Markets Configuration
 
 Before enabling the geolocation popup, ensure your Shopify Markets are properly configured:

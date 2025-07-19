@@ -417,6 +417,35 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Preview Mode Indicator */
+.geolocation-popup__preview-indicator {
+  position: absolute;
+  top: -25px;
+  left: 0;
+  background: #ff6b35;
+  color: white;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 4px 4px 0 0;
+  z-index: 10;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Ensure preview indicator is visible in all popup styles */
+.geolocation-popup--modal .geolocation-popup__preview-indicator,
+.geolocation-popup--corner .geolocation-popup__preview-indicator,
+.geolocation-popup--banner .geolocation-popup__preview-indicator {
+  display: block;
+}
+
 /* High Contrast Mode */
 @media (forced-colors: active) {
   .geolocation-popup__content {
@@ -433,5 +462,11 @@
     background: ButtonFace;
     color: ButtonText;
     border: 2px solid ButtonText;
+  }
+  
+  .geolocation-popup__preview-indicator {
+    background: Highlight;
+    color: HighlightText;
+    border: 1px solid ButtonText;
   }
 }

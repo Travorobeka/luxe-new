@@ -681,6 +681,12 @@ class GeolocationPopupService {
         return;
       }
 
+      // Handle preview mode
+      if (this.settings.previewMode) {
+        await this.initializePreviewMode();
+        return;
+      }
+
       // Check if popup should be shown
       if (!this.preferenceManager.shouldShowPopup()) {
         return;
@@ -722,31 +728,133 @@ class GeolocationPopupService {
     }
   }
 
+  async initializePreviewMode() {
+    try {
+      console.log('🎨 Geolocation Popup Preview Mode Active');
+      
+      // Create mock market data based on preview country
+      const mockMarketData = this.createMockMarketData(this.settings.previewCountry);
+      
+      if (!mockMarketData) {
+        console.warn('Preview mode: Could not create mock market data');
+        return;
+      }
+
+      // Show popup immediately without delays or checks
+      await this.showPopup(mockMarketData, true);
+      
+      this.isInitialized = true;
+    } catch (error) {
+      console.error('Preview mode initialization failed:', error);
+    }
+  }
+
+  createMockMarketData(countryCode) {
+    const countryData = {
+      'CA': { name: 'Canada', currency: 'CAD', currencySymbol: 'C$' },
+      'GB': { name: 'United Kingdom', currency: 'GBP', currencySymbol: '£' },
+      'AU': { name: 'Australia', currency: 'AUD', currencySymbol: 'A$' },
+      'FR': { name: 'France', currency: 'EUR', currencySymbol: '€' },
+      'DE': { name: 'Germany', currency: 'EUR', currencySymbol: '€' },
+      'JP': { name: 'Japan', currency: 'JPY', currencySymbol: '¥' },
+      'MX': { name: 'Mexico', currency: 'MXN', currencySymbol: '$' },
+      'BR': { name: 'Brazil', currency: 'BRL', currencySymbol: 'R$' }
+    };
+
+    const country = countryData[countryCode];
+    if (!country) return null;
+
+    return {
+      country: {
+        iso_code: countryCode,
+        name: country.name
+      },
+      currency: {
+        iso_code: country.currency,
+        name: country.currency,
+        symbol: country.currencySymbol
+      },
+      marketUrl: `/preview-${countryCode.toLowerCase()}`
+    };
+  }
+
   async waitForDelay() {
     if (this.settings.delay > 0) {
       return new Promise(resolve => setTimeout(resolve, this.settings.delay));
     }
   }
 
-  async showPopup(marketData) {
+  async showPopup(marketData, isPreview = false) {
     try {
       const popup = this.popupService.createPopup(marketData);
       
       // Set up event handlers
       this.popupService.onUserAction = (action, data) => {
-        this.handleUserAction(action, data);
+        this.handleUserAction(action, data, isPreview);
       };
 
+      // Add preview mode indicator
+      if (isPreview) {
+        this.addPreviewModeIndicator(popup);
+      }
+
       this.popupService.showPopup(popup);
-      this.preferenceManager.markPopupShown();
-      this.analytics.trackPopupDisplayed(marketData);
+      
+      if (!isPreview) {
+        this.preferenceManager.markPopupShown();
+        this.analytics.trackPopupDisplayed(marketData);
+      } else {
+        console.log('🎨 Preview popup displayed with sample data for:', marketData.country.name);
+      }
     } catch (error) {
       console.error('Failed to show geolocation popup:', error);
-      this.analytics.trackGeolocationError(error);
+      if (!isPreview) {
+        this.analytics.trackGeolocationError(error);
+      }
     }
   }
 
-  async handleUserAction(action, marketData) {
+  addPreviewModeIndicator(popup) {
+    const indicator = document.createElement('div');
+    indicator.className = 'geolocation-popup__preview-indicator';
+    indicator.innerHTML = '🎨 Preview Mode';
+    indicator.style.cssText = `
+      position: absolute;
+      top: -25px;
+      left: 0;
+      background: #ff6b35;
+      color: white;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 4px 4px 0 0;
+      z-index: 10;
+      letter-spacing: 0.5px;
+    `;
+    popup.style.position = 'relative';
+    popup.appendChild(indicator);
+  }
+
+  async handleUserAction(action, marketData, isPreview = false) {
+    if (isPreview) {
+      // Handle preview mode actions
+      switch (action) {
+        case 'accept':
+          console.log('🎨 Preview: User would accept switch to', marketData.currency.iso_code);
+          alert(`Preview Mode: Would redirect to ${marketData.country.name} market with ${marketData.currency.iso_code} currency.`);
+          break;
+        case 'decline':
+          console.log('🎨 Preview: User would decline the suggestion');
+          alert('Preview Mode: User would decline the localization suggestion.');
+          break;
+        case 'dismiss':
+          console.log('🎨 Preview: User would dismiss the popup');
+          break;
+      }
+      return;
+    }
+
+    // Handle normal mode actions
     switch (action) {
       case 'accept':
         this.analytics.trackUserAccepted(marketData);

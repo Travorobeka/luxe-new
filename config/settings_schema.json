@@ -3813,6 +3813,58 @@
         "label": "Enable analytics tracking",
         "default": true,
         "info": "Track popup display, user interactions, and conversion rates"
+      },
+      {
+        "type": "header",
+        "content": "Preview Mode"
+      },
+      {
+        "type": "checkbox",
+        "id": "geolocation_popup_preview_mode",
+        "label": "Enable preview mode",
+        "default": false,
+        "info": "Show popup immediately for design preview (overrides all other conditions)"
+      },
+      {
+        "type": "select",
+        "id": "geolocation_popup_preview_country",
+        "label": "Preview country",
+        "default": "CA",
+        "info": "Country to simulate for preview",
+        "options": [
+          {
+            "value": "CA",
+            "label": "Canada (CAD)"
+          },
+          {
+            "value": "GB",
+            "label": "United Kingdom (GBP)"
+          },
+          {
+            "value": "AU",
+            "label": "Australia (AUD)"
+          },
+          {
+            "value": "FR",
+            "label": "France (EUR)"
+          },
+          {
+            "value": "DE",
+            "label": "Germany (EUR)"
+          },
+          {
+            "value": "JP",
+            "label": "Japan (JPY)"
+          },
+          {
+            "value": "MX",
+            "label": "Mexico (MXN)"
+          },
+          {
+            "value": "BR",
+            "label": "Brazil (BRL)"
+          }
+        ]
       }
     ]
   }

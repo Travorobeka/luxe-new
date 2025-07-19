@@ -58,7 +58,11 @@
       accentColor: {{ settings.geolocation_popup_accent_color | default: '#007bff' | json }},
       borderColor: {{ settings.geolocation_popup_border_color | default: '#e0e0e0' | json }},
       borderRadius: {{ settings.geolocation_popup_border_radius | default: 8 }},
-      maxWidth: {{ settings.geolocation_popup_max_width | default: 400 }}
+      maxWidth: {{ settings.geolocation_popup_max_width | default: 400 }},
+      
+      // Preview mode settings
+      previewMode: {{ settings.geolocation_popup_preview_mode | default: false }},
+      previewCountry: {{ settings.geolocation_popup_preview_country | default: 'CA' | json }}
     };
 
     // Shopify localization data

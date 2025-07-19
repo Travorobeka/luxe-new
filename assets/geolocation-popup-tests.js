@@ -457,13 +457,89 @@ window.GeolocationPopupTests = {
     const manager = new UserPreferenceManager();
     manager.clearPreferences();
     console.log('✅ Preferences cleared.');
+  },
+
+  enablePreviewMode(countryCode = 'CA') {
+    console.log(`🎨 Enabling preview mode for ${countryCode}...`);
+    
+    if (!window.geolocationPopupSettings) {
+      console.error('❌ Geolocation popup settings not found. Make sure the feature is enabled.');
+      return;
+    }
+
+    // Enable preview mode
+    window.geolocationPopupSettings.previewMode = true;
+    window.geolocationPopupSettings.previewCountry = countryCode;
+    
+    // Initialize service with preview mode
+    const service = new GeolocationPopupService(window.geolocationPopupSettings);
+    service.initialize();
+    
+    console.log(`✅ Preview mode enabled for ${countryCode}. Popup should appear immediately.`);
+  },
+
+  disablePreviewMode() {
+    console.log('🔄 Disabling preview mode...');
+    
+    if (window.geolocationPopupSettings) {
+      window.geolocationPopupSettings.previewMode = false;
+    }
+    
+    // Hide any existing popups
+    const existingPopups = document.querySelectorAll('.geolocation-popup');
+    existingPopups.forEach(popup => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    });
+    
+    // Remove overlays
+    const overlays = document.querySelectorAll('.geolocation-popup__overlay');
+    overlays.forEach(overlay => {
+      if (overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+    });
+    
+    console.log('✅ Preview mode disabled.');
+  },
+
+  testPreviewMode() {
+    console.log('🧪 Testing preview mode functionality...');
+    
+    const countries = ['CA', 'GB', 'AU', 'FR', 'DE', 'JP', 'MX', 'BR'];
+    let currentIndex = 0;
+    
+    const showNextPreview = () => {
+      if (currentIndex >= countries.length) {
+        this.disablePreviewMode();
+        console.log('🎉 Preview mode testing complete!');
+        return;
+      }
+      
+      const country = countries[currentIndex];
+      console.log(`Testing preview for: ${country}`);
+      
+      this.disablePreviewMode(); // Clear previous
+      setTimeout(() => {
+        this.enablePreviewMode(country);
+        currentIndex++;
+        setTimeout(showNextPreview, 3000); // Show each for 3 seconds
+      }, 500);
+    };
+    
+    showNextPreview();
   }
 };
 
 // Auto-run tests if in development mode
 if (window.location.hostname === 'localhost' || window.location.hostname.includes('myshopify.com')) {
   console.log('🔧 Development mode detected. Geolocation popup tests are available.');
-  console.log('Run GeolocationPopupTests.runAllTests() to test the functionality.');
-  console.log('Run GeolocationPopupTests.simulateGeolocation("CA") to simulate Canadian visitor.');
-  console.log('Run GeolocationPopupTests.resetPreferences() to reset user preferences.');
+  console.log('Available commands:');
+  console.log('  GeolocationPopupTests.runAllTests() - Run complete test suite');
+  console.log('  GeolocationPopupTests.simulateGeolocation("CA") - Simulate geolocation for country');
+  console.log('  GeolocationPopupTests.enablePreviewMode("CA") - Enable preview mode for country');
+  console.log('  GeolocationPopupTests.disablePreviewMode() - Disable preview mode');
+  console.log('  GeolocationPopupTests.testPreviewMode() - Test all preview countries');
+  console.log('  GeolocationPopupTests.resetPreferences() - Reset user preferences');
 }
