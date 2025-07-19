@@ -120,8 +120,22 @@ class MarketMatchingService {
     
     const currentCurrencyCode = this.currentCurrency?.iso_code?.toLowerCase();
     const newCurrencyCode = market.currency?.iso_code?.toLowerCase();
+    
+    // Also check language differences
+    const currentLanguageCode = this.currentCountry?.language?.iso_code?.toLowerCase();
+    const newLanguageCode = market.language?.iso_code?.toLowerCase();
 
-    return currentCountryCode !== newCountryCode || currentCurrencyCode !== newCurrencyCode;
+    const isDifferentCountry = currentCountryCode !== newCountryCode;
+    const isDifferentCurrency = currentCurrencyCode !== newCurrencyCode;
+    const isDifferentLanguage = currentLanguageCode !== newLanguageCode;
+
+    console.log('🔍 Market comparison:', {
+      current: { country: currentCountryCode, currency: currentCurrencyCode, language: currentLanguageCode },
+      new: { country: newCountryCode, currency: newCurrencyCode, language: newLanguageCode },
+      differences: { country: isDifferentCountry, currency: isDifferentCurrency, language: isDifferentLanguage }
+    });
+
+    return isDifferentCountry || isDifferentCurrency || isDifferentLanguage;
   }
 
   buildMarketUrl(market) {
@@ -496,6 +510,12 @@ class PopupDisplayService {
       result = result.replace(/LANGUAGE_PLACEHOLDER/g, marketData.language.name || marketData.language.iso_code);
     }
     
+    // Enhanced placeholders for better messaging
+    if (marketData.currency && marketData.language) {
+      const currencyAndLanguage = `${marketData.currency.iso_code} and ${marketData.language.name}`;
+      result = result.replace(/{currency_and_language}/g, currencyAndLanguage);
+    }
+    
     return result;
   }
 
@@ -561,6 +581,12 @@ class PopupDisplayService {
   }
 
   applyStyles(popup) {
+    // Get current settings (support both old and new structure)
+    const bgColor = this.settings.colors?.background || this.settings.bgColor || '#ffffff';
+    const textColor = this.settings.colors?.text || this.settings.textColor || '#333333';
+    const accentColor = this.settings.colors?.accent || this.settings.accentColor || '#007bff';
+    const borderColor = this.settings.colors?.border || this.settings.borderColor || '#e0e0e0';
+    
     // Apply shadow styles
     let shadowStyle = '';
     switch (this.settings.shadow) {
@@ -576,44 +602,78 @@ class PopupDisplayService {
       case 'heavy':
         shadowStyle = '0 30px 60px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.15)';
         break;
+      default:
+        shadowStyle = '0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
     }
 
+    // Apply CSS custom properties with !important to override existing styles
     const styles = `
-      --popup-bg-color: ${this.settings.colors.background};
-      --popup-text-color: ${this.settings.colors.text};
-      --popup-accent-color: ${this.settings.colors.accent};
-      --popup-border-color: ${this.settings.colors.border};
-      --popup-border-radius: ${this.settings.borderRadius}px;
-      --popup-max-width: ${this.settings.maxWidth}px;
-      --popup-shadow: ${shadowStyle};
+      --popup-bg-color: ${bgColor} !important;
+      --popup-text-color: ${textColor} !important;
+      --popup-accent-color: ${accentColor} !important;
+      --popup-border-color: ${borderColor} !important;
+      --popup-border-radius: ${this.settings.borderRadius || 8}px !important;
+      --popup-max-width: ${this.settings.maxWidth || 400}px !important;
+      --popup-shadow: ${shadowStyle} !important;
     `;
-    popup.style.cssText = styles;
+    
+    // Apply styles directly to popup
+    popup.style.cssText += styles;
+    
+    // Force immediate style application
+    popup.style.setProperty('--popup-bg-color', bgColor, 'important');
+    popup.style.setProperty('--popup-text-color', textColor, 'important');
+    popup.style.setProperty('--popup-accent-color', accentColor, 'important');
+    popup.style.setProperty('--popup-border-color', borderColor, 'important');
+    popup.style.setProperty('--popup-border-radius', `${this.settings.borderRadius || 8}px`, 'important');
+    popup.style.setProperty('--popup-max-width', `${this.settings.maxWidth || 400}px`, 'important');
+    popup.style.setProperty('--popup-shadow', shadowStyle, 'important');
 
-    // Apply font sizes and padding
+    // Apply direct styles to specific elements
     const content = popup.querySelector('.geolocation-popup__content');
     if (content) {
-      content.style.padding = `${this.settings.padding}px`;
+      content.style.padding = `${this.settings.padding || 25}px`;
+      content.style.backgroundColor = bgColor;
+      content.style.color = textColor;
+      content.style.borderColor = borderColor;
+      content.style.borderRadius = `${this.settings.borderRadius || 8}px`;
+      content.style.boxShadow = shadowStyle;
+      content.style.maxWidth = `${this.settings.maxWidth || 400}px`;
     }
 
     const flag = popup.querySelector('.geolocation-popup__flag');
     if (flag) {
-      flag.style.fontSize = `${this.settings.flagSize}px`;
+      flag.style.fontSize = `${this.settings.flagSize || 40}px`;
     }
 
     const title = popup.querySelector('.geolocation-popup__title');
     if (title) {
-      title.style.fontSize = `${this.settings.titleSize}px`;
+      title.style.fontSize = `${this.settings.titleSize || 20}px`;
+      title.style.color = textColor;
     }
 
     const message = popup.querySelector('.geolocation-popup__message');
     if (message) {
-      message.style.fontSize = `${this.settings.messageSize}px`;
+      message.style.fontSize = `${this.settings.messageSize || 15}px`;
+      message.style.color = textColor;
     }
 
     const buttons = popup.querySelectorAll('.geolocation-popup__button');
     buttons.forEach(button => {
-      button.style.fontSize = `${this.settings.buttonSize}px`;
+      button.style.fontSize = `${this.settings.buttonSize || 14}px`;
+      
+      if (button.classList.contains('geolocation-popup__button--accept')) {
+        button.style.backgroundColor = accentColor;
+        button.style.borderColor = accentColor;
+        button.style.color = '#ffffff';
+      } else {
+        button.style.borderColor = borderColor;
+        button.style.color = textColor;
+      }
     });
+    
+    // Force a reflow to ensure styles are applied
+    popup.offsetHeight;
   }
 
   ensureViewportCentering(popup) {
@@ -861,14 +921,14 @@ class GeolocationPopupService {
 
   createMockMarketData(countryCode) {
     const countryData = {
-      'CA': { name: 'Canada', currency: 'CAD', currencySymbol: 'C$', flag: '🇨🇦' },
-      'GB': { name: 'United Kingdom', currency: 'GBP', currencySymbol: '£', flag: '🇬🇧' },
-      'AU': { name: 'Australia', currency: 'AUD', currencySymbol: 'A$', flag: '🇦🇺' },
-      'FR': { name: 'France', currency: 'EUR', currencySymbol: '€', flag: '🇫🇷' },
-      'DE': { name: 'Germany', currency: 'EUR', currencySymbol: '€', flag: '🇩🇪' },
-      'JP': { name: 'Japan', currency: 'JPY', currencySymbol: '¥', flag: '🇯🇵' },
-      'MX': { name: 'Mexico', currency: 'MXN', currencySymbol: '$', flag: '🇲🇽' },
-      'BR': { name: 'Brazil', currency: 'BRL', currencySymbol: 'R$', flag: '🇧🇷' }
+      'CA': { name: 'Canada', currency: 'CAD', currencySymbol: 'C$', flag: '🇨🇦', language: 'en' },
+      'GB': { name: 'United Kingdom', currency: 'GBP', currencySymbol: '£', flag: '🇬🇧', language: 'en' },
+      'AU': { name: 'Australia', currency: 'AUD', currencySymbol: 'A$', flag: '🇦🇺', language: 'en' },
+      'FR': { name: 'France', currency: 'EUR', currencySymbol: '€', flag: '🇫🇷', language: 'fr' },
+      'DE': { name: 'Germany', currency: 'EUR', currencySymbol: '€', flag: '🇩🇪', language: 'de' },
+      'JP': { name: 'Japan', currency: 'JPY', currencySymbol: '¥', flag: '🇯🇵', language: 'ja' },
+      'MX': { name: 'Mexico', currency: 'MXN', currencySymbol: '$', flag: '🇲🇽', language: 'es' },
+      'BR': { name: 'Brazil', currency: 'BRL', currencySymbol: 'R$', flag: '🇧🇷', language: 'pt' }
     };
 
     const country = countryData[countryCode];
@@ -878,15 +938,35 @@ class GeolocationPopupService {
       country: {
         iso_code: countryCode,
         name: country.name,
-        flag: country.flag
+        flag: country.flag,
+        language: {
+          iso_code: country.language,
+          name: this.getLanguageName(country.language)
+        }
       },
       currency: {
         iso_code: country.currency,
         name: country.currency,
         symbol: country.currencySymbol
       },
-      marketUrl: `/preview-${countryCode.toLowerCase()}`
+      language: {
+        iso_code: country.language,
+        name: this.getLanguageName(country.language)
+      },
+      marketUrl: `/${country.language}-${countryCode.toLowerCase()}`
     };
+  }
+  
+  getLanguageName(languageCode) {
+    const languages = {
+      'en': 'English',
+      'fr': 'French',
+      'de': 'German',
+      'es': 'Spanish',
+      'pt': 'Portuguese',
+      'ja': 'Japanese'
+    };
+    return languages[languageCode] || languageCode;
   }
 
   async waitForDelay() {
@@ -951,8 +1031,9 @@ class GeolocationPopupService {
       // Handle preview mode actions
       switch (action) {
         case 'accept':
-          console.log('🎨 Preview: User would accept switch to', marketData.currency.iso_code);
-          alert(`Preview Mode: Would redirect to ${marketData.country.name} market with ${marketData.currency.iso_code} currency.`);
+          const languageInfo = marketData.language ? ` and ${marketData.language.name} language` : '';
+          console.log('🎨 Preview: User would accept switch to', marketData.currency.iso_code, 'and', marketData.language?.name);
+          alert(`Preview Mode: Would redirect to ${marketData.country.name} market with ${marketData.currency.iso_code} currency${languageInfo}.\n\nURL: ${marketData.marketUrl}`);
           break;
         case 'decline':
           console.log('🎨 Preview: User would decline the suggestion');
@@ -1134,10 +1215,62 @@ class GeolocationPopupCustomizer {
     setTimeout(() => {
       if (window.geolocationPopupSettings && window.geolocationPopupSettings.enabled) {
         window.geolocationPopupSettings.previewMode = true;
+        
+        // Create a new service with fresh settings
         this.currentPopupService = new GeolocationPopupService(window.geolocationPopupSettings);
+        
+        // Force the popup service to use updated settings
+        this.currentPopupService.popupService.settings = this.mergeSettings(window.geolocationPopupSettings);
+        
         this.currentPopupService.initialize();
       }
     }, 200);
+  }
+  
+  mergeSettings(newSettings) {
+    return {
+      style: newSettings.style || 'modal',
+      position: newSettings.position || 'center',
+      animation: newSettings.animation || 'fade',
+      delay: newSettings.delay || 0,
+      autoDismiss: newSettings.autoDismiss || 0,
+      previewMode: newSettings.previewMode || false,
+      previewCountry: newSettings.previewCountry || 'CA',
+      
+      // Color settings
+      bgColor: newSettings.bgColor || '#ffffff',
+      textColor: newSettings.textColor || '#333333',
+      accentColor: newSettings.accentColor || '#007bff',
+      borderColor: newSettings.borderColor || '#e0e0e0',
+      
+      // Size settings
+      borderRadius: newSettings.borderRadius || 8,
+      maxWidth: newSettings.maxWidth || 400,
+      padding: newSettings.padding || 25,
+      shadow: newSettings.shadow || 'medium',
+      
+      // Font settings
+      flagSize: newSettings.flagSize || 40,
+      titleSize: newSettings.titleSize || 20,
+      messageSize: newSettings.messageSize || 15,
+      buttonSize: newSettings.buttonSize || 14,
+      
+      // Text content
+      text: {
+        title: newSettings.title || 'Shop in your local currency',
+        message: newSettings.message || 'We detected you\'re in {country}. Would you like to shop in {currency}?',
+        acceptButton: newSettings.acceptButton || 'Yes, switch to {currency}',
+        declineButton: newSettings.declineButton || 'No, keep current settings'
+      },
+      
+      // Legacy color structure for backward compatibility
+      colors: {
+        background: newSettings.bgColor || '#ffffff',
+        text: newSettings.textColor || '#333333',
+        accent: newSettings.accentColor || '#007bff',
+        border: newSettings.borderColor || '#e0e0e0'
+      }
+    };
   }
   
   refreshSettingsFromDOM() {
