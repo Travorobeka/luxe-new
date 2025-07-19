@@ -1,0 +1,312 @@
+{% liquid
+  assign custom_css = settings.custom_css
+
+  assign font_body_base = settings.type_base_size
+  assign h1_font_size = settings.h1_font_size
+  assign h2_font_size = settings.h2_font_size
+  assign h3_font_size = settings.type_header_base_size
+  assign h4_font_size = settings.h4_font_size
+
+  assign enable_rtl = settings.enable_rtl
+  assign language_support_rtl = settings.language_support_rtl
+  if enable_rtl and language_support_rtl != blank
+    assign shop_locale = localization.language.iso_code
+    assign language_support_rtl_list = language_support_rtl | split: ','
+    assign is_rtl = language_support_rtl_list | where: shop_locale
+    if is_rtl.size > 0
+      assign enable_rtl = true
+    else
+      assign enable_rtl = false
+    endif
+  endif
+
+  assign blocks_radius = 0
+  assign medium_blocks_radius = 0
+  case settings.blocks_corner_radius
+    when 'round'
+      assign blocks_radius = 10
+      assign medium_blocks_radius = 5
+  endcase
+
+  assign pcard_radius = 0
+
+  case settings.pcard_corner_radius
+    when 'round'
+      assign pcard_radius = 10
+  endcase
+%}
+
+{%- style -%}
+   {% for scheme in settings.color_schemes -%}
+  	{% assign scheme_classes = scheme_classes | append: '.m-color-' | append: scheme.id | append: ', ' %}
+  	{%- if forloop.index == 1 -%}
+  		:root,
+  	{%- endif -%}
+  	.m-color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+      --color-background-secondary: {{ scheme.settings.background_secondary.red }},{{ scheme.settings.background_secondary.green }},{{ scheme.settings.background_secondary.blue }};
+  		{% if scheme.settings.background_gradient != empty %}
+  	  --gradient-background: {{ scheme.settings.background_gradient }};
+  		{% else %}
+  	  --gradient-background: {{ scheme.settings.background }};
+  		{% endif %}
+  		--color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+  		--color-foreground-secondary: {{ scheme.settings.subtext.red }},{{ scheme.settings.subtext.green }},{{ scheme.settings.subtext.blue }};
+      --color-heading: {{ scheme.settings.heading_text.red }},{{ scheme.settings.heading_text.green }},{{ scheme.settings.heading_text.blue }};
+  		--color-button: {{ scheme.settings.button.red }},{{ scheme.settings.button.green }},{{ scheme.settings.button.blue }};
+  		--color-button-text: {{ scheme.settings.button_label.red }},{{ scheme.settings.button_label.green }},{{ scheme.settings.button_label.blue }};
+  		--color-outline-button: {{ scheme.settings.outline_button_label.red }},{{ scheme.settings.outline_button_label.green }},{{ scheme.settings.outline_button_label.blue }};
+      --color-button-hover: {{ scheme.settings.button_hover.red }}, {{ scheme.settings.button_hover.green }}, {{ scheme.settings.button_hover.blue }};
+      --color-button-text-hover: {{ scheme.settings.button_text_hover.red }}, {{ scheme.settings.button_text_hover.green }}, {{ scheme.settings.button_text_hover.blue }};
+  		--color-border: {{ scheme.settings.border.red }},{{ scheme.settings.border.green }},{{ scheme.settings.border.blue }};
+  		--color-price-sale: {{ scheme.settings.price_sale.red }},{{ scheme.settings.price_sale.green }},{{ scheme.settings.price_sale.blue }};
+  		--color-price-regular: {{ scheme.settings.price_regular.red }},{{ scheme.settings.price_regular.green }},{{ scheme.settings.price_regular.blue }};
+  		--color-form-field: {{ scheme.settings.form_field.red }},{{ scheme.settings.form_field.green }},{{ scheme.settings.form_field.blue }};
+  		--color-form-field-text: {{ scheme.settings.form_field_label.red }},{{ scheme.settings.form_field_label.green }},{{ scheme.settings.form_field_label.blue }};
+  		--color-tooltip: {{ scheme.settings.tooltip.red }},{{ scheme.settings.tooltip.green }},{{ scheme.settings.tooltip.blue }};
+  		--color-tooltip-text: {{ scheme.settings.tooltip_label.red }},{{ scheme.settings.tooltip_label.green }},{{ scheme.settings.tooltip_label.blue }};
+  	}
+  {% endfor %}
+  {{ scheme_classes | remove_last: ', ' }} {
+  	color: rgb(var(--color-foreground));
+  	background-color: rgb(var(--color-background));
+  }
+   {%- capture style -%}
+  :root {
+     /* ANIMATIONS */
+  	--m-duration-short: .1s;
+     --m-duration-default: .25s;
+     --m-duration-long: .5s;
+     --m-duration-image: .65s;
+     --m-duration-animate: 1s;
+     --m-animation-duration: {{ settings.animation_duration | times: 1000 | floor }}ms;
+     --m-animation-fade-in-up: m-fade-in-up var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;
+     --m-animation-fade-in-left: m-fade-in-left var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;
+     --m-animation-fade-in-right: m-fade-in-right var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;
+     --m-animation-fade-in-left-rtl: m-fade-in-left-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;
+     --m-animation-fade-in-right-rtl: m-fade-in-right-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;
+     --m-animation-fade-in: m-fade-in calc(var(--m-animation-duration) * 2) cubic-bezier(0, 0, 0.3, 1);
+     --m-animation-zoom-fade: m-zoom-fade var(--m-animation-duration) ease forwards;
+
+  	/* BODY */
+  	--base-line-height: {{ settings.type_base_line_height }};
+
+   /* INPUTS */
+   --inputs-border-width: {{ settings.inputs_border_thickness }}px;
+  	--inputs-radius: {{ settings.inputs_border_radius }}px;
+
+  	/* BUTTON */
+  	--btn-letter-spacing: {{ settings.btn_letter_spacing }}px;
+  	--btn-border-radius: {{ settings.btn_border_radius }}px;
+  	--btn-border-width: {{ settings.btn_border_width }}px;
+  	--btn-line-height: {{ settings.btn_line_height }}px;
+  	{% if settings.btn_uppercase_text %}
+  	--btn-text-transform: uppercase;
+  	{% endif %}
+  	
+  	/* ADVANCED BUTTON CUSTOMIZATION */
+  	--btn-padding-x: {{ settings.btn_padding_x }}px;
+  	--btn-padding-y: {{ settings.btn_padding_y }}px;
+  	--btn-min-width: {{ settings.btn_min_width }}px;
+  	--btn-transition-duration: {{ settings.btn_transition_duration }}ms;
+  	
+  	/* Button Shadows */
+  	{% case settings.btn_shadow_style %}
+  	  {% when 'sm' %}
+  	    --btn-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  	  {% when 'md' %}
+  	    --btn-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  	  {% when 'lg' %}
+  	    --btn-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  	  {% when 'xl' %}
+  	    --btn-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  	  {% when 'inner' %}
+  	    --btn-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  	  {% when 'custom' %}
+  	    --btn-shadow: {{ settings.btn_custom_shadow }};
+  	  {% else %}
+  	    --btn-shadow: none;
+  	{% endcase %}
+  	
+  	--btn-hover-lift: {% if settings.btn_hover_lift %}translateY(-2px){% else %}translateY(0){% endif %};
+  	--btn-hover-scale: {{ settings.btn_hover_scale }};
+  	--btn-border-style: {{ settings.btn_border_style }};
+  	--btn-gradient-bg: {% if settings.btn_gradient_bg %}{{ settings.btn_gradient_bg_colors }}{% else %}none{% endif %};
+  	--btn-gradient-border: {% if settings.btn_gradient_border %}{{ settings.btn_gradient_border_colors }}{% else %}none{% endif %};
+  	--btn-hover-effect: {{ settings.btn_hover_effect }};
+  	--btn-icon-spacing: {{ settings.btn_icon_spacing }}px;
+  	--btn-icon-position: {{ settings.btn_icon_position }};
+  	--btn-icon-animation: {% if settings.btn_icon_animation %}true{% else %}false{% endif %};
+  	--btn-loading-spinner: {% if settings.btn_loading_spinner %}true{% else %}false{% endif %};
+  	--btn-loading-style: {{ settings.btn_loading_style }};
+  	--btn-secondary-ghost: {% if settings.btn_secondary_ghost %}true{% else %}false{% endif %};
+  	--btn-secondary-opacity: {{ settings.btn_secondary_opacity }};
+  	--btn-click-animation: {{ settings.btn_click_animation }};
+  	--btn-disabled-opacity: {{ settings.btn_disabled_opacity }};
+  	--btn-disabled-cursor: {% if settings.btn_disabled_cursor %}not-allowed{% else %}default{% endif %};
+
+  	/* COUNT BUBBLE */
+  	--color-cart-wishlist-count: {{ settings.color_cart_wishlist_count }};
+  	--bg-cart-wishlist-count: {{ settings.bg_cart_wishlist_count }};
+
+  	/* OVERLAY */
+  	--color-image-overlay: {{ settings.img_overlay_bg }};
+  	--opacity-image-overlay: {{ settings.img_overlay_opacity | divided_by: 100.00 }};
+
+  	/* Notification */
+  	--color-success: {{ settings.color_success.red }},{{ settings.color_success.green }},{{ settings.color_success.blue }};
+  	--color-warning: {{ settings.color_warning.red }},{{ settings.color_warning.green }},{{ settings.color_warning.blue }};
+    --color-error: {{ settings.color_error.red }}, {{ settings.color_error.green }}, {{ settings.color_error.blue }};
+    --color-error-bg: {{ settings.color_error | color_lighten: 40 }};
+    --color-warning-bg: {{ settings.color_warning | color_lighten: 45 }};
+    --color-success-bg: {{ settings.color_success | color_lighten: 50 }};
+
+  	/* CUSTOM COLOR */
+  	--text-black: 0,0,0;
+  	--text-white: 255,255,255;
+  	--bg-black: 0,0,0;
+  	--bg-white: 255,255,255;
+  	--rounded-full: 9999px;
+  	--bg-card-placeholder: rgba(243,243,243,1);
+  	--arrow-select-box: url({{ 'ar-down.svg' | asset_url }});
+
+  	/* FONT SIZES */
+  	--font-base-size: {{ font_body_base }};
+  	--font-btn-size: {{ settings.btn_base_size }}px;
+  	--font-btn-weight: {{ settings.btn_weight }};
+  	--font-h1-desktop: {{ h1_font_size }};
+  	--font-h1-tablet: {{ h1_font_size | times: 0.70 | floor }};
+  	--font-h1-mobile: {{ h1_font_size | times: 0.60 | floor }};
+  	--font-h2-desktop: {{ h2_font_size }};
+  	--font-h2-tablet: {{ h2_font_size | times: 0.80 | floor }};
+  	--font-h2-mobile: {{ h2_font_size | times: 0.70 | floor }};
+  	--font-h3-desktop: {{ h3_font_size }};
+  	--font-h3-tablet: {{ h3_font_size | times: 0.80 | floor }};
+  	--font-h3-mobile: {{ h3_font_size | times: 0.70 | floor }};
+  	--font-h4-desktop: {{ h4_font_size }};
+  	--font-h4-tablet: {{ h4_font_size | times: 0.80 | floor }};
+  	--font-h4-mobile: {{ h4_font_size | times: 0.80 | floor }};
+  	--font-h5-desktop: {{ font_body_base | times: 1.125 | floor }};
+  	--font-h5-mobile: {{ font_body_base }};
+  	--font-h6-desktop: {{ font_body_base }};
+  	--font-h6-mobile: {{ font_body_base }};
+  	--heading-letter-spacing: {{ settings.type_header_spacing }}px;
+
+  	/* ADVANCED TYPOGRAPHY */
+  	--paragraph-spacing: {{ settings.paragraph_spacing }}px;
+  	--paragraph-indent: {{ settings.paragraph_indent }}px;
+  	--text-transform-headings: {{ settings.text_transform_headings }};
+  	--heading-font-style: {{ settings.heading_font_style }};
+  	--heading-line-height: {{ settings.heading_line_height }};
+  	--link-text-decoration: {{ settings.link_text_decoration }};
+  	--link-font-weight: {% if settings.link_bold %}700{% else %}inherit{% endif %};
+  	--small-text-size: {{ settings.small_text_size }}px;
+  	--caption-text-size: {{ settings.caption_text_size }}px;
+  	--caption-text-transform: {{ settings.caption_text_transform }};
+  	--mobile-font-scale: {{ settings.mobile_font_scale }};
+  	--mobile-line-height-reduction: {% if settings.mobile_reduce_line_height %}0.9{% else %}1{% endif %};
+  	--drop-cap-size: {{ settings.drop_cap_size }}em;
+  	--text-shadow: {% if settings.enable_text_shadow %}{{ settings.text_shadow_style }}{% else %}none{% endif %};
+
+  	/* INDIVIDUAL HEADING CONTROLS */
+  	--h1-font-weight: {{ settings.h1_font_weight }};
+  	--h1-letter-spacing: {{ settings.h1_letter_spacing }}px;
+  	--h1-text-transform: {{ settings.h1_text_transform }};
+  	--h2-font-weight: {{ settings.h2_font_weight }};
+  	--h2-letter-spacing: {{ settings.h2_letter_spacing }}px;
+  	--h2-text-transform: {{ settings.h2_text_transform }};
+  	--h3-font-weight: {{ settings.h3_font_weight }};
+  	--h3-letter-spacing: {{ settings.h3_letter_spacing }}px;
+  	--h3-text-transform: {{ settings.h3_text_transform }};
+  	--h4-font-weight: {{ settings.h4_font_weight }};
+  	--h4-letter-spacing: {{ settings.h4_letter_spacing }}px;
+  	--h4-text-transform: {{ settings.h4_text_transform }};
+  	--h5-font-size: {{ settings.h5_font_size }}px;
+  	--h5-font-weight: {{ settings.h5_font_weight }};
+  	--h6-font-size: {{ settings.h6_font_size }}px;
+  	--h6-font-weight: {{ settings.h6_font_weight }};
+  	
+  	/* ADVANCED BODY TEXT */
+  	--body-letter-spacing: {{ settings.body_letter_spacing }}px;
+  	--body-text-transform: {{ settings.body_text_transform }};
+  	--body-word-spacing: {{ settings.body_word_spacing }}px;
+  	--body-text-align: {{ settings.body_text_align }};
+  	--body-font-smoothing: {% if settings.body_font_smoothing %}antialiased{% else %}auto{% endif %};
+  	
+  	/* LIST STYLING */
+  	--list-style-type: {{ settings.list_style_type }};
+  	--list-indent: {{ settings.list_indent }}px;
+  	--list-item-spacing: {{ settings.list_item_spacing }}px;
+  	
+  	/* BLOCKQUOTE STYLING */
+  	--blockquote-font-style: {% if settings.blockquote_italic %}italic{% else %}normal{% endif %};
+  	--blockquote-font-size: {{ settings.blockquote_font_size }}px;
+  	--blockquote-border-color: {{ settings.blockquote_border_color }};
+  	--blockquote-border-width: {{ settings.blockquote_border_width }}px;
+
+   --arrow-down-url: url({{ 'arrow-down.svg' | asset_url }});
+   --arrow-down-white-url: url({{ 'arrow-down-white.svg' | asset_url }});
+   --product-title-line-clamp: {{ settings.pcard_title_line_clamp }};
+
+  	--spacing-sections-desktop: {{ settings.spacing_sections }}px;
+   --spacing-sections-laptop: {{ settings.spacing_sections | times: 0.8 | round: 0 }}px;
+   --spacing-sections-tablet: {{ settings.spacing_sections | times: 0.6 | round: 0 }}px;
+   --spacing-sections-mobile: {{ settings.spacing_sections_mobile }}px;
+
+  	/* LAYOUT */
+  	--container-width: {{ settings.container_width }}px;
+   --fluid-container-width: {{ settings.container_fluid_width }}px;
+   --fluid-container-offset: {{ settings.container_fluid_offset }}px;
+   /* CORNER RADIUS */
+   --blocks-radius: {{ blocks_radius }}px;
+   --medium-blocks-radius: {{ medium_blocks_radius }}px;
+   --pcard-radius: {{ pcard_radius }}px;
+  }
+   {%- endcapture -%}
+
+   {{ style | strip_newlines }}
+{%- endstyle -%}
+
+<link rel="stylesheet" href="{{ 'cart.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'cart.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- liquid
+  echo 'vendor.css' | asset_url | stylesheet_tag
+  if template contains 'customers/'
+    echo 'customer.css' | asset_url | stylesheet_tag
+  endif
+  if template.suffix == 'about-us'
+    echo 'about-us.css' | asset_url | stylesheet_tag
+  endif
+  if enable_rtl
+    echo 'rtl.css' | asset_url | stylesheet_tag
+  endif
+  if shop.metafields.tcustomizer.config
+    echo 'tpo-integration.css' | asset_url | stylesheet_tag
+  endif
+-%}
+{%- if linklists['gift-wrapping'].links != blank and linklists['gift-wrapping'].links.first.type == 'product_link' -%}
+  <link rel="stylesheet" href="{{ 'gift-wrapping.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'gift-wrapping.css' | asset_url | stylesheet_tag }}</noscript>
+{%- endif -%}
+<link rel="stylesheet" href="{{ 'custom-style.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'custom.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'typography-advanced.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'buttons-advanced.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'custom-style.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'custom.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'typography-advanced.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'buttons-advanced.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- style -%}
+  {%- if custom_css != blank -%}
+    {{ custom_css | strip_newlines }}
+  {%- endif -%}
+{%- endstyle -%}
+
+{% if request.path == '/challenge' %}
+  {% render 'customer-challenge-style' %}
+{% endif %}
+
+{% comment %} For init Product list of Recently product, Foxkit Related, Product recommendation {% endcomment %}
+<script src="{{ 'product-list.js' | asset_url }}" defer="defer"></script>

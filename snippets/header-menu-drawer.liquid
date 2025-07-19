@@ -1,0 +1,260 @@
+{% liquid
+  assign main_menu = section.settings.main_menu
+  assign mobile_menu = section.settings.mobile_menu
+
+  if mobile_menu == blank
+    assign menu = main_menu
+  else
+    assign menu = mobile_menu
+  endif
+%}
+<div id="m-menu-drawer" class="m-menu-drawer">
+  <div class="m-menu-drawer__bg" style="
+    position: absolute; inset: 0; z-index: 0;
+    background-color: #fff;
+  "></div>
+  <div class="m-menu-drawer__backdrop"></div>
+  <div class="m-menu-drawer__wrapper">
+    <!-- Custom close button removed: all close icon customizations will be applied to the hamburger/close icon in the header -->
+    <div class="m-menu-drawer__content" style="
+      padding-left: {{ section.settings.mb_drawer_padding_x | default: 24 }}px;
+      padding-right: {{ section.settings.mb_drawer_padding_x | default: 24 }}px;
+      padding-top: {{ section.settings.mb_drawer_padding_y | default: 24 }}px;
+      padding-bottom: {{ section.settings.mb_drawer_padding_y | default: 24 }}px;
+      position: relative;
+      z-index: 1;
+    ">
+      {%- if section.settings.mb_drawer_product_images_enable -%}
+        {%- assign layout = section.settings.mb_drawer_product_images_layout | default: 'row' -%}
+        {%- assign alignment = section.settings.mb_drawer_product_images_alignment | default: 'center' -%}
+        {%- assign product_count = section.settings.mb_drawer_product_images_count | default: 1 -%}
+        {%- assign padding_top = section.settings.mb_drawer_product_images_padding_top | default: 0 -%}
+        {%- assign padding_bottom = section.settings.mb_drawer_product_images_padding_bottom | default: 24 -%}
+        <div class="m-menu-drawer__product-images m-drawer-product-images-custom
+          {% if layout == 'row' %}
+            m:flex m:gap-4 m:mb-6
+            {% if alignment == 'center' %} m:justify-center
+            {% elsif alignment == 'right' %} m:justify-end
+            {% else %} m:justify-start
+            {% endif %}
+          {% elsif layout == 'grid' %}
+            m:grid m:gap-4 m:mb-6 m:grid-cols-2
+            {% if alignment == 'center' %} m:justify-items-center
+            {% elsif alignment == 'right' %} m:justify-items-end
+            {% else %} m:justify-items-start
+            {% endif %}
+          {% endif %}"
+          style="padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+          {%- assign aspect_ratio = section.settings.mb_drawer_product_images_aspect_ratio | default: '1/1' -%}
+          {%- assign border_radius = section.settings.mb_drawer_product_images_radius | default: 8 -%}
+          {%- for i in (1..product_count) -%}
+            {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_source' -%}
+            {%- assign source = section.settings[key] | default: 'upload' -%}
+            <div class="m-menu-drawer__product-image-item m:flex m:flex-col m:items-center" style="width: 80px;">
+              {%- assign aspect_ratio = section.settings.mb_drawer_product_images_aspect_ratio | default: '1/1' -%}
+              {%- assign aspect_w = aspect_ratio | split: '/' | first | default: 1 -%}
+              {%- assign aspect_h = aspect_ratio | split: '/' | last | default: 1 -%}
+              {%- assign aspect_percent = 100 | times: aspect_h | divided_by: aspect_w -%}
+              <div class="m-menu-drawer__product-image-wrapper"
+                   style="overflow: hidden; border-radius: {{ border_radius }}px; width: 100%; background: #f5f5f5; position: relative; padding-bottom: {{ aspect_percent }}%;">
+                {%- case source -%}
+                  {%- when 'upload' -%}
+                    {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_upload' -%}
+                    {%- assign img = section.settings[key] -%}
+                    {%- if img != blank -%}
+                      <img src="{{ img | image_url: width: 160 }}" alt="Drawer product image {{ i }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                    {%- else -%}
+                      <div style="width:100%;height:100%;background:#eee;position:absolute;top:0;left:0;"></div>
+                    {%- endif -%}
+                  {%- when 'product' -%}
+                    {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_product' -%}
+                    {%- assign product = section.settings[key] -%}
+                    {%- if product != blank and all_products[product] and all_products[product].featured_image != blank -%}
+                      <img src="{{ all_products[product].featured_image | image_url: width: 160 }}" alt="{{ all_products[product].title | escape }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                    {%- else -%}
+                      <div style="width:100%;height:100%;background:#eee;position:absolute;top:0;left:0;"></div>
+                    {%- endif -%}
+                  {%- when 'collection' -%}
+                    {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_collection' -%}
+                    {%- assign collection = section.settings[key] -%}
+                    {%- if collection != blank and collections[collection] and collections[collection].products.size > 0 and collections[collection].products.first.featured_image != blank -%}
+                      <img src="{{ collections[collection].products.first.featured_image | image_url: width: 160 }}" alt="{{ collections[collection].products.first.title | escape }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                    {%- else -%}
+                      <div style="width:100%;height:100%;background:#eee;position:absolute;top:0;left:0;"></div>
+                    {%- endif -%}
+                  {%- else -%}
+                    <div style="width:100%;height:100%;background:#eee;position:absolute;top:0;left:0;"></div>
+                {%- endcase -%}
+              </div>
+              {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_label' -%}
+              {%- assign label = section.settings[key] -%}
+              {%- if label != blank -%}
+                {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_label_size' -%}
+                {%- assign label_size = section.settings[key] | default: 16 -%}
+                {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_label_weight' -%}
+                {%- assign label_weight = section.settings[key] | default: 500 -%}
+                {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_label_color' -%}
+                {%- assign label_color = section.settings[key] | default: '#222' -%}
+                <span class="m-menu-drawer__product-image-label" style="font-size: {{ label_size }}px; font-weight: {{ label_weight }}; color: {{ label_color }}; margin-top: 6px; text-align: center; display: block;">
+                  {{ label }}
+                </span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <ul class="m-menu-drawer__navigation m-menu-mobile m-footer--accordion">
+        {% for link in linklists[menu].links %}
+          <li class="m-accordion--item" style="margin-bottom: {{ section.settings.mb_menu_btn_spacing | default: 12 }}px;">
+            <div class="m-accordion--item-button m-menu-mobile__link"
+              style="
+                background: {{ section.settings.mb_menu_btn_bg | default: '#fff' }};
+                border: {{ section.settings.mb_menu_btn_border_width | default: 1 }}px solid {{ section.settings.mb_menu_btn_border_color | default: '#e5e5e5' }};
+                border-radius: {{ section.settings.mb_menu_btn_radius | default: 8 }}px;
+                font-family: {{ section.settings.mb_menu_btn_font_family | default: 'roboto_n4' }};
+                font-size: {{ section.settings.mb_menu_btn_font_size | default: 16 }}px;
+                font-weight: {{ section.settings.mb_menu_btn_font_weight | default: 500 }};
+                font-style: {{ section.settings.mb_menu_btn_font_style | default: 'normal' }};
+                letter-spacing: {{ section.settings.mb_menu_btn_letter_spacing | default: 0.2 }}px;
+                text-transform: {{ section.settings.mb_menu_btn_text_transform | default: 'none' }};
+                padding: {{ section.settings.mb_menu_btn_padding_v | default: 12 }}px {{ section.settings.mb_menu_btn_padding_h | default: 16 }}px;
+                display: flex; align-items: center; justify-content: space-between;
+                transition: background 0.2s;
+              "
+              onmouseover="this.style.background='{{ section.settings.mb_menu_btn_bg_hover | default: '#f5f5f5' }}'"
+              onmouseout="this.style.background='{{ section.settings.mb_menu_btn_bg | default: '#fff' }}'"
+            >
+              <span>{{ link.title }}</span>
+              <span class="m-accordion--item-icon" style="color: {{ section.settings.mb_menu_sub_toggle_icon_color | default: '#222' }};">
+                {% case section.settings.mb_menu_sub_toggle_icon %}
+                  {% when 'caret' %}
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {% when 'arrow' %}
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {% when 'plus' %}
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 4V12M4 8H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {% else %}
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% endcase %}
+              </span>
+            </div>
+            {% if link.links != blank %}
+              <div class="m-accordion--item-content" style="
+                margin-top: {{ section.settings.mb_menu_sub_top_offset | default: 8 }}px;
+                font-size: {{ section.settings.mb_menu_sub_font_size | default: 14 }}px;
+                color: {{ section.settings.mb_menu_sub_font_color | default: '#222' }};
+                font-weight: {{ section.settings.mb_menu_sub_font_weight | default: 400 }};
+              ">
+                <ul class="m-link-lists">
+                  {% for child in link.links %}
+                    <li class="m-link-lists--item" style="padding-left: {{ section.settings.mb_menu_sub_indent | default: 16 }}px;">
+                      <a href="{{ child.url }}" class="m-link">{{ child.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      <!-- Help Section Start -->
+      <div class="m-menu-drawer__help-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; padding: {{ section.settings.mb_drawer_help_padding_v | default: 16 }}px {{ section.settings.mb_drawer_help_padding_h | default: 16 }}px;">
+        <!-- My Account -->
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="m-menu-drawer__help-item" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+          <svg class="m-svg-icon--medium" fill="currentColor" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_help_icon_weight | default: 2 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="margin-bottom: 4px; width: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px; height: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px;"><path d="M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z"/></svg>
+          <span style="font-size: 14px;">My Account</span>
+        </a>
+        <!-- My Order -->
+        <a href="{{ section.settings.mb_drawer_help_order_link | default: '#' }}" class="m-menu-drawer__help-item" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+          <svg class="m-svg-icon--medium" fill="currentColor" stroke-width="{{ section.settings.mb_drawer_help_icon_weight | default: 2 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="margin-bottom: 4px; width: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px; height: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px;"><path d="M192 96c-52.935 0-96 43.065-96 96s43.065 96 96 96 96-43.065 96-96-43.065-96-96-96zm0 160c-35.29 0-64-28.71-64-64s28.71-64 64-64 64 28.71 64 64-28.71 64-64 64zm0-256C85.961 0 0 85.961 0 192c0 77.413 26.97 99.031 172.268 309.67 9.534 13.772 29.929 13.774 39.465 0C357.03 291.031 384 269.413 384 192 384 85.961 298.039 0 192 0zm0 473.931C52.705 272.488 32 256.494 32 192c0-42.738 16.643-82.917 46.863-113.137S149.262 32 192 32s82.917 16.643 113.137 46.863S352 149.262 352 192c0 64.49-20.692 80.47-160 281.931z"/></svg>
+          <span style="font-size: 14px;">My Order</span>
+        </a>
+        <!-- Contact Us -->
+        <a href="{{ section.settings.mb_drawer_help_contact_link | default: '#' }}" class="m-menu-drawer__help-item" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+          <svg class="m-svg-icon--medium" fill="currentColor" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_help_icon_weight | default: 2 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="margin-bottom: 4px; width: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px; height: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px;"><path fill="currentColor" d="M493.09 351.3L384.7 304.8a31.36 31.36 0 0 0-36.5 8.9l-44.1 53.9A350 350 0 0 1 144.5 208l53.9-44.1a31.35 31.35 0 0 0 8.9-36.49l-46.5-108.5A31.33 31.33 0 0 0 125 .81L24.2 24.11A31.05 31.05 0 0 0 0 54.51C0 307.8 205.3 512 457.49 512A31.23 31.23 0 0 0 488 487.7L511.19 387a31.21 31.21 0 0 0-18.1-35.7zM456.89 480C222.4 479.7 32.3 289.7 32.1 55.21l99.6-23 46 107.39-72.8 59.5C153.3 302.3 209.4 358.6 313 407.2l59.5-72.8 107.39 46z"/></svg>
+          <span style="font-size: 14px;">Contact Us</span>
+        </a>
+        <!-- FAQs -->
+        <a href="{{ section.settings.mb_drawer_help_faqs_link | default: '#' }}" class="m-menu-drawer__help-item" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+          <svg class="m-svg-icon--medium" fill="currentColor" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_help_icon_weight | default: 2 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="margin-bottom: 4px; width: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px; height: {{ section.settings.mb_drawer_help_icon_size | default: 24 }}px;"><path d="M256 340c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28zm7.67-24h-16c-6.627 0-12-5.373-12-12v-.381c0-70.343 77.44-63.619 77.44-107.408 0-20.016-17.761-40.211-57.44-40.211-29.144 0-44.265 9.649-59.211 28.692-3.908 4.98-11.054 5.995-16.248 2.376l-13.134-9.15c-5.625-3.919-6.86-11.771-2.645-17.177C185.658 133.514 210.842 116 255.67 116c52.32 0 97.44 29.751 97.44 80.211 0 67.414-77.44 63.849-77.44 107.408V304c0 6.627-5.373 12-12 12zM256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8z"/></svg>
+          <span style="font-size: 14px;">FAQs</span>
+        </a>
+      </div>
+      <!-- Help Section End -->
+      <div class="m-menu-drawer__social-media m:flex m:justify-center m:mt-4"
+        style="
+          padding: {{ section.settings.mb_drawer_social_section_padding_v | default: 8 }}px {{ section.settings.mb_drawer_social_section_padding_h | default: 0 }}px;
+        "
+      >
+        {% if section.settings.mb_drawer_show_social_icons %}
+          {% render 'social-media-links',
+            extra_classes: 'm:justify-center',
+            show_facebook: section.settings.mb_drawer_show_facebook,
+            show_instagram: section.settings.mb_drawer_show_instagram,
+            show_twitter: section.settings.mb_drawer_show_twitter,
+            show_pinterest: section.settings.mb_drawer_show_pinterest,
+            show_youtube: section.settings.mb_drawer_show_youtube,
+            show_tiktok: section.settings.mb_drawer_show_tiktok,
+            show_linkedin: section.settings.mb_drawer_show_linkedin,
+            show_whatsapp: section.settings.mb_drawer_show_whatsapp,
+            show_snapchat: section.settings.mb_drawer_show_snapchat,
+            icon_size: section.settings.mb_drawer_social_icon_size,
+            icon_weight: section.settings.mb_drawer_social_icon_weight,
+            icon_height: section.settings.mb_drawer_social_icon_height,
+            icon_color: section.settings.mb_drawer_social_icon_color,
+            icon_color_hover: section.settings.mb_drawer_social_icon_color_hover,
+            icon_gap: section.settings.mb_drawer_social_icon_gap
+          %}
+        {% endif %}
+      </div>
+      
+      {% render 'mega-menu-customer', section: section %}
+      {%- assign secondary_menu = section.settings.mb_drawer_secondary_menu -%}
+      {% if section.settings.mb_drawer_secondary_layout contains 'grid' %}
+        {% assign secondary_menu_display = 'grid' %}
+      {% else %}
+        {% assign secondary_menu_display = 'flex' %}
+      {% endif %}
+      {% if secondary_menu != blank and linklists[secondary_menu] and linklists[secondary_menu].links.size > 0 %}
+        <ul
+          class="m-menu-drawer__secondary-menu"
+          style="
+            margin-top: 24px;
+            gap: {{ section.settings.mb_drawer_secondary_gap | default: 12 }}px;
+            display: {{ secondary_menu_display }};
+            flex-direction: column;
+            grid-template-columns: {% if section.settings.mb_drawer_secondary_layout == 'grid-2' %}repeat(2, 1fr){% elsif section.settings.mb_drawer_secondary_layout == 'grid-3' %}repeat(3, 1fr){% else %}none{% endif %};
+            background: {{ section.settings.mb_drawer_secondary_bg_color | default: '#FBF7F0' }};
+            padding: 0;
+          "
+        >
+          {% for link in linklists[secondary_menu].links %}
+            <li>
+              <a href="{{ link.url }}" class="m-menu-drawer__secondary-link" style="
+                color: {{ section.settings.mb_drawer_secondary_font_color | default: '#222' }};
+                font-weight: {{ section.settings.mb_drawer_secondary_font_weight | default: 400 }};
+                text-transform: {{ section.settings.mb_drawer_secondary_text_transform | default: 'none' }};
+                letter-spacing: {{ section.settings.mb_drawer_secondary_letter_spacing | default: 0.2 }}px;
+                font-size: {{ section.settings.mb_drawer_secondary_font_size | default: 16 }}px;
+                padding: {{ section.settings.mb_drawer_secondary_padding_v | default: 10 }}px {{ section.settings.mb_drawer_secondary_padding_h | default: 16 }}px;
+                display: block;
+              ">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <!-- Currency and Language Selectors Start -->
+      <div class="m-menu-drawer__localization m:flex m:flex-row m:justify-center m:items-center m:gap-3 m:mt-6">
+        {% if section.settings.mb_show_currency_switcher %}
+          {% render 'currency-switcher', pos: 'top' %}
+        {% endif %}
+        {% if section.settings.mb_show_language_switcher %}
+          {% render 'language-switcher', pos: 'top' %}
+        {% endif %}
+      </div>
+      <!-- Currency and Language Selectors End -->
+    </div>
+  </div>
+</div>

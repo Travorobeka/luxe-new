@@ -1,0 +1,83 @@
+/* Enhanced Footer Base Styles */
+.footer-base {
+  position: relative;
+  z-index: 9;
+}
+
+/* Mobile Sticky Bar Adjustment */
+@media screen and (max-width: 767px) {
+  .footer-base {
+    padding-bottom: calc(var(--mobile-sticky-bar-height, 0px) + 30px);
+  }
+}
+
+/* Payment Icons Base Styles */
+.footer-payment-icon {
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 100%;
+}
+
+/* Accessibility and Focus Styles */
+.footer-base a:focus,
+.footer-base button:focus {
+  outline: 2px solid #4285f4;
+  outline-offset: 2px;
+}
+
+/* Animation Support */
+.footer-base .animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Grid Fallback */
+@supports not (display: grid) {
+  .footer-base .footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .footer-base .footer-column {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .footer-base {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .footer-base .footer-social,
+  .footer-base .footer-newsletter,
+  .footer-base .footer-payment {
+    display: none !important;
+  }
+}
+
+/* Legacy Support - Keep essential styles for potential backwards compatibility */
+.m-footer {
+  position: relative;
+  z-index: 9;
+}
+
+/* Mobile Sticky Bar Support */
+@media screen and (max-width: 767px) {
+  .m-footer {
+    padding-bottom: calc(var(--mobile-sticky-bar-height, 0px) + 30px);
+  }
+}

@@ -1,0 +1,450 @@
+/* Advanced Button Styles */
+
+/* Base button adjustments with new variables */
+.m-button,
+.shopify-payment-button__button.shopify-payment-button__button--unbranded,
+.spr-button.spr-button-primary,
+button[type="submit"],
+.btn {
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  min-width: var(--btn-min-width);
+  box-shadow: var(--btn-shadow);
+  border-style: var(--btn-border-style);
+  transition: all var(--btn-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient backgrounds */
+.m-button--primary[data-gradient="true"],
+.m-button--gradient {
+  background: var(--btn-gradient-bg) !important;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Gradient borders */
+.m-button--gradient-border,
+.m-button[data-gradient-border="true"] {
+  background: linear-gradient(rgb(var(--color-background)), rgb(var(--color-background))) padding-box,
+              var(--btn-gradient-border) border-box;
+  border: var(--btn-border-width) solid transparent;
+}
+
+/* Hover effects */
+.m-button:hover,
+.shopify-payment-button__button.shopify-payment-button__button--unbranded:hover {
+  transform: var(--btn-hover-lift) scale(var(--btn-hover-scale));
+}
+
+/* Hover lift with shadow enhancement */
+.m-button[data-hover-lift="true"]:hover {
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+}
+
+/* Slide fill hover effect */
+.m-button--slide-fill {
+  background: rgb(var(--color-button));
+  position: relative;
+  z-index: 1;
+}
+
+.m-button--slide-fill::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: rgb(var(--color-button-hover));
+  transition: width var(--btn-transition-duration) ease;
+  z-index: -1;
+}
+
+.m-button--slide-fill:hover::before {
+  width: 100%;
+}
+
+/* Pulse hover effect */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--color-button), 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(var(--color-button), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--color-button), 0); }
+}
+
+.m-button--pulse:hover {
+  animation: pulse 1.5s infinite;
+}
+
+/* Icon animations */
+.m-button--text-with-icon svg,
+.m-button--icon svg {
+  transition: transform var(--btn-transition-duration) ease;
+}
+
+.m-button--text-with-icon[data-icon-animation="true"]:hover svg {
+  transform: translateX(4px);
+}
+
+.m-button--text-with-icon.icon-left[data-icon-animation="true"]:hover svg {
+  transform: translateX(-4px);
+}
+
+/* Icon positioning */
+.m-button--text-with-icon {
+  gap: var(--btn-icon-spacing);
+}
+
+.m-button--text-with-icon.icon-left {
+  flex-direction: row-reverse;
+}
+
+/* Click animations */
+/* Ripple effect */
+.m-button--ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.m-button--ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.m-button--ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+.m-button--bounce:active {
+  animation: bounce 0.6s;
+}
+
+/* Shake animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.m-button--shake:active {
+  animation: shake 0.5s;
+}
+
+/* Loading states */
+.m-button--loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.m-button--loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid rgb(var(--color-button-text));
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: button-spin 0.8s linear infinite;
+}
+
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Loading dots */
+.m-button--loading-dots::after {
+  content: "...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 2px;
+  animation: loading-dots 1.4s infinite;
+}
+
+@keyframes loading-dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60%, 100% { content: "..."; }
+}
+
+/* Loading progress bar */
+.m-button--loading-progress {
+  position: relative;
+  overflow: hidden;
+}
+
+.m-button--loading-progress::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: rgb(var(--color-button-text));
+  animation: progress 2s infinite;
+}
+
+@keyframes progress {
+  to { left: 100%; }
+}
+
+/* Secondary button variations */
+.m-button--secondary {
+  opacity: var(--btn-secondary-opacity);
+}
+
+.m-button--secondary.m-button--ghost,
+.m-button--ghost {
+  background: transparent !important;
+  border: var(--btn-border-width) solid rgb(var(--color-outline-button));
+}
+
+.m-button--secondary.m-button--ghost:hover,
+.m-button--ghost:hover {
+  background: rgb(var(--color-outline-button)) !important;
+  color: rgb(var(--color-background)) !important;
+}
+
+/* Disabled state enhancements */
+.m-button:disabled,
+.m-button--disabled {
+  opacity: var(--btn-disabled-opacity) !important;
+  cursor: var(--btn-disabled-cursor) !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Button sizes */
+.m-button--xs {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.m-button--sm {
+  padding: 6px 16px;
+  font-size: 14px;
+}
+
+.m-button--lg {
+  padding: 14px 32px;
+  font-size: 18px;
+}
+
+.m-button--xl {
+  padding: 16px 40px;
+  font-size: 20px;
+}
+
+/* Button shapes */
+.m-button--pill {
+  border-radius: 9999px;
+}
+
+.m-button--square {
+  border-radius: 0;
+}
+
+/* Button variants */
+.m-button--outline {
+  background: transparent;
+  border: 2px solid currentColor;
+}
+
+.m-button--outline:hover {
+  background: currentColor;
+  color: rgb(var(--color-background));
+}
+
+.m-button--text {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.m-button--text:hover {
+  text-decoration: none;
+}
+
+/* 3D button effect */
+.m-button--3d {
+  box-shadow: 0 4px 0 rgb(var(--color-button-hover));
+  transform: translateY(0);
+}
+
+.m-button--3d:active {
+  box-shadow: 0 0 0 rgb(var(--color-button-hover));
+  transform: translateY(4px);
+}
+
+/* Glow effect */
+.m-button--glow {
+  box-shadow: 0 0 20px rgba(var(--color-button), 0.5);
+}
+
+.m-button--glow:hover {
+  box-shadow: 0 0 30px rgba(var(--color-button), 0.8);
+}
+
+/* Split button */
+.m-button--split {
+  padding: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.m-button--split > * {
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+}
+
+.m-button--split > *:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Animated background */
+.m-button--animated-bg {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient-animation 15s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Icon-only buttons */
+.m-button--icon-only {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-button--icon-only.m-button--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.m-button--icon-only.m-button--lg {
+  width: 56px;
+  height: 56px;
+}
+
+/* Floating action button */
+.m-button--fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+
+.m-button--fab:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Button group */
+.m-button-group {
+  display: inline-flex;
+  border-radius: var(--btn-border-radius);
+  overflow: hidden;
+}
+
+.m-button-group .m-button {
+  border-radius: 0;
+  margin: 0;
+}
+
+.m-button-group .m-button:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle button */
+.m-button--toggle {
+  background: rgb(var(--color-background));
+  border: 2px solid rgb(var(--color-border));
+  color: rgb(var(--color-foreground));
+}
+
+.m-button--toggle.is-active {
+  background: rgb(var(--color-button));
+  border-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+/* Responsive button */
+@media screen and (max-width: 767px) {
+  .m-button--responsive {
+    width: 100%;
+  }
+  
+  .m-button--responsive-icon-only {
+    width: 44px;
+    padding: 0;
+  }
+  
+  .m-button--responsive-icon-only span:not(.icon) {
+    display: none;
+  }
+}
+
+/* Accessibility improvements */
+.m-button:focus-visible {
+  outline: 2px solid rgb(var(--color-button));
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .m-button {
+    border: 2px solid;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .m-button--adaptive {
+    filter: brightness(1.2);
+  }
+}
+
+/* Print styles */
+@media print {
+  .m-button {
+    border: 1px solid;
+  }
+}
