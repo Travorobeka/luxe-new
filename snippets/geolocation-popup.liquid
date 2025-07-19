@@ -1,0 +1,175 @@
+{% comment %}
+  Geolocation Popup Snippet
+  
+  Renders the geolocation popup configuration and initialization script.
+  This snippet should be included in the theme layout file.
+  
+  Dependencies:
+  - geolocation-popup.js
+  - geolocation-popup.css
+  
+  Settings used:
+  - settings.geolocation_popup_enabled
+  - settings.geolocation_popup_style
+  - settings.geolocation_popup_position
+  - settings.geolocation_popup_delay
+  - settings.geolocation_popup_auto_dismiss
+  - settings.geolocation_popup_animation
+  - settings.geolocation_popup_title
+  - settings.geolocation_popup_message
+  - settings.geolocation_popup_accept_button
+  - settings.geolocation_popup_decline_button
+  - settings.geolocation_popup_bg_color
+  - settings.geolocation_popup_text_color
+  - settings.geolocation_popup_accent_color
+  - settings.geolocation_popup_border_color
+  - settings.geolocation_popup_border_radius
+  - settings.geolocation_popup_max_width
+  - settings.geolocation_timeout
+  - settings.geolocation_analytics_enabled
+{% endcomment %}
+
+{% if settings.geolocation_popup_enabled %}
+
+  {%- comment -%} Include CSS styles {%- endcomment -%}
+  {{ 'geolocation-popup.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%} Configuration Script {%- endcomment -%}
+  <script>
+    window.geolocationPopupSettings = {
+      enabled: {{ settings.geolocation_popup_enabled | json }},
+      style: {{ settings.geolocation_popup_style | default: 'modal' | json }},
+      position: {{ settings.geolocation_popup_position | default: 'center' | json }},
+      delay: {{ settings.geolocation_popup_delay | default: 2000 }},
+      autoDismiss: {{ settings.geolocation_popup_auto_dismiss | default: 0 }},
+      animation: {{ settings.geolocation_popup_animation | default: 'fade' | json }},
+      timeout: {{ settings.geolocation_timeout | default: 5000 }},
+      analyticsEnabled: {{ settings.geolocation_analytics_enabled | default: true }},
+      
+      // Text content
+      title: {{ settings.geolocation_popup_title | default: 'Shop in your local currency' | json }},
+      message: {{ settings.geolocation_popup_message | default: 'We detected you\'re in {country}. Would you like to shop in {currency} and see prices in your local currency?' | json }},
+      acceptButton: {{ settings.geolocation_popup_accept_button | default: 'Yes, switch to {currency}' | json }},
+      declineButton: {{ settings.geolocation_popup_decline_button | default: 'No, keep current settings' | json }},
+      
+      // Styling
+      bgColor: {{ settings.geolocation_popup_bg_color | default: '#ffffff' | json }},
+      textColor: {{ settings.geolocation_popup_text_color | default: '#333333' | json }},
+      accentColor: {{ settings.geolocation_popup_accent_color | default: '#007bff' | json }},
+      borderColor: {{ settings.geolocation_popup_border_color | default: '#e0e0e0' | json }},
+      borderRadius: {{ settings.geolocation_popup_border_radius | default: 8 }},
+      maxWidth: {{ settings.geolocation_popup_max_width | default: 400 }}
+    };
+
+    // Shopify localization data
+    window.Shopify = window.Shopify || {};
+    window.Shopify.localization = {
+      {% if localization.available_countries.size > 0 %}
+        available_countries: [
+          {% for country in localization.available_countries %}
+            {
+              iso_code: {{ country.iso_code | json }},
+              name: {{ country.name | json }},
+              currency: {
+                iso_code: {{ country.currency.iso_code | json }},
+                name: {{ country.currency.name | json }},
+                symbol: {{ country.currency.symbol | json }}
+              }
+              {% if country.language %}
+                ,language: {
+                  iso_code: {{ country.language.iso_code | json }},
+                  name: {{ country.language.name | json }}
+                }
+              {% endif %}
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ],
+      {% else %}
+        available_countries: [],
+      {% endif %}
+      
+      current_country: {
+        iso_code: {{ localization.country.iso_code | json }},
+        name: {{ localization.country.name | json }},
+        currency: {
+          iso_code: {{ localization.country.currency.iso_code | json }},
+          name: {{ localization.country.currency.name | json }},
+          symbol: {{ localization.country.currency.symbol | json }}
+        }
+        {% if localization.language %}
+          ,language: {
+            iso_code: {{ localization.language.iso_code | json }},
+            name: {{ localization.language.name | json }}
+          }
+        {% endif %}
+      },
+      
+      current_currency: {
+        iso_code: {{ cart.currency.iso_code | json }},
+        name: {{ cart.currency.name | json }},
+        symbol: {{ cart.currency.symbol | json }}
+      }
+    };
+
+    // Additional Shopify data for analytics
+    window.Shopify.country = {{ localization.country.iso_code | json }};
+    window.Shopify.currency = {
+      active: {{ cart.currency.iso_code | json }}
+    };
+  </script>
+
+  {%- comment -%} Include JavaScript {%- endcomment -%}
+  <script src="{{ 'geolocation-popup.js' | asset_url }}" defer></script>
+
+  {%- comment -%} Preconnect to geolocation service {%- endcomment -%}
+  <link rel="preconnect" href="https://api.bigdatacloud.net" crossorigin>
+
+  {%- comment -%} Schema.org structured data for analytics {%- endcomment -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "potentialAction": {
+        "@type": "InteractAction",
+        "target": {
+          "@type": "EntryPoint",
+          "name": "Geolocation Popup Interaction"
+        },
+        "description": "User interaction with geolocation-based localization suggestion"
+      }
+    }
+  </script>
+
+{% endif %}
+
+{% comment %}
+  Fallback localization form for JavaScript-disabled users
+  This ensures the localization functionality still works even if JavaScript is disabled
+{% endcomment %}
+{% unless settings.geolocation_popup_enabled == false %}
+  <noscript>
+    {% if localization.available_countries.size > 1 %}
+      <div class="geolocation-fallback" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 1rem; margin: 1rem; text-align: center; font-family: system-ui, sans-serif;">
+        <p style="margin: 0 0 1rem 0; font-size: 0.875rem; color: #6c757d;">
+          {{ 'localization.country_label' | t: country: localization.country.name }}
+        </p>
+        
+        {%- form 'localization', class: 'localization-form' -%}
+          <div style="display: flex; gap: 0.5rem; align-items: center; justify-content: center; flex-wrap: wrap;">
+            <select name="country_code" style="padding: 0.5rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.875rem;">
+              {% for country in localization.available_countries %}
+                <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                </option>
+              {% endfor %}
+            </select>
+            
+            <button type="submit" style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+              {{ 'localization.update' | t: default: 'Update' }}
+            </button>
+          </div>
+        {%- endform -%}
+      </div>
+    {% endif %}
+  </noscript>
+{% endunless %}

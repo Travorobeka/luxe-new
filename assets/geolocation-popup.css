@@ -1,0 +1,437 @@
+/* Geolocation Popup Styles */
+.geolocation-popup {
+  --popup-bg-color: #ffffff;
+  --popup-text-color: #333333;
+  --popup-accent-color: #007bff;
+  --popup-border-color: #e0e0e0;
+  --popup-border-radius: 8px;
+  --popup-max-width: 400px;
+  --popup-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --popup-z-index: 9999;
+  
+  position: fixed;
+  z-index: var(--popup-z-index);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.5;
+}
+
+.geolocation-popup--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Style */
+.geolocation-popup--modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  max-width: var(--popup-max-width);
+  width: calc(100% - 2rem);
+}
+
+.geolocation-popup--modal.geolocation-popup--visible {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Corner Style */
+.geolocation-popup--corner {
+  max-width: 350px;
+  width: calc(100% - 2rem);
+  margin: 1rem;
+}
+
+.geolocation-popup--corner.geolocation-popup--top-right {
+  top: 0;
+  right: 0;
+  transform: translateX(100%);
+}
+
+.geolocation-popup--corner.geolocation-popup--top-right.geolocation-popup--visible {
+  transform: translateX(0);
+}
+
+.geolocation-popup--corner.geolocation-popup--bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: translateX(100%);
+}
+
+.geolocation-popup--corner.geolocation-popup--bottom-right.geolocation-popup--visible {
+  transform: translateX(0);
+}
+
+.geolocation-popup--corner.geolocation-popup--top-left {
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.geolocation-popup--corner.geolocation-popup--top-left.geolocation-popup--visible {
+  transform: translateX(0);
+}
+
+.geolocation-popup--corner.geolocation-popup--bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.geolocation-popup--corner.geolocation-popup--bottom-left.geolocation-popup--visible {
+  transform: translateX(0);
+}
+
+/* Banner Style */
+.geolocation-popup--banner {
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(-100%);
+  max-width: none;
+  width: 100%;
+}
+
+.geolocation-popup--banner.geolocation-popup--visible {
+  transform: translateY(0);
+}
+
+/* Popup Content */
+.geolocation-popup__content {
+  background: var(--popup-bg-color);
+  border: 1px solid var(--popup-border-color);
+  border-radius: var(--popup-border-radius);
+  box-shadow: var(--popup-shadow);
+  padding: 1.5rem;
+  position: relative;
+  color: var(--popup-text-color);
+}
+
+.geolocation-popup--banner .geolocation-popup__content {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+}
+
+/* Close Button */
+.geolocation-popup__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--popup-text-color);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.geolocation-popup__close:hover {
+  opacity: 1;
+}
+
+.geolocation-popup__close:focus {
+  outline: 2px solid var(--popup-accent-color);
+  outline-offset: 2px;
+}
+
+/* Title */
+.geolocation-popup__title {
+  margin: 0 2rem 0.75rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--popup-text-color);
+}
+
+.geolocation-popup--banner .geolocation-popup__title {
+  font-size: 1rem;
+  margin: 0 2rem 0.5rem 0;
+}
+
+/* Message */
+.geolocation-popup__message {
+  margin: 0 0 1.25rem 0;
+  font-size: 0.875rem;
+  color: var(--popup-text-color);
+  opacity: 0.8;
+}
+
+.geolocation-popup--banner .geolocation-popup__message {
+  font-size: 0.8125rem;
+  margin-bottom: 1rem;
+}
+
+/* Buttons Container */
+.geolocation-popup__buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.geolocation-popup--banner .geolocation-popup__buttons {
+  gap: 0.5rem;
+}
+
+/* Buttons */
+.geolocation-popup__button {
+  flex: 1;
+  min-width: 0;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--popup-border-color);
+  border-radius: calc(var(--popup-border-radius) * 0.5);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.geolocation-popup--banner .geolocation-popup__button {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+}
+
+.geolocation-popup__button--accept {
+  background: var(--popup-accent-color);
+  color: white;
+  border-color: var(--popup-accent-color);
+}
+
+.geolocation-popup__button--accept:hover {
+  background: color-mix(in srgb, var(--popup-accent-color) 85%, black);
+  border-color: color-mix(in srgb, var(--popup-accent-color) 85%, black);
+}
+
+.geolocation-popup__button--decline {
+  background: transparent;
+  color: var(--popup-text-color);
+}
+
+.geolocation-popup__button--decline:hover {
+  background: color-mix(in srgb, var(--popup-text-color) 5%, transparent);
+}
+
+.geolocation-popup__button:focus {
+  outline: 2px solid var(--popup-accent-color);
+  outline-offset: 2px;
+}
+
+/* Overlay for Modal */
+.geolocation-popup__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: calc(var(--popup-z-index) - 1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.geolocation-popup__overlay--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Animation Variants */
+.geolocation-popup--fade {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.geolocation-popup--slide.geolocation-popup--modal {
+  transition: all 0.3s ease;
+}
+
+.geolocation-popup--zoom.geolocation-popup--modal {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.geolocation-popup--zoom.geolocation-popup--modal:not(.geolocation-popup--visible) {
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .geolocation-popup--modal {
+    max-width: calc(100% - 2rem);
+    width: calc(100% - 2rem);
+  }
+  
+  .geolocation-popup--corner {
+    max-width: calc(100% - 1rem);
+    width: calc(100% - 1rem);
+    margin: 0.5rem;
+  }
+  
+  .geolocation-popup__content {
+    padding: 1.25rem;
+  }
+  
+  .geolocation-popup--banner .geolocation-popup__content {
+    padding: 1rem;
+  }
+  
+  .geolocation-popup__buttons {
+    flex-direction: column;
+  }
+  
+  .geolocation-popup__button {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .geolocation-popup__content {
+    padding: 1rem;
+  }
+  
+  .geolocation-popup--banner .geolocation-popup__content {
+    padding: 0.875rem;
+  }
+  
+  .geolocation-popup__title {
+    font-size: 1rem;
+    margin-right: 1.5rem;
+  }
+  
+  .geolocation-popup--banner .geolocation-popup__title {
+    font-size: 0.9375rem;
+  }
+  
+  .geolocation-popup__message {
+    font-size: 0.8125rem;
+  }
+  
+  .geolocation-popup--banner .geolocation-popup__message {
+    font-size: 0.75rem;
+  }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  .geolocation-popup,
+  .geolocation-popup__overlay,
+  .geolocation-popup__button,
+  .geolocation-popup__close {
+    transition: none;
+  }
+  
+  .geolocation-popup--modal {
+    transform: translate(-50%, -50%);
+  }
+  
+  .geolocation-popup--corner.geolocation-popup--visible {
+    transform: none;
+  }
+  
+  .geolocation-popup--banner.geolocation-popup--visible {
+    transform: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .geolocation-popup__content {
+    border-width: 2px;
+    box-shadow: none;
+  }
+  
+  .geolocation-popup__button {
+    border-width: 2px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .geolocation-popup {
+    --popup-bg-color: #2d2d2d;
+    --popup-text-color: #ffffff;
+    --popup-border-color: #404040;
+  }
+  
+  .geolocation-popup__overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .geolocation-popup,
+  .geolocation-popup__overlay {
+    display: none !important;
+  }
+}
+
+/* Focus Trap for Modal */
+.geolocation-popup--modal {
+  outline: none;
+}
+
+.geolocation-popup--modal:focus {
+  outline: none;
+}
+
+/* Loading State */
+.geolocation-popup--loading .geolocation-popup__buttons {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.geolocation-popup--loading .geolocation-popup__button {
+  position: relative;
+}
+
+.geolocation-popup--loading .geolocation-popup__button--accept::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: geolocation-popup-spin 1s linear infinite;
+}
+
+@keyframes geolocation-popup-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+  .geolocation-popup__content {
+    border: 2px solid ButtonText;
+  }
+  
+  .geolocation-popup__button--accept {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 2px solid ButtonText;
+  }
+  
+  .geolocation-popup__button--decline {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 2px solid ButtonText;
+  }
+}

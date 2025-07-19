@@ -3606,5 +3606,214 @@
         "default": false
       }
     ]
+  },
+  {
+    "name": "Geolocation Popup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Geolocation Settings"
+      },
+      {
+        "type": "paragraph",
+        "content": "Automatically suggest localized currency and language based on visitor location using Shopify Markets configuration."
+      },
+      {
+        "type": "checkbox",
+        "id": "geolocation_popup_enabled",
+        "label": "Enable geolocation popup",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "geolocation_popup_style",
+        "label": "Popup style",
+        "default": "modal",
+        "options": [
+          {
+            "value": "modal",
+            "label": "Modal overlay"
+          },
+          {
+            "value": "corner",
+            "label": "Corner notification"
+          },
+          {
+            "value": "banner",
+            "label": "Top banner"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "geolocation_popup_position",
+        "label": "Popup position",
+        "default": "center",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "top-right",
+            "label": "Top right"
+          },
+          {
+            "value": "bottom-right",
+            "label": "Bottom right"
+          },
+          {
+            "value": "top-left",
+            "label": "Top left"
+          },
+          {
+            "value": "bottom-left",
+            "label": "Bottom left"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "geolocation_popup_delay",
+        "min": 0,
+        "max": 10000,
+        "step": 500,
+        "unit": "ms",
+        "label": "Popup delay",
+        "default": 2000
+      },
+      {
+        "type": "range",
+        "id": "geolocation_popup_auto_dismiss",
+        "min": 0,
+        "max": 30000,
+        "step": 1000,
+        "unit": "ms",
+        "label": "Auto dismiss time (0 = no auto dismiss)",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "geolocation_popup_animation",
+        "label": "Animation",
+        "default": "fade",
+        "options": [
+          {
+            "value": "fade",
+            "label": "Fade in/out"
+          },
+          {
+            "value": "slide",
+            "label": "Slide in/out"
+          },
+          {
+            "value": "zoom",
+            "label": "Zoom in/out"
+          },
+          {
+            "value": "none",
+            "label": "No animation"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Popup Content"
+      },
+      {
+        "type": "text",
+        "id": "geolocation_popup_title",
+        "label": "Popup title",
+        "default": "Shop in your local currency"
+      },
+      {
+        "type": "textarea",
+        "id": "geolocation_popup_message",
+        "label": "Popup message",
+        "default": "We detected you're in {country}. Would you like to shop in {currency} and see prices in your local currency?",
+        "info": "Use {country}, {currency}, and {language} as placeholders"
+      },
+      {
+        "type": "text",
+        "id": "geolocation_popup_accept_button",
+        "label": "Accept button text",
+        "default": "Yes, switch to {currency}"
+      },
+      {
+        "type": "text",
+        "id": "geolocation_popup_decline_button",
+        "label": "Decline button text",
+        "default": "No, keep current settings"
+      },
+      {
+        "type": "header",
+        "content": "Popup Styling"
+      },
+      {
+        "type": "color",
+        "id": "geolocation_popup_bg_color",
+        "label": "Background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "geolocation_popup_text_color",
+        "label": "Text color",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "geolocation_popup_accent_color",
+        "label": "Accent color",
+        "default": "#007bff"
+      },
+      {
+        "type": "color",
+        "id": "geolocation_popup_border_color",
+        "label": "Border color",
+        "default": "#e0e0e0"
+      },
+      {
+        "type": "range",
+        "id": "geolocation_popup_border_radius",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "geolocation_popup_max_width",
+        "min": 300,
+        "max": 600,
+        "step": 10,
+        "unit": "px",
+        "label": "Maximum width",
+        "default": 400
+      },
+      {
+        "type": "header",
+        "content": "Advanced Settings"
+      },
+      {
+        "type": "range",
+        "id": "geolocation_timeout",
+        "min": 1000,
+        "max": 10000,
+        "step": 500,
+        "unit": "ms",
+        "label": "Geolocation detection timeout",
+        "default": 5000
+      },
+      {
+        "type": "checkbox",
+        "id": "geolocation_analytics_enabled",
+        "label": "Enable analytics tracking",
+        "default": true,
+        "info": "Track popup display, user interactions, and conversion rates"
+      }
+    ]
   }
 ]
