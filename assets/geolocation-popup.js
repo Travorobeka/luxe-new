@@ -502,6 +502,9 @@ class PopupDisplayService {
   showPopup(popup) {
     if (!popup) return;
 
+    // Ensure popup appears in viewport center regardless of scroll position
+    this.ensureViewportCentering(popup);
+
     document.body.appendChild(popup);
     
     // Apply position classes
@@ -509,7 +512,14 @@ class PopupDisplayService {
 
     // Show with animation
     setTimeout(() => {
+      // Make popup visible first
+      popup.style.visibility = 'visible';
       popup.classList.add('geolocation-popup--visible');
+      
+      // Debug positioning for preview mode
+      if (this.settings.previewMode) {
+        this.debugPopupPosition(popup);
+      }
     }, 50);
 
     // Set up auto dismiss
@@ -603,6 +613,53 @@ class PopupDisplayService {
     const buttons = popup.querySelectorAll('.geolocation-popup__button');
     buttons.forEach(button => {
       button.style.fontSize = `${this.settings.buttonSize}px`;
+    });
+  }
+
+  ensureViewportCentering(popup) {
+    // Force popup to appear in the center of the current viewport
+    if (this.settings.style === 'modal' || this.settings.style === undefined) {
+      // Override any existing positioning styles
+      popup.style.cssText += `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) scale(0.8) !important;
+        z-index: 99999 !important;
+        margin: 0 !important;
+        visibility: hidden;
+      `;
+      
+      // Force a reflow to ensure styles are applied
+      popup.offsetHeight;
+    }
+  }
+
+  debugPopupPosition(popup) {
+    const rect = popup.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    
+    console.log('🎯 Popup Position Debug:', {
+      popupRect: rect,
+      viewportSize: { width: viewportWidth, height: viewportHeight },
+      isInViewport: {
+        horizontal: rect.left >= 0 && rect.right <= viewportWidth,
+        vertical: rect.top >= 0 && rect.bottom <= viewportHeight
+      },
+      centerPosition: {
+        expectedX: viewportWidth / 2,
+        expectedY: viewportHeight / 2,
+        actualX: rect.left + rect.width / 2,
+        actualY: rect.top + rect.height / 2
+      },
+      styles: {
+        position: popup.style.position,
+        top: popup.style.top,
+        left: popup.style.left,
+        transform: popup.style.transform,
+        zIndex: popup.style.zIndex
+      }
     });
   }
 

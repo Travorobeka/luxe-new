@@ -7,10 +7,10 @@
   --popup-border-radius: 12px;
   --popup-max-width: 380px;
   --popup-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
-  --popup-z-index: 9999;
+  --popup-z-index: 99999;
   
-  position: fixed;
-  z-index: var(--popup-z-index);
+  position: fixed !important;
+  z-index: var(--popup-z-index) !important;
   opacity: 0;
   visibility: hidden;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -27,17 +27,18 @@
 
 /* Modal Style - Center positioned popup */
 .geolocation-popup--modal {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(0.8) !important;
   max-width: var(--popup-max-width);
   width: calc(100% - 2rem);
-  position: fixed;
-  z-index: var(--popup-z-index);
+  position: fixed !important;
+  z-index: var(--popup-z-index) !important;
+  margin: 0 !important;
 }
 
 .geolocation-popup--modal.geolocation-popup--visible {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1) !important;
 }
 
 /* Corner Style */
@@ -262,10 +263,16 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .geolocation-popup--modal {
-    max-width: calc(100% - 1.5rem);
-    width: calc(100% - 1.5rem);
-    top: 50%;
-    position: fixed;
+    max-width: calc(100% - 1.5rem) !important;
+    width: calc(100% - 1.5rem) !important;
+    top: 50% !important;
+    left: 50% !important;
+    position: fixed !important;
+    transform: translate(-50%, -50%) scale(0.8) !important;
+  }
+  
+  .geolocation-popup--modal.geolocation-popup--visible {
+    transform: translate(-50%, -50%) scale(1) !important;
   }
   
   .geolocation-popup--corner {
