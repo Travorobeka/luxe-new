@@ -452,14 +452,17 @@ class PopupDisplayService {
     
     if (marketData.country) {
       result = result.replace(/{country}/g, marketData.country.name || marketData.country.iso_code);
+      result = result.replace(/COUNTRY_PLACEHOLDER/g, marketData.country.name || marketData.country.iso_code);
     }
     
     if (marketData.currency) {
       result = result.replace(/{currency}/g, marketData.currency.iso_code || marketData.currency.name);
+      result = result.replace(/CURRENCY_PLACEHOLDER/g, marketData.currency.iso_code || marketData.currency.name);
     }
     
     if (marketData.language) {
       result = result.replace(/{language}/g, marketData.language.name || marketData.language.iso_code);
+      result = result.replace(/LANGUAGE_PLACEHOLDER/g, marketData.language.name || marketData.language.iso_code);
     }
     
     return result;

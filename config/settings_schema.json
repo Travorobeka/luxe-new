@@ -3730,14 +3730,14 @@
         "type": "textarea",
         "id": "geolocation_popup_message",
         "label": "Popup message",
-        "default": "We detected you are in {country}. Would you like to shop in {currency} and see prices in your local currency?",
-        "info": "Use {country}, {currency}, and {language} as placeholders"
+        "default": "We detected you are in COUNTRY_PLACEHOLDER. Would you like to shop in CURRENCY_PLACEHOLDER and see prices in your local currency?",
+        "info": "Use {country}, {currency}, {language} or COUNTRY_PLACEHOLDER, CURRENCY_PLACEHOLDER, LANGUAGE_PLACEHOLDER as placeholders"
       },
       {
         "type": "text",
         "id": "geolocation_popup_accept_button",
         "label": "Accept button text",
-        "default": "Yes, switch to {currency}"
+        "default": "Yes, switch to CURRENCY_PLACEHOLDER"
       },
       {
         "type": "text",
