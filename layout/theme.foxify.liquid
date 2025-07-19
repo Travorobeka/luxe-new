@@ -98,7 +98,7 @@
     {% endif %}
     data-link-decoration="{{ settings.link_text_decoration }}"
     data-drop-caps="{{ settings.enable_drop_caps }}"
-  >
+  > {% sections 'foxify-header-group' %} 
     {%- liquid
       render 'page-transition'
       render 'scroll-top-button'
@@ -106,7 +106,7 @@
     -%}
 
     <main role="main" id="MainContent">
-      {{ content_for_layout }}
+      <div class="foxify-container">{{ content_for_layout }}</div>
     </main>
 
     {%- liquid
@@ -143,5 +143,5 @@
     
     <script src="{{ 'typography-advanced.js' | asset_url }}" defer></script>
     <script src="{{ 'buttons-advanced.js' | asset_url }}" defer></script>
-  {%- render 'foxify-footer' -%}</body>
+  {%- render 'foxify-footer' -%} {% sections 'foxify-footer-group' %} </body>
 </html>
