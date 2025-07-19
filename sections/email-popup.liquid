@@ -1,0 +1,872 @@
+{% comment %}
+  Email Popup Section
+  Captures visitor email addresses with sophisticated customization options
+{% endcomment %}
+
+{% liquid
+  assign popup_enabled = section.settings.enabled
+  assign preview_mode = section.settings.preview_mode
+  assign show_popup = false
+  
+  if request.design_mode and preview_mode
+    assign show_popup = true
+  elsif popup_enabled and request.design_mode == false
+    assign show_popup = true
+  endif
+%}
+
+{% if show_popup %}
+  <div 
+    class="email-popup-section"
+    data-section-id="{{ section.id }}"
+    data-section-type="email-popup"
+    data-popup-config='{
+      "enabled": {{ popup_enabled | json }},
+      "previewMode": {{ preview_mode | json }},
+      "content": {
+        "headline": {{ section.settings.headline | default: "Join Our Newsletter" | json }},
+        "description": {{ section.settings.description | default: "Get exclusive offers and updates delivered to your inbox." | json }},
+        "buttonText": {{ section.settings.button_text | default: "Subscribe Now" | json }},
+        "placeholderText": {{ section.settings.placeholder_text | default: "Enter your email address" | json }},
+        "thankYouMessage": {{ section.settings.thank_you_message | default: "Thank you for subscribing!" | json }},
+        "privacyText": {{ section.settings.privacy_text | json }}
+      },
+      "discount": {
+        "enabled": {{ section.settings.discount_enabled | json }},
+        "code": {{ section.settings.discount_code | json }},
+        "type": {{ section.settings.discount_type | json }},
+        "value": {{ section.settings.discount_value | json }},
+        "description": {{ section.settings.discount_description | json }}
+      },
+      "styling": {
+        "colors": {
+          "primary": {{ section.settings.color_primary | json }},
+          "secondary": {{ section.settings.color_secondary | json }},
+          "accent": {{ section.settings.color_accent | json }},
+          "text": {{ section.settings.color_text | json }},
+          "overlay": {{ section.settings.color_overlay | json }}
+        },
+        "typography": {
+          "fontFamily": {{ section.settings.font_family | json }},
+          "headlineFontSize": {{ section.settings.headline_font_size | json }},
+          "bodyFontSize": {{ section.settings.body_font_size | json }},
+          "fontWeight": {{ section.settings.font_weight | json }}
+        },
+        "layout": {
+          "width": {{ section.settings.popup_width | json }},
+          "height": {{ section.settings.popup_height | json }},
+          "borderRadius": {{ section.settings.border_radius | json }},
+          "shadow": {{ section.settings.shadow_intensity | json }},
+          "overlayOpacity": {{ section.settings.overlay_opacity | json }},
+          "position": {{ section.settings.popup_position | json }}
+        },
+        "animation": {
+          "entrance": {{ section.settings.entrance_animation | json }},
+          "exit": {{ section.settings.exit_animation | json }},
+          "duration": {{ section.settings.animation_duration | json }},
+          "easing": {{ section.settings.animation_easing | json }}
+        }
+      },
+      "triggers": {
+        "timeDelay": {{ section.settings.time_delay | json }},
+        "scrollPercentage": {{ section.settings.scroll_percentage | json }},
+        "exitIntent": {{ section.settings.exit_intent | json }},
+        "pageViews": {{ section.settings.page_views | json }},
+        "sessionDuration": {{ section.settings.session_duration | json }},
+        "showOnce": {{ section.settings.show_once | json }},
+        "cookieDuration": {{ section.settings.cookie_duration | json }}
+      },
+      "targeting": {
+        "newVisitors": {{ section.settings.target_new_visitors | json }},
+        "returningVisitors": {{ section.settings.target_returning_visitors | json }},
+        "mobileDevices": {{ section.settings.target_mobile | json }},
+        "desktopDevices": {{ section.settings.target_desktop | json }},
+        "specificPages": {{ section.settings.specific_pages | json }}
+      },
+      "integrations": {
+        "enabled": {{ section.settings.enable_integrations | json }},
+        "webhookUrl": {{ section.settings.webhook_url | json }},
+        "retryAttempts": {{ section.settings.webhook_retry_attempts | json }},
+        "retryDelay": {{ section.settings.webhook_retry_delay | json }},
+        "timeout": {{ section.settings.webhook_timeout | json }}
+      }
+    }'
+    {% if request.design_mode and preview_mode %}
+      data-preview-mode="true"
+    {% endif %}
+  >
+    
+    {% comment %} Popup Overlay {% endcomment %}
+    <div class="email-popup-overlay" data-popup-overlay>
+      
+      {% comment %} Popup Container {% endcomment %}
+      <div class="email-popup-container" data-popup-container>
+        
+        {% comment %} Close Button {% endcomment %}
+        <button 
+          class="email-popup-close" 
+          data-popup-close
+          aria-label="Close popup"
+          type="button"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        {% comment %} Preview Mode Indicator {% endcomment %}
+        {% if request.design_mode and preview_mode %}
+          <div class="email-popup-preview-indicator">
+            <span>Preview Mode</span>
+          </div>
+        {% endif %}
+
+        {% comment %} Popup Content {% endcomment %}
+        <div class="email-popup-content">
+          
+          {% comment %} Image/Logo {% endcomment %}
+          {% if section.settings.show_image and section.settings.image %}
+            <div class="email-popup-image">
+              <img 
+                src="{{ section.settings.image | image_url: width: 400 }}"
+                alt="{{ section.settings.image.alt | default: section.settings.headline }}"
+                width="200"
+                height="auto"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
+
+          {% comment %} Form State (Default) {% endcomment %}
+          <div class="email-popup-form-state" data-popup-form-state>
+            
+            {% comment %} Headline {% endcomment %}
+            {% if section.settings.headline != blank %}
+              <h2 class="email-popup-headline">
+                {{ section.settings.headline }}
+              </h2>
+            {% endif %}
+
+            {% comment %} Description {% endcomment %}
+            {% if section.settings.description != blank %}
+              <div class="email-popup-description">
+                {{ section.settings.description }}
+              </div>
+            {% endif %}
+
+            {% comment %} Discount Offer {% endcomment %}
+            {% if section.settings.discount_enabled and section.settings.discount_description != blank %}
+              <div class="email-popup-discount-offer">
+                {{ section.settings.discount_description }}
+              </div>
+            {% endif %}
+
+            {% comment %} Email Form {% endcomment %}
+            {% render 'email-popup-form', section: section %}
+
+            {% comment %} Privacy Text {% endcomment %}
+            {% if section.settings.privacy_text != blank %}
+              <div class="email-popup-privacy">
+                {{ section.settings.privacy_text }}
+              </div>
+            {% endif %}
+
+          </div>
+
+          {% comment %} Success State {% endcomment %}
+          <div class="email-popup-success-state" data-popup-success-state style="display: none;">
+            {% render 'email-popup-success', section: section %}
+          </div>
+
+          {% comment %} Error State {% endcomment %}
+          <div class="email-popup-error-state" data-popup-error-state style="display: none;">
+            <div class="email-popup-error-content">
+              <h3 class="email-popup-error-title">Something went wrong</h3>
+              <p class="email-popup-error-message" data-error-message>
+                We encountered an error while processing your request. Please try again.
+              </p>
+              <button class="email-popup-retry-button" data-retry-button>
+                Try Again
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} Critical CSS for Performance {% endcomment %}
+  <style data-email-popup-critical>
+    .email-popup-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .email-popup-section.is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .email-popup-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .email-popup-container {
+      position: relative;
+      background: white;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    .email-popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      color: #666;
+      padding: 5px;
+    }
+    .email-popup-preview-indicator {
+      background: #007bff;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+
+  {% comment %} Load Main CSS {% endcomment %}
+  <link rel="stylesheet" href="{{ 'email-popup.css' | asset_url }}">
+
+  {% comment %} Load Main JavaScript {% endcomment %}
+  <script src="{{ 'email-popup.js' | asset_url }}" defer></script>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Email Popup",
+  "tag": "section",
+  "class": "email-popup-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable email popup",
+      "default": true,
+      "info": "Turn on/off the email popup for visitors"
+    },
+    {
+      "type": "checkbox",
+      "id": "preview_mode",
+      "label": "Preview mode",
+      "default": false,
+      "info": "Show popup in theme editor for preview (admin only)"
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Join Our Newsletter",
+      "info": "Main headline text"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Get exclusive offers and updates delivered to your inbox.</p>",
+      "info": "Description text below headline"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe Now",
+      "info": "Submit button text"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Email placeholder",
+      "default": "Enter your email address",
+      "info": "Placeholder text for email input"
+    },
+    {
+      "type": "richtext",
+      "id": "thank_you_message",
+      "label": "Thank you message",
+      "default": "<p>Thank you for subscribing!</p>",
+      "info": "Message shown after successful subscription"
+    },
+    {
+      "type": "richtext",
+      "id": "privacy_text",
+      "label": "Privacy text",
+      "default": "<p>We respect your privacy. Unsubscribe at any time.</p>",
+      "info": "Privacy notice text"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show image",
+      "default": false,
+      "info": "Display an image in the popup"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Logo or promotional image"
+    },
+    {
+      "type": "header",
+      "content": "Discount Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "discount_enabled",
+      "label": "Enable discount offer",
+      "default": false,
+      "info": "Offer a discount code for email signup"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Discount code",
+      "default": "WELCOME10",
+      "info": "The discount code to display"
+    },
+    {
+      "type": "select",
+      "id": "discount_type",
+      "label": "Discount type",
+      "options": [
+        {
+          "value": "percentage",
+          "label": "Percentage"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed amount"
+        }
+      ],
+      "default": "percentage"
+    },
+    {
+      "type": "number",
+      "id": "discount_value",
+      "label": "Discount value",
+      "default": 10,
+      "info": "Percentage or fixed amount value"
+    },
+    {
+      "type": "text",
+      "id": "discount_description",
+      "label": "Discount description",
+      "default": "Get 10% off your first order!",
+      "info": "Description of the discount offer"
+    },
+    {
+      "type": "header",
+      "content": "Design Settings"
+    },
+    {
+      "type": "color",
+      "id": "color_primary",
+      "label": "Primary color",
+      "default": "#000000",
+      "info": "Main background color"
+    },
+    {
+      "type": "color",
+      "id": "color_secondary",
+      "label": "Secondary color",
+      "default": "#ffffff",
+      "info": "Content background color"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Accent color",
+      "default": "#007bff",
+      "info": "Button and link color"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text color",
+      "default": "#333333",
+      "info": "Main text color"
+    },
+    {
+      "type": "color",
+      "id": "color_overlay",
+      "label": "Overlay color",
+      "default": "#000000",
+      "info": "Background overlay color"
+    },
+    {
+      "type": "header",
+      "content": "Typography Settings"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "assistant_n4",
+      "info": "Font family for popup text"
+    },
+    {
+      "type": "range",
+      "id": "headline_font_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Body font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "select",
+      "id": "popup_width",
+      "label": "Popup width",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small (400px)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (500px)"
+        },
+        {
+          "value": "large",
+          "label": "Large (600px)"
+        },
+        {
+          "value": "extra-large",
+          "label": "Extra Large (700px)"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "popup_height",
+      "label": "Popup height",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "small",
+          "label": "Small (300px)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (400px)"
+        },
+        {
+          "value": "large",
+          "label": "Large (500px)"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "shadow_intensity",
+      "label": "Shadow intensity",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "strong",
+          "label": "Strong"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 75
+    },
+    {
+      "type": "select",
+      "id": "popup_position",
+      "label": "Popup position",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "select",
+      "id": "entrance_animation",
+      "label": "Entrance animation",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide-up",
+          "label": "Slide Up"
+        },
+        {
+          "value": "slide-down",
+          "label": "Slide Down"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        },
+        {
+          "value": "bounce",
+          "label": "Bounce"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "select",
+      "id": "exit_animation",
+      "label": "Exit animation",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide-up",
+          "label": "Slide Up"
+        },
+        {
+          "value": "slide-down",
+          "label": "Slide Down"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        },
+        {
+          "value": "bounce",
+          "label": "Bounce"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "label": "Animation duration",
+      "default": 300
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation easing",
+      "options": [
+        {
+          "value": "ease",
+          "label": "Ease"
+        },
+        {
+          "value": "ease-in",
+          "label": "Ease In"
+        },
+        {
+          "value": "ease-out",
+          "label": "Ease Out"
+        },
+        {
+          "value": "ease-in-out",
+          "label": "Ease In Out"
+        }
+      ],
+      "default": "ease-out"
+    },
+    {
+      "type": "header",
+      "content": "Trigger Settings"
+    },
+    {
+      "type": "range",
+      "id": "time_delay",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "label": "Time delay",
+      "default": 5,
+      "info": "Delay before showing popup (seconds)"
+    },
+    {
+      "type": "range",
+      "id": "scroll_percentage",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Scroll percentage",
+      "default": 50,
+      "info": "Show popup after scrolling this percentage"
+    },
+    {
+      "type": "checkbox",
+      "id": "exit_intent",
+      "label": "Exit intent",
+      "default": true,
+      "info": "Show popup when user tries to leave page"
+    },
+    {
+      "type": "range",
+      "id": "page_views",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Page views",
+      "default": 2,
+      "info": "Show popup after this many page views"
+    },
+    {
+      "type": "range",
+      "id": "session_duration",
+      "min": 0,
+      "max": 300,
+      "step": 15,
+      "unit": "s",
+      "label": "Session duration",
+      "default": 30,
+      "info": "Show popup after this session duration (seconds)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_once",
+      "label": "Show only once",
+      "default": true,
+      "info": "Show popup only once per visitor"
+    },
+    {
+      "type": "range",
+      "id": "cookie_duration",
+      "min": 1,
+      "max": 90,
+      "step": 1,
+      "unit": "d",
+      "label": "Cookie duration",
+      "default": 30,
+      "info": "Remember visitor choice for this many days"
+    },
+    {
+      "type": "header",
+      "content": "Targeting Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_new_visitors",
+      "label": "Target new visitors",
+      "default": true,
+      "info": "Show popup to first-time visitors"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_returning_visitors",
+      "label": "Target returning visitors",
+      "default": false,
+      "info": "Show popup to returning visitors"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_mobile",
+      "label": "Show on mobile",
+      "default": true,
+      "info": "Display popup on mobile devices"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_desktop",
+      "label": "Show on desktop",
+      "default": true,
+      "info": "Display popup on desktop devices"
+    },
+    {
+      "type": "textarea",
+      "id": "specific_pages",
+      "label": "Specific pages",
+      "placeholder": "/collections/sale\n/pages/about",
+      "info": "Show popup only on these pages (one per line, leave empty for all pages)"
+    },
+    {
+      "type": "header",
+      "content": "Integration Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_integrations",
+      "label": "Enable third-party integrations",
+      "default": false,
+      "info": "Enable webhook integrations with email marketing services"
+    },
+    {
+      "type": "url",
+      "id": "webhook_url",
+      "label": "Webhook URL",
+      "info": "URL for third-party integrations"
+    },
+    {
+      "type": "range",
+      "id": "webhook_timeout",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "label": "Webhook timeout",
+      "default": 10,
+      "info": "Timeout for webhook requests in seconds"
+    },
+    {
+      "type": "range",
+      "id": "webhook_retry_attempts",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "label": "Retry attempts",
+      "default": 3,
+      "info": "Number of retry attempts for failed webhooks"
+    },
+    {
+      "type": "range",
+      "id": "webhook_retry_delay",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Retry delay",
+      "default": 2,
+      "info": "Initial delay between retry attempts in seconds"
+    }
+  ]
+}
+{% endschema %}

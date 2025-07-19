@@ -1,0 +1,472 @@
+{% comment %}
+  Email Popup Success Component
+  
+  Thank you state with:
+  - Customizable success message
+  - Discount code display with copy functionality
+  - Usage instructions
+  - Optional social sharing
+  - Smooth transition animations
+{% endcomment %}
+
+<div 
+  class="email-popup-success" 
+  id="email-popup-success"
+  role="dialog"
+  aria-labelledby="email-popup-success-heading"
+  aria-describedby="email-popup-success-description"
+  data-popup-success
+>
+  
+  {% comment %} Success content wrapper {% endcomment %}
+  <div class="email-popup-success__content">
+    
+    {% comment %} Success icon {% endcomment %}
+    <div class="email-popup-success__icon" aria-hidden="true">
+      <svg class="email-popup-success__checkmark" viewBox="0 0 24 24" width="48" height="48">
+        <circle 
+          cx="12" 
+          cy="12" 
+          r="11" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          fill="none"
+          class="email-popup-success__circle"
+        />
+        <path 
+          d="M7 12l3 3 7-7" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          class="email-popup-success__check"
+        />
+      </svg>
+    </div>
+    
+    {% comment %} Success heading {% endcomment %}
+    <h3 
+      id="email-popup-success-heading" 
+      class="email-popup-success__heading"
+    >
+      Thank You!
+    </h3>
+    
+    {% comment %} Success description {% endcomment %}
+    <div 
+      id="email-popup-success-description" 
+      class="email-popup-success__description"
+    >
+      {{ section.settings.thank_you_message | default: "You have successfully subscribed to our newsletter." }}
+    </div> 
+   
+    {% comment %} Discount code section {% endcomment %}
+    {% if section.settings.discount_enabled and section.settings.discount_code != blank %}
+      <div class="email-popup-success__discount">
+        
+        {% comment %} Discount heading {% endcomment %}
+        <h4 class="email-popup-success__discount-heading">
+          Your Exclusive Discount Code
+        </h4>
+        
+        {% comment %} Discount code display {% endcomment %}
+        <div class="email-popup-success__discount-code-wrapper">
+          <div 
+            class="email-popup-success__discount-code"
+            data-popup-discount-code
+            role="textbox"
+            aria-readonly="true"
+            aria-label="Discount code: {{ section.settings.discount_code }}"
+            tabindex="0"
+          >
+            {{ section.settings.discount_code }}
+          </div>
+          
+          {% comment %} Copy button {% endcomment %}
+          <button 
+            type="button" 
+            class="email-popup-success__copy-button"
+            data-popup-copy-button
+            aria-label="Copy discount code to clipboard"
+            title="Copy to clipboard"
+          >
+            <span class="email-popup-success__copy-icon" data-popup-copy-icon>
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path 
+                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span class="email-popup-success__copy-text" data-popup-copy-text>
+              Copy
+            </span>
+          </button>
+        </div>
+        
+        {% comment %} Copy success feedback {% endcomment %}
+        <div 
+          class="email-popup-success__copy-feedback"
+          data-popup-copy-feedback
+          role="status"
+          aria-live="polite"
+          style="display: none;"
+        >
+          Copied to clipboard!
+        </div>
+        
+        {% comment %} Discount details {% endcomment %}
+        <div class="email-popup-success__discount-details">
+          {% if section.settings.discount_type == 'percentage' %}
+            <p class="email-popup-success__discount-value">
+              Save {{ section.settings.discount_value }}% on your next order
+            </p>
+          {% elsif section.settings.discount_type == 'fixed' %}
+            <p class="email-popup-success__discount-value">
+              Save {{ section.settings.discount_value | money }} on your next order
+            </p>
+          {% endif %}
+        </div>
+        
+        {% comment %} Usage instructions {% endcomment %}
+        <div class="email-popup-success__instructions">
+          <h5 class="email-popup-success__instructions-heading">
+            How to use your code:
+          </h5>
+          <ol class="email-popup-success__instructions-list">
+            <li>Add items to your cart</li>
+            <li>Enter your discount code at checkout</li>
+            <li>Enjoy your savings!</li>
+          </ol>
+        </div>
+        
+      </div>
+    {% endif %}    
+
+    {% comment %} Call to action button {% endcomment %}
+    <div class="email-popup-success__cta">
+      <a 
+        href="/collections/all" 
+        class="email-popup-success__cta-button"
+        data-popup-cta
+      >
+        Start Shopping
+      </a>
+    </div>
+    
+  </div>
+  
+  {% comment %} Screen reader announcements {% endcomment %}
+  <div 
+    class="visually-hidden" 
+    aria-live="polite" 
+    aria-atomic="true"
+    data-popup-success-status
+  ></div>
+  
+</div>
+
+{% comment %} Copy to clipboard functionality {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyButton = document.querySelector('[data-popup-copy-button]');
+    const discountCode = document.querySelector('[data-popup-discount-code]');
+    const copyFeedback = document.querySelector('[data-popup-copy-feedback]');
+    const copyText = document.querySelector('[data-popup-copy-text]');
+    const statusElement = document.querySelector('[data-popup-success-status]');
+    
+    if (copyButton && discountCode) {
+      copyButton.addEventListener('click', function() {
+        const codeText = discountCode.textContent.trim();
+        
+        // Try to use the modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(codeText).then(function() {
+            showCopySuccess();
+          }).catch(function() {
+            fallbackCopyToClipboard(codeText);
+          });
+        } else {
+          fallbackCopyToClipboard(codeText);
+        }
+      });
+    }
+    
+    function showCopySuccess() {
+      if (copyFeedback) {
+        copyFeedback.style.display = 'block';
+        setTimeout(function() {
+          copyFeedback.style.display = 'none';
+        }, 2000);
+      }
+      
+      if (copyText) {
+        const originalText = copyText.textContent;
+        copyText.textContent = 'Copied!';
+        setTimeout(function() {
+          copyText.textContent = originalText;
+        }, 2000);
+      }
+      
+      if (statusElement) {
+        statusElement.textContent = 'Discount code copied to clipboard';
+        setTimeout(function() {
+          statusElement.textContent = '';
+        }, 2000);
+      }
+    }
+    
+    function fallbackCopyToClipboard(text) {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+          showCopySuccess();
+        } else {
+          console.error('Fallback copy failed');
+        }
+      } catch (err) {
+        console.error('Copy to clipboard failed:', err);
+      }
+    }
+  });
+</script>
+
+{% comment %} Success state styles {% endcomment %}
+<style>
+  .email-popup-success {
+    padding: 40px 30px;
+    text-align: center;
+    animation: slideInUp 0.3s ease-out;
+  }
+
+  .email-popup-success__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .email-popup-success__icon {
+    color: #28a745;
+    animation: scaleIn 0.5s ease-out;
+  }
+
+  .email-popup-success__checkmark {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: drawCheck 0.6s ease-out 0.2s forwards;
+  }
+
+  .email-popup-success__heading {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--popup-text-color, #333);
+  }
+
+  .email-popup-success__description {
+    margin: 0;
+    font-size: 16px;
+    color: var(--popup-text-color, #666);
+    line-height: 1.5;
+  }
+
+  .email-popup-success__discount {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .email-popup-success__discount-heading {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--popup-text-color, #333);
+  }
+
+  .email-popup-success__discount-code-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+  }
+
+  .email-popup-success__discount-code {
+    flex: 1;
+    background: white;
+    border: 2px dashed var(--popup-accent-color, #007bff);
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--popup-accent-color, #007bff);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .email-popup-success__discount-code:focus {
+    outline: none;
+    background-color: #f0f8ff;
+  }
+
+  .email-popup-success__copy-button {
+    background: var(--popup-accent-color, #007bff);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .email-popup-success__copy-button:hover {
+    background: var(--popup-accent-color-hover, #0056b3);
+  }
+
+  .email-popup-success__copy-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+  }
+
+  .email-popup-success__copy-feedback {
+    color: #28a745;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  .email-popup-success__discount-details {
+    margin: 15px 0;
+  }
+
+  .email-popup-success__discount-value {
+    margin: 0;
+    font-size: 14px;
+    color: var(--popup-text-color, #666);
+  }
+
+  .email-popup-success__instructions {
+    margin-top: 15px;
+    text-align: left;
+  }
+
+  .email-popup-success__instructions-heading {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--popup-text-color, #333);
+  }
+
+  .email-popup-success__instructions-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--popup-text-color, #666);
+  }
+
+  .email-popup-success__instructions-list li {
+    margin-bottom: 5px;
+  }
+
+  .email-popup-success__cta-button {
+    background: var(--popup-accent-color, #007bff);
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline-block;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .email-popup-success__cta-button:hover {
+    background: var(--popup-accent-color-hover, #0056b3);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: white;
+  }
+
+  .email-popup-success__cta-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* Animations */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes drawCheck {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Mobile responsive adjustments */
+  @media (max-width: 480px) {
+    .email-popup-success {
+      padding: 30px 20px;
+    }
+    
+    .email-popup-success__discount-code-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .email-popup-success__copy-button {
+      justify-content: center;
+    }
+  }
+</style>

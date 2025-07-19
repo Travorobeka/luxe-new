@@ -1,0 +1,234 @@
+{% comment %}
+  Email Popup Form Component
+  
+  Accessible form structure for email capture with:
+  - HTML5 validation attributes
+  - ARIA labels and roles
+  - Loading states
+  - Error display areas
+  - Keyboard navigation support
+{% endcomment %}
+
+<form 
+  class="email-popup-form" 
+  id="email-popup-form"
+  method="post" 
+  action="/contact#contact_form" 
+  accept-charset="UTF-8"
+  novalidate
+  role="form"
+  aria-labelledby="email-popup-heading"
+  data-popup-form
+>
+  {% comment %} Hidden fields for Shopify contact form {% endcomment %}
+  <input type="hidden" name="form_type" value="customer">
+  <input type="hidden" name="utf8" value="✓">
+  <input type="hidden" name="contact[tags]" value="newsletter,email-popup">
+  
+  {% comment %} Form content wrapper {% endcomment %}
+  <div class="email-popup-form__content">
+    
+    {% comment %} Email input group {% endcomment %}
+    <div class="email-popup-form__group">
+      <label 
+        for="email-popup-email" 
+        class="email-popup-form__label visually-hidden"
+      >
+        Email Address
+      </label>
+      <input 
+        type="email" 
+        id="email-popup-email"
+        name="contact[email]"
+        class="email-popup-form__input"
+        placeholder="{{ section.settings.placeholder_text | default: 'Enter your email address' }}"
+        required
+        aria-describedby="email-popup-error"
+        aria-invalid="false"
+        autocomplete="email"
+        autocapitalize="off"
+        spellcheck="false"
+        data-popup-email-input
+      >
+      {% comment %} Error message container {% endcomment %}
+      <div 
+        id="email-popup-error" 
+        class="email-popup-form__error"
+        role="alert"
+        aria-live="polite"
+        data-popup-error
+        style="display: none;"
+      ></div>
+    </div>
+
+    {% comment %} Submit button {% endcomment %}
+    <button 
+      type="submit" 
+      class="email-popup-form__submit"
+      data-popup-submit
+      aria-describedby="email-popup-submit-status"
+    >
+      <span class="email-popup-form__submit-text" data-popup-submit-text>
+        {{ section.settings.button_text | default: 'Subscribe Now' }}
+      </span>
+      <span class="email-popup-form__submit-loading" data-popup-submit-loading style="display: none;">
+        <svg class="email-popup-form__spinner" viewBox="0 0 24 24" width="16" height="16">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32">
+            <animate attributeName="stroke-dashoffset" values="32;0;32" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+        Subscribing...
+      </span>
+    </button>
+
+    {% comment %} Submit status for screen readers {% endcomment %}
+    <div 
+      id="email-popup-submit-status" 
+      class="visually-hidden"
+      aria-live="polite"
+      aria-atomic="true"
+      data-popup-submit-status
+    ></div>
+
+  </div>
+</form>
+
+{% comment %} Form validation and interaction styles {% endcomment %}
+<style>
+  .email-popup-form {
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+  }
+
+  .email-popup-form__content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .email-popup-form__group {
+    position: relative;
+    width: 100%;
+  }
+
+  .email-popup-form__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--popup-text-color, #333);
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .email-popup-form__input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--popup-text-color, #333);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .email-popup-form__input:focus {
+    outline: none;
+    border-color: var(--popup-accent-color, #007bff);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  }
+
+  .email-popup-form__input:invalid {
+    border-color: #dc3545;
+  }
+
+  .email-popup-form__input.has-error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+  }
+
+  .email-popup-form__error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+
+  .email-popup-form__submit {
+    background: var(--popup-accent-color, #007bff);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .email-popup-form__submit:hover:not(:disabled) {
+    background: var(--popup-accent-color-hover, #0056b3);
+    transform: translateY(-1px);
+  }
+
+  .email-popup-form__submit:active {
+    transform: translateY(0);
+  }
+
+  .email-popup-form__submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .email-popup-form__submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+  }
+
+  .email-popup-form__submit-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .email-popup-form__spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* Mobile responsive adjustments */
+  @media (max-width: 480px) {
+    .email-popup-form {
+      padding: 20px;
+    }
+    
+    .email-popup-form__input,
+    .email-popup-form__submit {
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
+  }
+</style>
