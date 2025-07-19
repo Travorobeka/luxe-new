@@ -107,6 +107,7 @@
     "geolocation_popup_enabled": true,
     "geolocation_popup_style": "corner",
     "geolocation_popup_preview_mode": true,
+    "geolocation_popup_preview_country": "GB",
     "enable_page_transition": true,
     "show_variant_swatch_image": true,
     "use_theme_currencies": true,
