@@ -59,6 +59,12 @@
       borderColor: {{ settings.geolocation_popup_border_color | default: '#e0e0e0' | json }},
       borderRadius: {{ settings.geolocation_popup_border_radius | default: 8 }},
       maxWidth: {{ settings.geolocation_popup_max_width | default: 400 }},
+      padding: {{ settings.geolocation_popup_padding | default: 25 }},
+      shadow: {{ settings.geolocation_popup_shadow | default: 'medium' | json }},
+      flagSize: {{ settings.geolocation_popup_flag_size | default: 40 }},
+      titleSize: {{ settings.geolocation_popup_title_size | default: 20 }},
+      messageSize: {{ settings.geolocation_popup_message_size | default: 15 }},
+      buttonSize: {{ settings.geolocation_popup_button_size | default: 14 }},
       
       // Preview mode settings
       previewMode: {{ settings.geolocation_popup_preview_mode | default: false }},

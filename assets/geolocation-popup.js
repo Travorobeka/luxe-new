@@ -551,6 +551,23 @@ class PopupDisplayService {
   }
 
   applyStyles(popup) {
+    // Apply shadow styles
+    let shadowStyle = '';
+    switch (this.settings.shadow) {
+      case 'none':
+        shadowStyle = 'none';
+        break;
+      case 'light':
+        shadowStyle = '0 5px 15px rgba(0, 0, 0, 0.08)';
+        break;
+      case 'medium':
+        shadowStyle = '0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
+        break;
+      case 'heavy':
+        shadowStyle = '0 30px 60px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.15)';
+        break;
+    }
+
     const styles = `
       --popup-bg-color: ${this.settings.colors.background};
       --popup-text-color: ${this.settings.colors.text};
@@ -558,8 +575,35 @@ class PopupDisplayService {
       --popup-border-color: ${this.settings.colors.border};
       --popup-border-radius: ${this.settings.borderRadius}px;
       --popup-max-width: ${this.settings.maxWidth}px;
+      --popup-shadow: ${shadowStyle};
     `;
     popup.style.cssText = styles;
+
+    // Apply font sizes and padding
+    const content = popup.querySelector('.geolocation-popup__content');
+    if (content) {
+      content.style.padding = `${this.settings.padding}px`;
+    }
+
+    const flag = popup.querySelector('.geolocation-popup__flag');
+    if (flag) {
+      flag.style.fontSize = `${this.settings.flagSize}px`;
+    }
+
+    const title = popup.querySelector('.geolocation-popup__title');
+    if (title) {
+      title.style.fontSize = `${this.settings.titleSize}px`;
+    }
+
+    const message = popup.querySelector('.geolocation-popup__message');
+    if (message) {
+      message.style.fontSize = `${this.settings.messageSize}px`;
+    }
+
+    const buttons = popup.querySelectorAll('.geolocation-popup__button');
+    buttons.forEach(button => {
+      button.style.fontSize = `${this.settings.buttonSize}px`;
+    });
   }
 
   applyPositionClasses(popup) {
@@ -701,10 +745,7 @@ class GeolocationPopupService {
         return;
       }
 
-      // Wait for page load and settings delay
-      await this.waitForDelay();
-
-      // Detect user location
+      // Detect user location immediately
       const locationData = await this.geolocationService.detectLocation();
       
       if (!locationData || !locationData.country) {
@@ -725,7 +766,10 @@ class GeolocationPopupService {
         return;
       }
 
-      // Show popup
+      // Show popup with optional delay
+      if (this.settings.delay > 0) {
+        await this.waitForDelay();
+      }
       await this.showPopup(marketData);
       
       this.isInitialized = true;
@@ -954,17 +998,8 @@ if (typeof window !== 'undefined') {
       // Initialize service only when needed
       const service = new GeolocationPopupService(window.geolocationPopupSettings);
       
-      // Use requestIdleCallback for better performance if available
-      if (window.requestIdleCallback) {
-        requestIdleCallback(() => {
-          service.initialize();
-        }, { timeout: 3000 });
-      } else {
-        // Fallback to setTimeout for older browsers
-        setTimeout(() => {
-          service.initialize();
-        }, 100);
-      }
+      // Initialize immediately for better user experience
+      service.initialize();
     }
   }
 
@@ -972,12 +1007,8 @@ if (typeof window !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', lazyInitialize);
   } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    // Page already loaded, delay initialization to avoid blocking
-    if (window.requestIdleCallback) {
-      requestIdleCallback(lazyInitialize, { timeout: 2000 });
-    } else {
-      setTimeout(lazyInitialize, 50);
-    }
+    // Page already loaded, initialize immediately
+    lazyInitialize();
   }
 
   // Handle page visibility changes for performance
