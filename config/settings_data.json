@@ -114,7 +114,7 @@
     "geolocation_popup_max_width": 400,
     "geolocation_popup_padding": 20,
     "geolocation_timeout": 1000,
-    "geolocation_popup_preview_mode": true,
+    "geolocation_popup_preview_mode": false,
     "geolocation_popup_preview_country": "FR",
     "enable_page_transition": true,
     "show_variant_swatch_image": true,
