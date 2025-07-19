@@ -35,7 +35,7 @@
   {{ 'geolocation-popup.css' | asset_url | stylesheet_tag }}
 
   {%- comment -%} Configuration Script {%- endcomment -%}
-  <script>
+  <script id="geolocation-popup-settings">
     window.geolocationPopupSettings = {
       enabled: {{ settings.geolocation_popup_enabled | json }},
       style: {{ settings.geolocation_popup_style | default: 'modal' | json }},

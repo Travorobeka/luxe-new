@@ -1006,9 +1006,211 @@ class GeolocationPopupService {
   }
 }
 
+// Real-time customization preview for theme editor
+class GeolocationPopupCustomizer {
+  constructor() {
+    this.currentPopupService = null;
+    this.isInThemeEditor = this.detectThemeEditor();
+    this.lastSettings = null;
+    
+    if (this.isInThemeEditor) {
+      this.initializeCustomizer();
+    }
+  }
+  
+  detectThemeEditor() {
+    return window.Shopify && window.Shopify.designMode === true;
+  }
+  
+  initializeCustomizer() {
+    console.log('🎨 Theme editor detected - enabling real-time preview');
+    
+    // Listen for Shopify theme setting changes
+    document.addEventListener('shopify:section:load', () => this.handleSettingsChange());
+    document.addEventListener('shopify:section:reorder', () => this.handleSettingsChange());
+    document.addEventListener('shopify:section:select', () => this.handleSettingsChange());
+    document.addEventListener('shopify:section:deselect', () => this.handleSettingsChange());
+    
+    // Listen for input changes in theme settings
+    this.setupInputListeners();
+    
+    // Watch for DOM changes that might indicate settings updates
+    this.setupMutationObserver();
+    
+    // Poll for settings changes as fallback
+    setInterval(() => this.checkForSettingsChanges(), 500);
+    
+    // Enable preview mode by default in theme editor
+    if (window.geolocationPopupSettings) {
+      window.geolocationPopupSettings.previewMode = true;
+      window.geolocationPopupSettings.previewCountry = window.geolocationPopupSettings.previewCountry || 'CA';
+    }
+    
+    // Show initial preview
+    setTimeout(() => this.updatePreview(), 1000);
+  }
+  
+  setupInputListeners() {
+    // Listen for changes to any input fields that might affect the popup
+    document.addEventListener('input', (event) => {
+      const input = event.target;
+      if (input.name && input.name.includes('geolocation_popup')) {
+        console.log('🎛️ Input change detected:', input.name, input.value);
+        // Immediate update for color pickers and range sliders
+        if (input.type === 'color' || input.type === 'range') {
+          this.handleSettingsChange();
+        }
+      }
+    });
+    
+    document.addEventListener('change', (event) => {
+      const input = event.target;
+      if (input.name && input.name.includes('geolocation_popup')) {
+        console.log('🔄 Input value changed:', input.name, input.value);
+        this.handleSettingsChange();
+      }
+    });
+    
+    // Special handling for common theme editor events
+    document.addEventListener('keyup', (event) => {
+      const input = event.target;
+      if (input.name && input.name.includes('geolocation_popup') && input.type === 'text') {
+        // Debounced update for text inputs
+        clearTimeout(this.textInputTimeout);
+        this.textInputTimeout = setTimeout(() => {
+          this.handleSettingsChange();
+        }, 500);
+      }
+    });
+  }
+  
+  setupMutationObserver() {
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          // Check if any script tags with settings were modified
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+              if (node.tagName === 'SCRIPT' && node.textContent.includes('geolocationPopupSettings')) {
+                console.log('🔄 Settings script updated');
+                this.handleSettingsChange();
+              }
+            });
+          }
+        });
+      });
+      
+      observer.observe(document.head, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }
+  
+  handleSettingsChange() {
+    console.log('📝 Settings changed - updating preview');
+    setTimeout(() => this.updatePreview(), 100);
+  }
+  
+  checkForSettingsChanges() {
+    if (!window.geolocationPopupSettings) return;
+    
+    const currentSettings = JSON.stringify(window.geolocationPopupSettings);
+    if (this.lastSettings && currentSettings !== this.lastSettings) {
+      console.log('🔄 Settings change detected');
+      this.updatePreview();
+    }
+    this.lastSettings = currentSettings;
+  }
+  
+  updatePreview() {
+    // Hide current popup
+    this.hideCurrentPopup();
+    
+    // Reload settings from DOM inputs
+    this.refreshSettingsFromDOM();
+    
+    // Wait a moment then show updated popup
+    setTimeout(() => {
+      if (window.geolocationPopupSettings && window.geolocationPopupSettings.enabled) {
+        window.geolocationPopupSettings.previewMode = true;
+        this.currentPopupService = new GeolocationPopupService(window.geolocationPopupSettings);
+        this.currentPopupService.initialize();
+      }
+    }, 200);
+  }
+  
+  refreshSettingsFromDOM() {
+    if (!window.geolocationPopupSettings) return;
+    
+    // Map of setting names to their input selectors
+    const settingMappings = {
+      'enabled': 'input[name*="geolocation_popup_enabled"]',
+      'style': 'select[name*="geolocation_popup_style"]',
+      'position': 'select[name*="geolocation_popup_position"]',
+      'delay': 'input[name*="geolocation_popup_delay"]',
+      'autoDismiss': 'input[name*="geolocation_popup_auto_dismiss"]',
+      'animation': 'select[name*="geolocation_popup_animation"]',
+      'title': 'input[name*="geolocation_popup_title"]',
+      'message': 'textarea[name*="geolocation_popup_message"]',
+      'acceptButton': 'input[name*="geolocation_popup_accept_button"]',
+      'declineButton': 'input[name*="geolocation_popup_decline_button"]',
+      'bgColor': 'input[name*="geolocation_popup_bg_color"]',
+      'textColor': 'input[name*="geolocation_popup_text_color"]',
+      'accentColor': 'input[name*="geolocation_popup_accent_color"]',
+      'borderColor': 'input[name*="geolocation_popup_border_color"]',
+      'borderRadius': 'input[name*="geolocation_popup_border_radius"]',
+      'maxWidth': 'input[name*="geolocation_popup_max_width"]',
+      'padding': 'input[name*="geolocation_popup_padding"]',
+      'shadow': 'select[name*="geolocation_popup_shadow"]',
+      'flagSize': 'input[name*="geolocation_popup_flag_size"]',
+      'titleSize': 'input[name*="geolocation_popup_title_size"]',
+      'messageSize': 'input[name*="geolocation_popup_message_size"]',
+      'buttonSize': 'input[name*="geolocation_popup_button_size"]',
+      'previewMode': 'input[name*="geolocation_popup_preview_mode"]',
+      'previewCountry': 'select[name*="geolocation_popup_preview_country"]'
+    };
+    
+    // Update settings from current DOM values
+    Object.keys(settingMappings).forEach(key => {
+      const input = document.querySelector(settingMappings[key]);
+      if (input) {
+        let value = input.value;
+        
+        // Handle different input types
+        if (input.type === 'checkbox') {
+          value = input.checked;
+        } else if (input.type === 'number' || input.type === 'range') {
+          value = parseInt(value, 10) || 0;
+        }
+        
+        window.geolocationPopupSettings[key] = value;
+        console.log(`Updated ${key}: ${value}`);
+      }
+    });
+  }
+  
+  hideCurrentPopup() {
+    // Remove existing popups
+    const existingPopups = document.querySelectorAll('.geolocation-popup');
+    existingPopups.forEach(popup => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    });
+    
+    // Clear current service
+    if (this.currentPopupService) {
+      this.currentPopupService.hide();
+      this.currentPopupService = null;
+    }
+  }
+}
+
 // Performance optimizations and initialization
 if (typeof window !== 'undefined') {
   window.GeolocationPopupService = GeolocationPopupService;
+  window.GeolocationPopupCustomizer = GeolocationPopupCustomizer;
   
   // Throttle function for performance
   function throttle(func, wait) {
@@ -1060,6 +1262,17 @@ if (typeof window !== 'undefined') {
     }
   }
 
+  // Initialize customizer for theme editor
+  const customizer = new GeolocationPopupCustomizer();
+  window.geolocationCustomizer = customizer;
+  
+  // Global function to manually refresh preview
+  window.refreshGeolocationPreview = function() {
+    if (customizer) {
+      customizer.updatePreview();
+    }
+  };
+  
   // Optimize initialization based on loading state
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', lazyInitialize);
