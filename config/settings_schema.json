@@ -3941,5 +3941,214 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Email Popup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Email Popup Configuration"
+      },
+      {
+        "type": "paragraph",
+        "content": "Configure the email popup system that captures visitor emails. Add the 'Email Popup' section to any template to enable it."
+      },
+      {
+        "type": "checkbox",
+        "id": "email_popup_global_enabled",
+        "label": "Enable email popup globally",
+        "default": true,
+        "info": "Master switch for email popup functionality across the theme"
+      },
+      {
+        "type": "header",
+        "content": "Default Content Settings"
+      },
+      {
+        "type": "text",
+        "id": "email_popup_default_headline",
+        "label": "Default headline",
+        "default": "Join Our Newsletter",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "richtext",
+        "id": "email_popup_default_description",
+        "label": "Default description",
+        "default": "<p>Get exclusive offers and updates delivered to your inbox.</p>",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "text",
+        "id": "email_popup_default_button_text",
+        "label": "Default button text",
+        "default": "Subscribe Now",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "text",
+        "id": "email_popup_default_placeholder",
+        "label": "Default email placeholder",
+        "default": "Enter your email address",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "header",
+        "content": "Default Design Settings"
+      },
+      {
+        "type": "color",
+        "id": "email_popup_default_primary_color",
+        "label": "Default primary color",
+        "default": "#000000",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "color",
+        "id": "email_popup_default_accent_color",
+        "label": "Default accent color",
+        "default": "#007bff",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "color",
+        "id": "email_popup_default_text_color",
+        "label": "Default text color",
+        "default": "#333333",
+        "info": "Used when section settings are empty"
+      },
+      {
+        "type": "header",
+        "content": "Default Trigger Settings"
+      },
+      {
+        "type": "range",
+        "id": "email_popup_default_time_delay",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "s",
+        "label": "Default time delay",
+        "default": 5,
+        "info": "Default delay before showing popup (seconds)"
+      },
+      {
+        "type": "range",
+        "id": "email_popup_default_scroll_percentage",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Default scroll percentage",
+        "default": 50,
+        "info": "Default scroll percentage to trigger popup"
+      },
+      {
+        "type": "checkbox",
+        "id": "email_popup_default_exit_intent",
+        "label": "Enable exit intent by default",
+        "default": true,
+        "info": "Default exit intent setting"
+      },
+      {
+        "type": "range",
+        "id": "email_popup_default_cookie_duration",
+        "min": 1,
+        "max": 90,
+        "step": 1,
+        "unit": "d",
+        "label": "Default cookie duration",
+        "default": 30,
+        "info": "Default duration to remember visitor choice"
+      },
+      {
+        "type": "header",
+        "content": "Default Discount Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "email_popup_default_discount_enabled",
+        "label": "Enable discount offers by default",
+        "default": false,
+        "info": "Default setting for discount offers"
+      },
+      {
+        "type": "text",
+        "id": "email_popup_default_discount_code",
+        "label": "Default discount code",
+        "default": "WELCOME10",
+        "info": "Default discount code to offer"
+      },
+      {
+        "type": "select",
+        "id": "email_popup_default_discount_type",
+        "label": "Default discount type",
+        "options": [
+          {
+            "value": "percentage",
+            "label": "Percentage"
+          },
+          {
+            "value": "fixed",
+            "label": "Fixed amount"
+          }
+        ],
+        "default": "percentage",
+        "info": "Default type of discount"
+      },
+      {
+        "type": "number",
+        "id": "email_popup_default_discount_value",
+        "label": "Default discount value",
+        "default": 10,
+        "info": "Default discount percentage or amount"
+      },
+      {
+        "type": "header",
+        "content": "Integration Settings"
+      },
+      {
+        "type": "text",
+        "id": "email_popup_global_webhook_url",
+        "label": "Global webhook URL",
+        "info": "Optional: Global webhook for email submissions (can be overridden per section)"
+      },
+      {
+        "type": "range",
+        "id": "email_popup_global_webhook_timeout",
+        "min": 5,
+        "max": 30,
+        "step": 1,
+        "unit": "s",
+        "label": "Global webhook timeout",
+        "default": 10,
+        "info": "Global timeout for webhook requests"
+      },
+      {
+        "type": "range",
+        "id": "email_popup_global_retry_attempts",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Global retry attempts",
+        "default": 3,
+        "info": "Global number of retry attempts for failed webhooks"
+      },
+      {
+        "type": "textarea",
+        "id": "email_popup_custom_css",
+        "label": "Custom CSS",
+        "placeholder": ".email-popup-container { border-radius: 10px; }",
+        "info": "Add custom CSS for email popup styling"
+      },
+      {
+        "type": "header",
+        "content": "Usage Instructions"
+      },
+      {
+        "type": "paragraph",
+        "content": "To use the email popup:<br>1. Go to any template (e.g., index.json)<br>2. Add 'Email Popup' section<br>3. Configure section-specific settings<br>4. The popup will appear based on trigger settings"
+      }
+    ]
   }
 ]

@@ -6,13 +6,34 @@
 {% liquid
   assign popup_enabled = section.settings.enabled
   assign preview_mode = section.settings.preview_mode
+  assign global_enabled = settings.email_popup_global_enabled
   assign show_popup = false
   
   if request.design_mode and preview_mode
     assign show_popup = true
-  elsif popup_enabled and request.design_mode == false
+  elsif popup_enabled and global_enabled and request.design_mode == false
     assign show_popup = true
   endif
+  
+  comment 'Theme settings fallbacks'
+  assign fallback_headline = settings.email_popup_default_headline
+  assign fallback_description = settings.email_popup_default_description
+  assign fallback_button_text = settings.email_popup_default_button_text
+  assign fallback_placeholder = settings.email_popup_default_placeholder
+  assign fallback_primary_color = settings.email_popup_default_primary_color
+  assign fallback_accent_color = settings.email_popup_default_accent_color
+  assign fallback_text_color = settings.email_popup_default_text_color
+  assign fallback_time_delay = settings.email_popup_default_time_delay
+  assign fallback_scroll_percentage = settings.email_popup_default_scroll_percentage
+  assign fallback_exit_intent = settings.email_popup_default_exit_intent
+  assign fallback_cookie_duration = settings.email_popup_default_cookie_duration
+  assign fallback_discount_enabled = settings.email_popup_default_discount_enabled
+  assign fallback_discount_code = settings.email_popup_default_discount_code
+  assign fallback_discount_type = settings.email_popup_default_discount_type
+  assign fallback_discount_value = settings.email_popup_default_discount_value
+  assign global_webhook_url = settings.email_popup_global_webhook_url
+  assign global_webhook_timeout = settings.email_popup_global_webhook_timeout
+  assign global_retry_attempts = settings.email_popup_global_retry_attempts
 %}
 
 {% if show_popup %}
@@ -24,27 +45,27 @@
       "enabled": {{ popup_enabled | json }},
       "previewMode": {{ preview_mode | json }},
       "content": {
-        "headline": {{ section.settings.headline | default: "Join Our Newsletter" | json }},
-        "description": {{ section.settings.description | default: "Get exclusive offers and updates delivered to your inbox." | json }},
-        "buttonText": {{ section.settings.button_text | default: "Subscribe Now" | json }},
-        "placeholderText": {{ section.settings.placeholder_text | default: "Enter your email address" | json }},
+        "headline": {{ section.settings.headline | default: fallback_headline | default: "Join Our Newsletter" | json }},
+        "description": {{ section.settings.description | default: fallback_description | default: "Get exclusive offers and updates delivered to your inbox." | json }},
+        "buttonText": {{ section.settings.button_text | default: fallback_button_text | default: "Subscribe Now" | json }},
+        "placeholderText": {{ section.settings.placeholder_text | default: fallback_placeholder | default: "Enter your email address" | json }},
         "thankYouMessage": {{ section.settings.thank_you_message | default: "Thank you for subscribing!" | json }},
         "privacyText": {{ section.settings.privacy_text | json }}
       },
       "discount": {
-        "enabled": {{ section.settings.discount_enabled | json }},
-        "code": {{ section.settings.discount_code | json }},
-        "type": {{ section.settings.discount_type | json }},
-        "value": {{ section.settings.discount_value | json }},
+        "enabled": {{ section.settings.discount_enabled | default: fallback_discount_enabled | json }},
+        "code": {{ section.settings.discount_code | default: fallback_discount_code | json }},
+        "type": {{ section.settings.discount_type | default: fallback_discount_type | json }},
+        "value": {{ section.settings.discount_value | default: fallback_discount_value | json }},
         "description": {{ section.settings.discount_description | json }}
       },
       "styling": {
         "colors": {
-          "primary": {{ section.settings.color_primary | json }},
-          "secondary": {{ section.settings.color_secondary | json }},
-          "accent": {{ section.settings.color_accent | json }},
-          "text": {{ section.settings.color_text | json }},
-          "overlay": {{ section.settings.color_overlay | json }}
+          "primary": {{ section.settings.color_primary | default: fallback_primary_color | default: "#000000" | json }},
+          "secondary": {{ section.settings.color_secondary | default: "#ffffff" | json }},
+          "accent": {{ section.settings.color_accent | default: fallback_accent_color | default: "#007bff" | json }},
+          "text": {{ section.settings.color_text | default: fallback_text_color | default: "#333333" | json }},
+          "overlay": {{ section.settings.color_overlay | default: "#000000" | json }}
         },
         "typography": {
           "fontFamily": {{ section.settings.font_family | json }},
@@ -68,13 +89,13 @@
         }
       },
       "triggers": {
-        "timeDelay": {{ section.settings.time_delay | json }},
-        "scrollPercentage": {{ section.settings.scroll_percentage | json }},
-        "exitIntent": {{ section.settings.exit_intent | json }},
-        "pageViews": {{ section.settings.page_views | json }},
-        "sessionDuration": {{ section.settings.session_duration | json }},
-        "showOnce": {{ section.settings.show_once | json }},
-        "cookieDuration": {{ section.settings.cookie_duration | json }}
+        "timeDelay": {{ section.settings.time_delay | default: fallback_time_delay | default: 5 | json }},
+        "scrollPercentage": {{ section.settings.scroll_percentage | default: fallback_scroll_percentage | default: 50 | json }},
+        "exitIntent": {{ section.settings.exit_intent | default: fallback_exit_intent | default: true | json }},
+        "pageViews": {{ section.settings.page_views | default: 2 | json }},
+        "sessionDuration": {{ section.settings.session_duration | default: 30 | json }},
+        "showOnce": {{ section.settings.show_once | default: true | json }},
+        "cookieDuration": {{ section.settings.cookie_duration | default: fallback_cookie_duration | default: 30 | json }}
       },
       "targeting": {
         "newVisitors": {{ section.settings.target_new_visitors | json }},
@@ -84,11 +105,11 @@
         "specificPages": {{ section.settings.specific_pages | json }}
       },
       "integrations": {
-        "enabled": {{ section.settings.enable_integrations | json }},
-        "webhookUrl": {{ section.settings.webhook_url | json }},
-        "retryAttempts": {{ section.settings.webhook_retry_attempts | json }},
-        "retryDelay": {{ section.settings.webhook_retry_delay | json }},
-        "timeout": {{ section.settings.webhook_timeout | json }}
+        "enabled": {{ section.settings.enable_integrations | default: false | json }},
+        "webhookUrl": {{ section.settings.webhook_url | default: global_webhook_url | json }},
+        "retryAttempts": {{ section.settings.webhook_retry_attempts | default: global_retry_attempts | default: 3 | json }},
+        "retryDelay": {{ section.settings.webhook_retry_delay | default: 2 | json }},
+        "timeout": {{ section.settings.webhook_timeout | default: global_webhook_timeout | default: 10 | json }}
       }
     }'
     {% if request.design_mode and preview_mode %}
@@ -261,6 +282,13 @@
 
   {% comment %} Load Main JavaScript {% endcomment %}
   <script src="{{ 'email-popup.js' | asset_url }}" defer></script>
+
+  {% comment %} Inject Custom CSS from Theme Settings {% endcomment %}
+  {% if settings.email_popup_custom_css != blank %}
+    <style data-email-popup-custom>
+      {{ settings.email_popup_custom_css }}
+    </style>
+  {% endif %}
 
 {% endif %}
 
