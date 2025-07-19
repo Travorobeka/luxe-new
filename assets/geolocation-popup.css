@@ -4,30 +4,32 @@
   --popup-text-color: #333333;
   --popup-accent-color: #007bff;
   --popup-border-color: #e0e0e0;
-  --popup-border-radius: 8px;
-  --popup-max-width: 400px;
-  --popup-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --popup-border-radius: 12px;
+  --popup-max-width: 380px;
+  --popup-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
   --popup-z-index: 9999;
   
   position: fixed;
   z-index: var(--popup-z-index);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.5;
+  line-height: 1.4;
+  pointer-events: none;
 }
 
 .geolocation-popup--visible {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
-/* Modal Style */
+/* Modal Style - Center positioned popup */
 .geolocation-popup--modal {
-  top: 50%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+  transform: translate(-50%, -50%) scale(0.8);
   max-width: var(--popup-max-width);
   width: calc(100% - 2rem);
 }
@@ -103,9 +105,11 @@
   border: 1px solid var(--popup-border-color);
   border-radius: var(--popup-border-radius);
   box-shadow: var(--popup-shadow);
-  padding: 1.5rem;
+  padding: 2rem 1.5rem 1.5rem;
   position: relative;
   color: var(--popup-text-color);
+  text-align: center;
+  overflow: hidden;
 }
 
 .geolocation-popup--banner .geolocation-popup__content {
@@ -122,24 +126,28 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
+  background: var(--popup-bg-color);
+  border: 1px solid var(--popup-border-color);
+  border-radius: 50%;
+  font-size: 1.2rem;
   line-height: 1;
   color: var(--popup-text-color);
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-  padding: 0.25rem;
-  width: 2rem;
-  height: 2rem;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  padding: 0;
+  width: 1.75rem;
+  height: 1.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .geolocation-popup__close:hover {
   opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .geolocation-popup__close:focus {
@@ -147,63 +155,54 @@
   outline-offset: 2px;
 }
 
-/* Title */
-.geolocation-popup__title {
-  margin: 0 2rem 0.75rem 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--popup-text-color);
+/* Flag Icon */
+.geolocation-popup__flag {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  line-height: 1;
 }
 
-.geolocation-popup--banner .geolocation-popup__title {
-  font-size: 1rem;
-  margin: 0 2rem 0.5rem 0;
+/* Title */
+.geolocation-popup__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--popup-text-color);
+  line-height: 1.3;
 }
 
 /* Message */
 .geolocation-popup__message {
-  margin: 0 0 1.25rem 0;
-  font-size: 0.875rem;
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
   color: var(--popup-text-color);
-  opacity: 0.8;
-}
-
-.geolocation-popup--banner .geolocation-popup__message {
-  font-size: 0.8125rem;
-  margin-bottom: 1rem;
+  opacity: 0.85;
+  line-height: 1.4;
 }
 
 /* Buttons Container */
 .geolocation-popup__buttons {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.geolocation-popup--banner .geolocation-popup__buttons {
   gap: 0.5rem;
+  justify-content: center;
 }
 
 /* Buttons */
 .geolocation-popup__button {
-  flex: 1;
-  min-width: 0;
-  padding: 0.625rem 1rem;
-  border: 1px solid var(--popup-border-color);
-  border-radius: calc(var(--popup-border-radius) * 0.5);
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.geolocation-popup--banner .geolocation-popup__button {
-  padding: 0.5rem 0.875rem;
-  font-size: 0.8125rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
 }
 
 .geolocation-popup__button--accept {
@@ -213,17 +212,21 @@
 }
 
 .geolocation-popup__button--accept:hover {
-  background: color-mix(in srgb, var(--popup-accent-color) 85%, black);
-  border-color: color-mix(in srgb, var(--popup-accent-color) 85%, black);
+  background: transparent;
+  color: var(--popup-accent-color);
+  border-color: var(--popup-accent-color);
 }
 
 .geolocation-popup__button--decline {
   background: transparent;
   color: var(--popup-text-color);
+  border-color: var(--popup-border-color);
 }
 
 .geolocation-popup__button--decline:hover {
-  background: color-mix(in srgb, var(--popup-text-color) 5%, transparent);
+  background: var(--popup-text-color);
+  color: var(--popup-bg-color);
+  border-color: var(--popup-text-color);
 }
 
 .geolocation-popup__button:focus {
@@ -231,24 +234,7 @@
   outline-offset: 2px;
 }
 
-/* Overlay for Modal */
-.geolocation-popup__overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: calc(var(--popup-z-index) - 1);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.geolocation-popup__overlay--visible {
-  opacity: 1;
-  visibility: visible;
-}
+/* No overlay - popup appears without background */
 
 /* Animation Variants */
 .geolocation-popup--fade {
@@ -270,31 +256,37 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .geolocation-popup--modal {
-    max-width: calc(100% - 2rem);
-    width: calc(100% - 2rem);
-  }
-  
-  .geolocation-popup--corner {
-    max-width: calc(100% - 1rem);
-    width: calc(100% - 1rem);
-    margin: 0.5rem;
+    max-width: calc(100% - 1.5rem);
+    width: calc(100% - 1.5rem);
+    top: 35%;
   }
   
   .geolocation-popup__content {
-    padding: 1.25rem;
+    padding: 1.75rem 1.25rem 1.25rem;
   }
   
-  .geolocation-popup--banner .geolocation-popup__content {
-    padding: 1rem;
+  .geolocation-popup__flag {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .geolocation-popup__title {
+    font-size: 1.125rem;
+  }
+  
+  .geolocation-popup__message {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
   }
   
   .geolocation-popup__buttons {
     flex-direction: column;
+    gap: 0.75rem;
   }
   
   .geolocation-popup__button {
-    flex: none;
     width: 100%;
+    min-width: auto;
   }
 }
 

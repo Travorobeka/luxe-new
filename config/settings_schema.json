@@ -3724,26 +3724,26 @@
         "type": "text",
         "id": "geolocation_popup_title",
         "label": "Popup title",
-        "default": "Shop in your local currency"
+        "default": "Shop in CURRENCY_PLACEHOLDER"
       },
       {
         "type": "textarea",
         "id": "geolocation_popup_message",
         "label": "Popup message",
-        "default": "We detected you are in COUNTRY_PLACEHOLDER. Would you like to shop in CURRENCY_PLACEHOLDER and see prices in your local currency?",
+        "default": "Switch to CURRENCY_PLACEHOLDER for local pricing?",
         "info": "Use {country}, {currency}, {language} or COUNTRY_PLACEHOLDER, CURRENCY_PLACEHOLDER, LANGUAGE_PLACEHOLDER as placeholders"
       },
       {
         "type": "text",
         "id": "geolocation_popup_accept_button",
         "label": "Accept button text",
-        "default": "Yes, switch to CURRENCY_PLACEHOLDER"
+        "default": "Yes, switch"
       },
       {
         "type": "text",
         "id": "geolocation_popup_decline_button",
         "label": "Decline button text",
-        "default": "No, keep current settings"
+        "default": "No thanks"
       },
       {
         "type": "header",

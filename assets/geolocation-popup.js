@@ -409,6 +409,11 @@ class PopupDisplayService {
     closeButton.setAttribute('aria-label', 'Close');
     closeButton.addEventListener('click', () => this.handleUserAction('dismiss', marketData));
 
+    // Flag icon
+    const flag = document.createElement('div');
+    flag.className = 'geolocation-popup__flag';
+    flag.textContent = this.getCountryFlag(marketData.country);
+
     // Title
     const title = document.createElement('h3');
     title.id = 'geolocation-popup-title';
@@ -440,11 +445,37 @@ class PopupDisplayService {
     buttonsContainer.appendChild(declineButton);
 
     content.appendChild(closeButton);
+    content.appendChild(flag);
     content.appendChild(title);
     content.appendChild(message);
     content.appendChild(buttonsContainer);
 
     return content;
+  }
+
+  getCountryFlag(country) {
+    // Use flag from country data if available (for preview mode)
+    if (country.flag) {
+      return country.flag;
+    }
+
+    // Map common country codes to flag emojis
+    const flagMap = {
+      'US': '🇺🇸', 'CA': '🇨🇦', 'GB': '🇬🇧', 'AU': '🇦🇺',
+      'FR': '🇫🇷', 'DE': '🇩🇪', 'IT': '🇮🇹', 'ES': '🇪🇸',
+      'JP': '🇯🇵', 'KR': '🇰🇷', 'CN': '🇨🇳', 'IN': '🇮🇳',
+      'BR': '🇧🇷', 'MX': '🇲🇽', 'AR': '🇦🇷', 'CL': '🇨🇱',
+      'NL': '🇳🇱', 'BE': '🇧🇪', 'CH': '🇨🇭', 'AT': '🇦🇹',
+      'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮',
+      'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'RO': '🇷🇴',
+      'GR': '🇬🇷', 'PT': '🇵🇹', 'IE': '🇮🇪', 'HR': '🇭🇷',
+      'SG': '🇸🇬', 'MY': '🇲🇾', 'TH': '🇹🇭', 'PH': '🇵🇭',
+      'ID': '🇮🇩', 'VN': '🇻🇳', 'TR': '🇹🇷', 'SA': '🇸🇦',
+      'AE': '🇦🇪', 'IL': '🇮🇱', 'ZA': '🇿🇦', 'EG': '🇪🇬',
+      'NZ': '🇳🇿', 'RU': '🇷🇺', 'UA': '🇺🇦', 'BY': '🇧🇾'
+    };
+
+    return flagMap[country.iso_code] || '🌍';
   }
 
   replacePlaceholders(text, marketData) {
@@ -471,18 +502,6 @@ class PopupDisplayService {
   showPopup(popup) {
     if (!popup) return;
 
-    // Create overlay for modal style
-    if (this.settings.style === 'modal') {
-      this.overlay = document.createElement('div');
-      this.overlay.className = 'geolocation-popup__overlay';
-      this.overlay.addEventListener('click', (e) => {
-        if (e.target === this.overlay) {
-          this.handleUserAction('dismiss');
-        }
-      });
-      document.body.appendChild(this.overlay);
-    }
-
     document.body.appendChild(popup);
     
     // Apply position classes
@@ -491,9 +510,6 @@ class PopupDisplayService {
     // Show with animation
     setTimeout(() => {
       popup.classList.add('geolocation-popup--visible');
-      if (this.overlay) {
-        this.overlay.classList.add('geolocation-popup__overlay--visible');
-      }
     }, 50);
 
     // Set up auto dismiss
@@ -511,20 +527,13 @@ class PopupDisplayService {
     if (!this.popup) return;
 
     this.popup.classList.remove('geolocation-popup--visible');
-    if (this.overlay) {
-      this.overlay.classList.remove('geolocation-popup__overlay--visible');
-    }
 
     // Remove from DOM after animation
     setTimeout(() => {
       if (this.popup && this.popup.parentNode) {
         this.popup.parentNode.removeChild(this.popup);
       }
-      if (this.overlay && this.overlay.parentNode) {
-        this.overlay.parentNode.removeChild(this.overlay);
-      }
       this.popup = null;
-      this.overlay = null;
     }, 300);
 
     // Clear auto dismiss timer
@@ -751,14 +760,14 @@ class GeolocationPopupService {
 
   createMockMarketData(countryCode) {
     const countryData = {
-      'CA': { name: 'Canada', currency: 'CAD', currencySymbol: 'C$' },
-      'GB': { name: 'United Kingdom', currency: 'GBP', currencySymbol: '£' },
-      'AU': { name: 'Australia', currency: 'AUD', currencySymbol: 'A$' },
-      'FR': { name: 'France', currency: 'EUR', currencySymbol: '€' },
-      'DE': { name: 'Germany', currency: 'EUR', currencySymbol: '€' },
-      'JP': { name: 'Japan', currency: 'JPY', currencySymbol: '¥' },
-      'MX': { name: 'Mexico', currency: 'MXN', currencySymbol: '$' },
-      'BR': { name: 'Brazil', currency: 'BRL', currencySymbol: 'R$' }
+      'CA': { name: 'Canada', currency: 'CAD', currencySymbol: 'C$', flag: '🇨🇦' },
+      'GB': { name: 'United Kingdom', currency: 'GBP', currencySymbol: '£', flag: '🇬🇧' },
+      'AU': { name: 'Australia', currency: 'AUD', currencySymbol: 'A$', flag: '🇦🇺' },
+      'FR': { name: 'France', currency: 'EUR', currencySymbol: '€', flag: '🇫🇷' },
+      'DE': { name: 'Germany', currency: 'EUR', currencySymbol: '€', flag: '🇩🇪' },
+      'JP': { name: 'Japan', currency: 'JPY', currencySymbol: '¥', flag: '🇯🇵' },
+      'MX': { name: 'Mexico', currency: 'MXN', currencySymbol: '$', flag: '🇲🇽' },
+      'BR': { name: 'Brazil', currency: 'BRL', currencySymbol: 'R$', flag: '🇧🇷' }
     };
 
     const country = countryData[countryCode];
@@ -767,7 +776,8 @@ class GeolocationPopupService {
     return {
       country: {
         iso_code: countryCode,
-        name: country.name
+        name: country.name,
+        flag: country.flag
       },
       currency: {
         iso_code: country.currency,

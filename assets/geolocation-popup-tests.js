@@ -493,11 +493,11 @@ window.GeolocationPopupTests = {
       }
     });
     
-    // Remove overlays
-    const overlays = document.querySelectorAll('.geolocation-popup__overlay');
-    overlays.forEach(overlay => {
-      if (overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
+    // Remove any leftover elements
+    const leftoverElements = document.querySelectorAll('[class*="geolocation-popup"]');
+    leftoverElements.forEach(element => {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
       }
     });
     

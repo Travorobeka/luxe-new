@@ -47,10 +47,10 @@
       analyticsEnabled: {{ settings.geolocation_analytics_enabled | default: true }},
       
       // Text content
-      title: {{ settings.geolocation_popup_title | default: 'Shop in your local currency' | json }},
-      message: {{ settings.geolocation_popup_message | default: 'We detected you are in COUNTRY_PLACEHOLDER. Would you like to shop in CURRENCY_PLACEHOLDER and see prices in your local currency?' | json }},
-      acceptButton: {{ settings.geolocation_popup_accept_button | default: 'Yes, switch to CURRENCY_PLACEHOLDER' | json }},
-      declineButton: {{ settings.geolocation_popup_decline_button | default: 'No, keep current settings' | json }},
+      title: {{ settings.geolocation_popup_title | default: 'Shop in CURRENCY_PLACEHOLDER' | json }},
+      message: {{ settings.geolocation_popup_message | default: 'Switch to CURRENCY_PLACEHOLDER for local pricing?' | json }},
+      acceptButton: {{ settings.geolocation_popup_accept_button | default: 'Yes, switch' | json }},
+      declineButton: {{ settings.geolocation_popup_decline_button | default: 'No thanks' | json }},
       
       // Styling
       bgColor: {{ settings.geolocation_popup_bg_color | default: '#ffffff' | json }},
