@@ -16,6 +16,7 @@
     "use_custom_font_body": true,
     "custom_body_font": "https://cdn.shopify.com/s/files/1/0930/5964/5788/files/Light.ttf?v=1753112645",
     "custom_body_weight": "400",
+    "type_base_size": 15,
     "type_base_line_height": 27,
     "type_header_font": "roboto_condensed_n7",
     "use_custom_font_heading": true,
