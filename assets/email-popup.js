@@ -119,15 +119,16 @@
     
     if (isTablet) return false;
     
-    // Check for mobile width (important for responsive behavior)
-    const isMobileWidth = window.innerWidth <= 768;
-    
-    // Check for mobile devices
+    // Check for mobile devices first
     const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
     
-    // Return true if either mobile width OR mobile device (but not tablet)
-    // This ensures we catch edge cases where user agent detection might fail
-    return isMobileWidth || isMobileDevice;
+    // If it's a mobile device, also check width to ensure it's phone-sized
+    if (isMobileDevice) {
+      return window.innerWidth <= 768;
+    }
+    
+    // For non-mobile user agents, use strict width check for very small screens
+    return window.innerWidth <= 480;
   }
 
   // Utility: focus trap
