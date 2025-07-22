@@ -28,7 +28,7 @@
         "column_distribution": "custom",
         "custom_column_widths": "2fr 1fr 1fr",
         "column_alignment": "center",
-        "column_justify": "space-evenly",
+        "column_justify": "space-around",
         "column_content_alignment": "default",
         "column_text_alignment": "default",
         "column_padding_x": 0,
