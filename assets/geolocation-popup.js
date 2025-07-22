@@ -900,20 +900,18 @@ class GeolocationPopupService {
 
   async initializePreviewMode() {
     try {
-      console.log('🎨 Geolocation Popup Preview Mode Active');
-      
-      // Create mock market data based on preview country
-      const mockMarketData = this.createMockMarketData(this.settings.previewCountry);
-      
-      if (!mockMarketData) {
-        console.warn('Preview mode: Could not create mock market data');
-        return;
+      if (window.Shopify && window.Shopify.designMode === true) {
+        console.log('🎨 Geolocation Popup Preview Mode Active');
+        // Create mock market data based on preview country
+        const mockMarketData = this.createMockMarketData(this.settings.previewCountry);
+        if (!mockMarketData) {
+          console.warn('Preview mode: Could not create mock market data');
+          return;
+        }
+        // Show popup immediately without delays or checks
+        await this.showPopup(mockMarketData, true);
+        this.isInitialized = true;
       }
-
-      // Show popup immediately without delays or checks
-      await this.showPopup(mockMarketData, true);
-      
-      this.isInitialized = true;
     } catch (error) {
       console.error('Preview mode initialization failed:', error);
     }
