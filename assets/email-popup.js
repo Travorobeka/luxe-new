@@ -114,41 +114,37 @@
     const userAgent = navigator.userAgent;
     const width = window.innerWidth;
     
-    // Debug logging (remove in production)
+    // Debug logging
     console.log('Email Popup - Mobile Detection Debug:', {
       userAgent: userAgent,
-      width: width,
-      isTabletUA: /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent),
-      isAndroidTablet: (userAgent.includes('Android') && !userAgent.includes('Mobile')),
-      isMobileUA: /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent)
+      width: width
     });
     
-    // First check if it's explicitly a tablet/iPad - these should use desktop design
-    const isTablet = /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent) || 
-                     (userAgent.includes('Android') && !userAgent.includes('Mobile'));
+    // Very simple and reliable approach:
+    // 1. If it's explicitly a tablet/iPad -> desktop design
+    // 2. If width is small (mobile phone size) AND not a tablet -> mobile design  
+    // 3. Everything else -> desktop design
     
-    if (isTablet) {
-      console.log('Email Popup - Detected as tablet, using desktop design');
+    const isKnownTablet = /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent) || 
+                         (userAgent.includes('Android') && !userAgent.includes('Mobile'));
+    
+    if (isKnownTablet) {
+      console.log('Email Popup - Known tablet detected, using desktop design');
       return false;
     }
     
-    // Simplified logic: prioritize screen width, but be more permissive for mobile
-    const isMobileWidth = width <= 768;
-    const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
+    // For mobile detection, prioritize small screen size
+    // Most phones are <= 428px width (iPhone 14 Pro Max is 428px)
+    // But allow up to 600px to catch larger phones
+    const isPhoneSize = width <= 600;
     
-    // Use mobile design if:
-    // 1. Width is mobile-sized AND it's a mobile device, OR
-    // 2. Width is very small (likely a phone regardless of UA)
-    const shouldUseMobile = (isMobileWidth && isMobileDevice) || width <= 480;
-    
-    console.log('Email Popup - Mobile decision:', {
-      isMobileWidth,
-      isMobileDevice,
-      shouldUseMobile,
-      finalDecision: shouldUseMobile ? 'bottom-sheet' : 'centered-modal'
+    console.log('Email Popup - Final decision:', {
+      isKnownTablet,
+      isPhoneSize,
+      decision: isPhoneSize ? 'bottom-sheet' : 'centered-modal'
     });
     
-    return shouldUseMobile;
+    return isPhoneSize;
   }
 
   // Utility: focus trap
