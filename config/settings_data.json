@@ -123,7 +123,7 @@
     "geolocation_popup_preview_country": "FR",
     "email_popup_enable": true,
     "email_popup_preview_mode": true,
-    "email_popup_trigger_type": "delay",
+    "email_popup_trigger_type": "immediate",
     "email_popup_trigger_scroll": 10,
     "email_popup_trigger_new_visitors_only": true,
     "email_popup_bg_color": "#f8f2ea",
