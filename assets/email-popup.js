@@ -112,23 +112,43 @@
   // Utility: check if mobile (phones only, not tablets/iPads)
   function isMobile() {
     const userAgent = navigator.userAgent;
+    const width = window.innerWidth;
+    
+    // Debug logging (remove in production)
+    console.log('Email Popup - Mobile Detection Debug:', {
+      userAgent: userAgent,
+      width: width,
+      isTabletUA: /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent),
+      isAndroidTablet: (userAgent.includes('Android') && !userAgent.includes('Mobile')),
+      isMobileUA: /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent)
+    });
     
     // First check if it's explicitly a tablet/iPad - these should use desktop design
     const isTablet = /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent) || 
                      (userAgent.includes('Android') && !userAgent.includes('Mobile'));
     
-    if (isTablet) return false;
-    
-    // Check for mobile devices first
-    const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
-    
-    // If it's a mobile device, also check width to ensure it's phone-sized
-    if (isMobileDevice) {
-      return window.innerWidth <= 768;
+    if (isTablet) {
+      console.log('Email Popup - Detected as tablet, using desktop design');
+      return false;
     }
     
-    // For non-mobile user agents, use strict width check for very small screens
-    return window.innerWidth <= 480;
+    // Simplified logic: prioritize screen width, but be more permissive for mobile
+    const isMobileWidth = width <= 768;
+    const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
+    
+    // Use mobile design if:
+    // 1. Width is mobile-sized AND it's a mobile device, OR
+    // 2. Width is very small (likely a phone regardless of UA)
+    const shouldUseMobile = (isMobileWidth && isMobileDevice) || width <= 480;
+    
+    console.log('Email Popup - Mobile decision:', {
+      isMobileWidth,
+      isMobileDevice,
+      shouldUseMobile,
+      finalDecision: shouldUseMobile ? 'bottom-sheet' : 'centered-modal'
+    });
+    
+    return shouldUseMobile;
   }
 
   // Utility: focus trap
