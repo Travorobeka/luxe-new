@@ -1119,14 +1119,17 @@ class GeolocationPopupCustomizer {
     // Poll for settings changes as fallback
     setInterval(() => this.checkForSettingsChanges(), 500);
     
-    // Enable preview mode by default in theme editor
+    // Set default preview country if not specified
     if (window.geolocationPopupSettings) {
-      window.geolocationPopupSettings.previewMode = true;
       window.geolocationPopupSettings.previewCountry = window.geolocationPopupSettings.previewCountry || 'CA';
     }
     
-    // Show initial preview
-    setTimeout(() => this.updatePreview(), 1000);
+    // Show initial preview only if preview mode is enabled
+    setTimeout(() => {
+      if (window.geolocationPopupSettings && window.geolocationPopupSettings.previewMode) {
+        this.updatePreview();
+      }
+    }, 1000);
   }
   
   setupInputListeners() {
@@ -1211,8 +1214,7 @@ class GeolocationPopupCustomizer {
     
     // Wait a moment then show updated popup
     setTimeout(() => {
-      if (window.geolocationPopupSettings && window.geolocationPopupSettings.enabled) {
-        window.geolocationPopupSettings.previewMode = true;
+      if (window.geolocationPopupSettings && window.geolocationPopupSettings.enabled && window.geolocationPopupSettings.previewMode) {
         
         // Create a new service with fresh settings
         this.currentPopupService = new GeolocationPopupService(window.geolocationPopupSettings);

@@ -1,0 +1,65 @@
+{% comment %}
+  Email Popup Snippet - Global theme feature
+  Shows on all pages based on theme settings. Highly configurable.
+{% endcomment %}
+
+{%- if settings.email_popup_enable -%}
+<link rel="stylesheet" href="{{ 'newsletter.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'component-newsletter.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'age-verifier.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'geolocation-popup.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'foxify-modal-component.css' | asset_url }}">
+
+<div id="email-popup-root" style="display:none;" data-settings='{
+  "enable": {{ settings.email_popup_enable | json }},
+  "preview_mode": {{ settings.email_popup_preview_mode | json }},
+  "trigger_type": {{ settings.email_popup_trigger_type | json }},
+  "trigger_delay": {{ settings.email_popup_trigger_delay | json }},
+  "trigger_scroll": {{ settings.email_popup_trigger_scroll | json }},
+  "trigger_new_visitors_only": {{ settings.email_popup_trigger_new_visitors_only | json }},
+  "trigger_returning_visitors_only": {{ settings.email_popup_trigger_returning_visitors_only | json }},
+  "trigger_mobile_only": {{ settings.email_popup_trigger_mobile_only | json }},
+  "trigger_desktop_only": {{ settings.email_popup_trigger_desktop_only | json }},
+  "exclude_urls": {{ settings.email_popup_exclude_urls | json }},
+  "resurface_delay": {{ settings.email_popup_resurface_delay | json }},
+  "bg_color": {{ settings.email_popup_bg_color | json }},
+  "text_color": {{ settings.email_popup_text_color | json }},
+  "accent_color": {{ settings.email_popup_accent_color | json }},
+  "overlay_color": {{ settings.email_popup_overlay_color | json }},
+  "overlay_opacity": {{ settings.email_popup_overlay_opacity | json }},
+  "font_family": {{ settings.email_popup_font_family | json }},
+  "border_radius": {{ settings.email_popup_border_radius | json }},
+  "shadow_strength": {{ settings.email_popup_shadow_strength | json }},
+  "popup_image": {{ settings.email_popup_image | json }},
+  "heading": {{ settings.email_popup_heading | json }},
+  "description": {{ settings.email_popup_description | json }},
+  "email_placeholder": {{ settings.email_popup_email_placeholder | json }},
+  "submit_button": {{ settings.email_popup_submit_button | json }},
+  "show_agreement": {{ settings.email_popup_show_agreement | json }},
+  "agreement_text": {{ settings.email_popup_agreement_text | json }},
+  "thank_you_message": {{ settings.email_popup_thank_you_message | json }},
+  "enable_discount": {{ settings.email_popup_enable_discount | json }},
+  "discount_code": {{ settings.email_popup_discount_code | json }},
+  "discount_instructions": {{ settings.email_popup_discount_instructions | json }},
+  "show_copy_button": {{ settings.email_popup_show_copy_button | json }},
+  "integrate_shopify_customers": {{ settings.email_popup_integrate_shopify_customers | json }},
+  "enable_webhook": {{ settings.email_popup_enable_webhook | json }},
+  "webhook_url": {{ settings.email_popup_webhook_url | json }},
+  "enable_mailchimp": {{ settings.email_popup_enable_mailchimp | json }},
+  "mailchimp_api_key": {{ settings.email_popup_mailchimp_api_key | json }},
+  "mailchimp_list_id": {{ settings.email_popup_mailchimp_list_id | json }},
+  "enable_klaviyo": {{ settings.email_popup_enable_klaviyo | json }},
+  "klaviyo_api_key": {{ settings.email_popup_klaviyo_api_key | json }},
+  "klaviyo_list_id": {{ settings.email_popup_klaviyo_list_id | json }},
+  "fallback_storage": {{ settings.email_popup_fallback_storage | json }},
+  "enable_analytics": {{ settings.email_popup_enable_analytics | json }},
+  "gdpr_compliance": {{ settings.email_popup_gdpr_compliance | json }},
+  "enable_keyboard_nav": {{ settings.email_popup_enable_keyboard_nav | json }},
+  "enable_screen_reader": {{ settings.email_popup_enable_screen_reader | json }},
+  "custom_class": {{ settings.email_popup_custom_class | json }}
+}'>
+  <!-- Modal markup will be injected by JS for mobile-first, accessibility, and performance -->
+</div>
+
+<script src="{{ 'email-popup.js' | asset_url }}" defer></script>
+{%- endif -%}

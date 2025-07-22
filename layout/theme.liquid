@@ -141,6 +141,9 @@
     {%- comment -%} Geolocation Popup for automatic currency/language detection {%- endcomment -%}
     {% render 'geolocation-popup' %}
     
+    {%- comment -%} Email Popup for newsletter signups {%- endcomment -%}
+    {% render 'email-popup' %}
+    
     <script src="{{ 'typography-advanced.js' | asset_url }}" defer></script>
     <script src="{{ 'buttons-advanced.js' | asset_url }}" defer></script>
   {%- render 'foxify-footer' -%}</body>

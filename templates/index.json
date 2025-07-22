@@ -1267,57 +1267,6 @@
         "custom_class": "m-icon-box--small",
         "animations": "inherit"
       }
-    },
-    "email_popup_3iji6V": {
-      "type": "email-popup",
-      "name": "Email Popup",
-      "settings": {
-        "enable": true,
-        "preview_mode": true,
-        "trigger_type": "delay",
-        "trigger_delay": 5,
-        "trigger_scroll": 50,
-        "trigger_new_visitors_only": false,
-        "trigger_returning_visitors_only": false,
-        "trigger_mobile_only": false,
-        "trigger_desktop_only": false,
-        "exclude_urls": "/policies/terms-of-service\n/policies/privacy-policy\n/policies/refund-policy",
-        "resurface_delay": 24,
-        "bg_color": "#ffffff",
-        "text_color": "#222222",
-        "accent_color": "#007bff",
-        "overlay_color": "#000000",
-        "overlay_opacity": 40,
-        "font_family": "inherit",
-        "border_radius": 12,
-        "shadow_strength": 2,
-        "heading": "Subscribe for exclusive offers!",
-        "description": "<p>Sign up to get a discount code and the latest news.</p>",
-        "email_placeholder": "Enter your email",
-        "submit_button": "Subscribe",
-        "show_agreement": false,
-        "agreement_text": "<p>I agree to the <a href=\"/policies/terms-of-service\">Terms of Service</a></p>",
-        "thank_you_message": "<p>Thank you for subscribing!</p>",
-        "enable_discount": false,
-        "discount_code": "WELCOME10",
-        "discount_instructions": "Copy and use this code at checkout.",
-        "show_copy_button": true,
-        "integrate_shopify_customers": true,
-        "enable_webhook": false,
-        "webhook_url": "-",
-        "enable_mailchimp": false,
-        "mailchimp_api_key": "-",
-        "mailchimp_list_id": "-",
-        "enable_klaviyo": false,
-        "klaviyo_api_key": "-",
-        "klaviyo_list_id": "-",
-        "fallback_storage": true,
-        "enable_analytics": true,
-        "gdpr_compliance": true,
-        "enable_keyboard_nav": true,
-        "enable_screen_reader": true,
-        "custom_class": "-"
-      }
     }
   },
   "order": [
@@ -1337,7 +1286,6 @@
     "custom_content_KiFzqG",
     "testimonials_pnyUnX",
     "gallery_LXcceh",
-    "16225125199f82d8fe",
-    "email_popup_3iji6V"
+    "16225125199f82d8fe"
   ]
 }

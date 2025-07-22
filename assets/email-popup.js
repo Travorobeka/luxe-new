@@ -139,17 +139,30 @@
   // Helper to show preview in theme editor
   function maybeShowPreview() {
     settings = getSettings(); // re-fetch in case settings changed
-    if (popupShown) return;
     if (settings.enable && settings.preview_mode && window.Shopify && window.Shopify.designMode === true) {
+      // Reset popup state to allow re-showing
+      popupShown = false;
       renderPopup();
       popupShown = true;
+    }
+  }
+
+  // Helper to handle section events
+  function handleSectionEvent(event) {
+    // Check if this event is for our email popup section
+    if (event && event.target && event.target.querySelector('#email-popup-root')) {
+      maybeShowPreview();
+    } else if (!event || !event.target) {
+      // If no specific target, try to show preview anyway
+      maybeShowPreview();
     }
   }
 
   // Preview mode: only show in theme editor (admin)
   if (settings.enable && settings.preview_mode && window.Shopify && window.Shopify.designMode === true) {
     document.addEventListener('DOMContentLoaded', maybeShowPreview);
-    document.addEventListener('shopify:section:load', maybeShowPreview);
+    document.addEventListener('shopify:section:load', handleSectionEvent);
+    document.addEventListener('shopify:section:select', handleSectionEvent);
     // Also try immediately in case designMode is already set
     maybeShowPreview();
     return;
