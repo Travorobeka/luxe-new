@@ -3941,5 +3941,67 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Popups",
+    "settings": [
+      {"type": "header", "content": "Email Popup Settings"},
+      {"type": "checkbox", "id": "email_popup_enable", "label": "Enable email popup", "default": false},
+      {"type": "checkbox", "id": "email_popup_preview_mode", "label": "Preview mode (always show for admin)", "default": false},
+      {"type": "select", "id": "email_popup_trigger_type", "label": "Trigger type", "options": [
+        {"value": "immediate", "label": "Show immediately"},
+        {"value": "delay", "label": "After delay (seconds)"},
+        {"value": "scroll", "label": "On scroll %"},
+        {"value": "exit_intent", "label": "On exit intent (desktop only)"}
+      ], "default": "delay"},
+      {"type": "range", "id": "email_popup_trigger_delay", "label": "Delay (seconds)", "min": 1, "max": 60, "step": 1, "default": 5},
+      {"type": "range", "id": "email_popup_trigger_scroll", "label": "Scroll % to trigger", "min": 10, "max": 90, "step": 5, "default": 50},
+      {"type": "checkbox", "id": "email_popup_trigger_new_visitors_only", "label": "Show only to new visitors", "default": false},
+      {"type": "checkbox", "id": "email_popup_trigger_returning_visitors_only", "label": "Show only to returning visitors", "default": false},
+      {"type": "checkbox", "id": "email_popup_trigger_mobile_only", "label": "Show only on mobile", "default": false},
+      {"type": "checkbox", "id": "email_popup_trigger_desktop_only", "label": "Show only on desktop", "default": false},
+      {"type": "textarea", "id": "email_popup_exclude_urls", "label": "Exclude URLs (one per line, e.g. /policies/terms-of-service)", "default": "/policies/terms-of-service\n/policies/privacy-policy\n/policies/refund-policy"},
+      {"type": "range", "id": "email_popup_resurface_delay", "label": "Delay before showing again after close (hours)", "min": 1, "max": 72, "step": 1, "default": 24},
+      {"type": "color", "id": "email_popup_bg_color", "label": "Background color", "default": "#ffffff"},
+      {"type": "color", "id": "email_popup_text_color", "label": "Text color", "default": "#222222"},
+      {"type": "color", "id": "email_popup_accent_color", "label": "Accent color (button)", "default": "#007bff"},
+      {"type": "color", "id": "email_popup_overlay_color", "label": "Overlay color", "default": "#000000"},
+      {"type": "range", "id": "email_popup_overlay_opacity", "label": "Overlay opacity (%)", "min": 0, "max": 100, "step": 5, "default": 40},
+      {"type": "select", "id": "email_popup_font_family", "label": "Font family", "options": [
+        {"value": "inherit", "label": "Inherit"},
+        {"value": "sans-serif", "label": "Sans-serif"},
+        {"value": "serif", "label": "Serif"},
+        {"value": "monospace", "label": "Monospace"}
+      ], "default": "inherit"},
+      {"type": "range", "id": "email_popup_border_radius", "label": "Border radius (px)", "min": 0, "max": 32, "step": 2, "default": 12},
+      {"type": "range", "id": "email_popup_shadow_strength", "label": "Shadow strength", "min": 0, "max": 3, "step": 1, "default": 2},
+      {"type": "image_picker", "id": "email_popup_image", "label": "Popup image (optional)"},
+      {"type": "text", "id": "email_popup_heading", "label": "Heading", "default": "Subscribe for exclusive offers!"},
+      {"type": "richtext", "id": "email_popup_description", "label": "Description", "default": "<p>Sign up to get a discount code and the latest news.</p>"},
+      {"type": "text", "id": "email_popup_email_placeholder", "label": "Email placeholder", "default": "Enter your email"},
+      {"type": "text", "id": "email_popup_submit_button", "label": "Submit button label", "default": "Subscribe"},
+      {"type": "checkbox", "id": "email_popup_show_agreement", "label": "Show terms & conditions checkbox", "default": false},
+      {"type": "richtext", "id": "email_popup_agreement_text", "label": "Agreement text", "default": "<p>I agree to the <a href=\"/policies/terms-of-service\">Terms of Service</a></p>"},
+      {"type": "richtext", "id": "email_popup_thank_you_message", "label": "Thank you message", "default": "<p>Thank you for subscribing!</p>"},
+      {"type": "checkbox", "id": "email_popup_enable_discount", "label": "Show discount code after signup", "default": false},
+      {"type": "text", "id": "email_popup_discount_code", "label": "Discount code (if enabled)", "default": "WELCOME10"},
+      {"type": "text", "id": "email_popup_discount_instructions", "label": "Discount usage instructions", "default": "Copy and use this code at checkout."},
+      {"type": "checkbox", "id": "email_popup_show_copy_button", "label": "Show copy-to-clipboard button", "default": true},
+      {"type": "checkbox", "id": "email_popup_integrate_shopify_customers", "label": "Add emails to Shopify customers DB", "default": true},
+      {"type": "checkbox", "id": "email_popup_enable_webhook", "label": "Enable webhook for third-party integration", "default": false},
+      {"type": "text", "id": "email_popup_webhook_url", "label": "Webhook URL", "default": "-"},
+      {"type": "checkbox", "id": "email_popup_enable_mailchimp", "label": "Enable Mailchimp integration", "default": false},
+      {"type": "text", "id": "email_popup_mailchimp_api_key", "label": "Mailchimp API Key", "default": "-"},
+      {"type": "text", "id": "email_popup_mailchimp_list_id", "label": "Mailchimp List ID", "default": "-"},
+      {"type": "checkbox", "id": "email_popup_enable_klaviyo", "label": "Enable Klaviyo integration", "default": false},
+      {"type": "text", "id": "email_popup_klaviyo_api_key", "label": "Klaviyo API Key", "default": "-"},
+      {"type": "text", "id": "email_popup_klaviyo_list_id", "label": "Klaviyo List ID", "default": "-"},
+      {"type": "checkbox", "id": "email_popup_fallback_storage", "label": "Enable fallback storage if integration fails", "default": true},
+      {"type": "checkbox", "id": "email_popup_enable_analytics", "label": "Enable popup analytics", "default": true},
+      {"type": "checkbox", "id": "email_popup_gdpr_compliance", "label": "Enable GDPR compliance", "default": true},
+      {"type": "checkbox", "id": "email_popup_enable_keyboard_nav", "label": "Enable keyboard navigation", "default": true},
+      {"type": "checkbox", "id": "email_popup_enable_screen_reader", "label": "Enable screen reader support", "default": true},
+      {"type": "text", "id": "email_popup_custom_class", "label": "Custom CSS class", "default": "-"}
+    ]
   }
 ]
