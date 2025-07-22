@@ -134,7 +134,7 @@
     "email_popup_button_hover_bg_color": "#4a4a4a",
     "email_popup_button_hover_text_color": "#ffffff",
     "email_popup_button_style": "primary",
-    "email_popup_button_size": "medium",
+    "email_popup_button_size": "small",
     "email_popup_button_border_radius": 6,
     "email_popup_button_border_width": 1,
     "email_popup_button_full_width": true,
