@@ -153,7 +153,7 @@
     "email_popup_email_placeholder": "Enter your email address",
     "email_popup_submit_button": "Subscribe",
     "email_popup_show_agreement": true,
-    "email_popup_thank_you_message": "<p>Thank you for subscribing! Check your email for your discount code.</p>",
+    "email_popup_thank_you_message": "<p>Thank you for subscribing! Copy and paste this discount code.</p>",
     "email_popup_enable_discount": true,
     "email_popup_discount_code": "WELCOME10",
     "email_popup_show_copy_button": true,
