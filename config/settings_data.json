@@ -143,7 +143,7 @@
     "email_popup_button_font_weight": 500,
     "email_popup_button_inline": false,
     "email_popup_button_icon": "none",
-    "email_popup_button_custom_svg": "",
+    "email_popup_button_custom_svg": "<svg width=\"20\" height=\"20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 12h14m-7-7l7 7-7 7\"/></svg>",
     "email_popup_button_icon_only": false,
     "email_popup_button_icon_position": "right",
     "email_popup_enable_discount": true,

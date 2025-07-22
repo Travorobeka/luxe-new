@@ -3996,7 +3996,7 @@
         {"value": "chevron", "label": "Chevron icon"},
         {"value": "custom", "label": "Custom SVG"}
       ], "default": "none"},
-      {"type": "textarea", "id": "email_popup_button_custom_svg", "label": "Custom SVG icon (if custom selected)", "default": ""},
+      {"type": "textarea", "id": "email_popup_button_custom_svg", "label": "Custom SVG icon (if custom selected)", "default": "<svg width=\"20\" height=\"20\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 12h14m-7-7l7 7-7 7\"/></svg>"},
       {"type": "checkbox", "id": "email_popup_button_icon_only", "label": "Show icon only (hide button text)", "default": false},
       {"type": "select", "id": "email_popup_button_icon_position", "label": "Icon position", "options": [
         {"value": "left", "label": "Left of text"},
