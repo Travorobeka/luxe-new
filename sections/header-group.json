@@ -13,39 +13,46 @@
   "sections": {
     "annoucement": {
       "type": "annoucement",
-      "blocks": {
-        "item_dGj4GU": {
-          "type": "item",
-          "settings": {
-            "message": "Free shipping for all orders from $60+",
-            "message_link": ""
-          }
-        },
-        "item_6Ycmkw": {
-          "type": "item",
-          "settings": {
-            "message": "Free shipping for all orders from $60+",
-            "message_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "item_dGj4GU",
-        "item_6Ycmkw"
-      ],
       "custom_css": [
         ".m-announcement-bar__container {--container-width: 600px;}"
       ],
       "settings": {
-        "container": "container",
-        "color_scheme": "badge-sale",
         "show_announcement": true,
-        "homepage_only": true,
+        "homepage_only": false,
         "show_close": true,
-        "show_divider": false,
-        "show_nav": true,
-        "autorotate": true,
-        "autorotate_speed": 3
+        "announcement_text_1": "Free shipping on all orders over $50",
+        "announcement_text_2": "Use code WELCOME10 for 10% off your first order",
+        "announcement_text_3": "Limited time offer - Shop now",
+        "announcement_text_4": "New arrivals every week",
+        "separator": "★",
+        "separator_style": "pulse",
+        "separator_size": 16,
+        "separator_opacity": 70,
+        "separator_spacing": 20,
+        "separator_color": "",
+        "background_color": "#000000",
+        "background_gradient": "",
+        "text_color": "#ffffff",
+        "rainbow_text": false,
+        "glow_effect": false,
+        "glow_color": "#ffffff",
+        "text_shadow": false,
+        "bar_height": 40,
+        "bar_height_mobile": 36,
+        "text_size": 14,
+        "text_size_mobile": 12,
+        "text_weight": "500",
+        "uppercase_text": false,
+        "letter_spacing": 0,
+        "item_spacing": 40,
+        "border_top_enabled": false,
+        "border_bottom_enabled": false,
+        "border_width": 1,
+        "border_color": "#ffffff",
+        "scroll_direction": "left",
+        "scroll_speed": 30,
+        "pause_on_hover": true,
+        "hover_effect": "none"
       }
     },
     "header": {
