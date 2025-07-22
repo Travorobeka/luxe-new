@@ -39,6 +39,15 @@
         button_icon_only: window.theme.settings.email_popup_button_icon_only,
         button_icon_position: window.theme.settings.email_popup_button_icon_position,
         font_family: window.theme.settings.email_popup_font_family,
+        heading_font_size: window.theme.settings.email_popup_heading_font_size,
+        heading_font_weight: window.theme.settings.email_popup_heading_font_weight,
+        heading_color: window.theme.settings.email_popup_heading_color,
+        description_font_size: window.theme.settings.email_popup_description_font_size,
+        description_font_weight: window.theme.settings.email_popup_description_font_weight,
+        description_color: window.theme.settings.email_popup_description_color,
+        thankyou_color: window.theme.settings.email_popup_thankyou_color,
+        thankyou_font_size: window.theme.settings.email_popup_thankyou_font_size,
+        thankyou_font_weight: window.theme.settings.email_popup_thankyou_font_weight,
         border_radius: window.theme.settings.email_popup_border_radius,
         shadow_strength: window.theme.settings.email_popup_shadow_strength,
         popup_image: window.theme.settings.email_popup_image,
@@ -224,8 +233,13 @@
     if (settings.enable && settings.preview_mode && window.Shopify && window.Shopify.designMode === true) {
       // Reset popup state to allow re-showing
       popupShown = false;
-      renderPopup();
-      popupShown = true;
+      
+      // Add slight delay to ensure mobile detection works correctly in preview
+      setTimeout(() => {
+        console.log('Email Popup - Preview mode rendering with mobile detection');
+        renderPopup();
+        popupShown = true;
+      }, 100);
     }
   }
 
@@ -304,6 +318,10 @@
     popupRoot.innerHTML = '';
     popupRoot.style.display = 'block';
     
+    // Check mobile status at render time
+    const isCurrentlyMobile = isMobile();
+    console.log('Email Popup - renderPopup() called, mobile status:', isCurrentlyMobile);
+    
     // Modal container - mobile first approach
     const modal = document.createElement('div');
     modal.className = 'email-popup-modal ' + (settings.custom_class || '');
@@ -311,7 +329,7 @@
     modal.setAttribute('aria-modal', 'true');
     
     // Device-specific responsive positioning
-    if (isMobile()) {
+    if (isCurrentlyMobile) {
       // Mobile phones only: Bottom sheet style for touch optimization
       modal.style.position = 'fixed';
       modal.style.bottom = '0';
@@ -379,9 +397,11 @@
       const h = document.createElement('h2');
       h.className = 'email-popup-heading';
       h.innerHTML = settings.heading;
-      h.style.fontSize = isMobile() ? '1.2em' : '1.5em';
-      h.style.fontWeight = 'bold';
+      h.style.fontSize = `${settings.heading_font_size || 24}px`;
+      h.style.fontWeight = settings.heading_font_weight || '700';
+      h.style.color = settings.heading_color || settings.text_color || '#222';
       h.style.margin = '0 0 0.5em 0';
+      h.style.lineHeight = '1.2';
       modal.appendChild(h);
     }
     // Description
@@ -389,7 +409,11 @@
       const desc = document.createElement('div');
       desc.className = 'email-popup-desc';
       desc.innerHTML = settings.description;
+      desc.style.fontSize = `${settings.description_font_size || 16}px`;
+      desc.style.fontWeight = settings.description_font_weight || '400';
+      desc.style.color = settings.description_color || '#666';
       desc.style.marginBottom = '1em';
+      desc.style.lineHeight = '1.4';
       modal.appendChild(desc);
     }
     // Form
@@ -410,8 +434,12 @@
       inputGroup = document.createElement('div');
       inputGroup.className = 'email-popup-input-group';
       inputGroup.style.position = 'relative';
-      inputGroup.style.display = 'flex';
+      inputGroup.style.display = 'block';
       inputGroup.style.marginBottom = '0.8em';
+      inputGroup.style.background = '#fff';
+      inputGroup.style.border = '1px solid #ccc';
+      inputGroup.style.borderRadius = '6px';
+      inputGroup.style.overflow = 'hidden';
     }
     
     // Email input
@@ -426,9 +454,11 @@
     if (isInline) {
       // Inline layout: input takes most space, button is inside/adjacent
       emailInput.style.width = '100%';
-      emailInput.style.padding = isMobile() ? '0.8em 4rem 0.8em 0.8em' : '0.8em 5rem 0.8em 1rem';
-      emailInput.style.borderRadius = '6px';
-      emailInput.style.paddingRight = isMobile() ? '3.5rem' : '4.5rem'; // Space for inline button
+      emailInput.style.padding = isMobile() ? '0.8em 3.5rem 0.8em 0.8em' : '0.8em 4.5rem 0.8em 1rem';
+      emailInput.style.border = 'none';
+      emailInput.style.borderRadius = '0';
+      emailInput.style.outline = 'none';
+      emailInput.style.background = 'transparent';
     } else {
       // Standard layout: full width input with bottom margin
       emailInput.style.width = '100%';
@@ -511,18 +541,21 @@
     if (isInline) {
       // Inline button positioning
       submitBtn.style.position = 'absolute';
-      submitBtn.style.right = '0.25rem';
+      submitBtn.style.right = '0.2rem';
       submitBtn.style.top = '50%';
       submitBtn.style.transform = 'translateY(-50%)';
-      submitBtn.style.height = 'auto';
+      submitBtn.style.height = 'calc(100% - 0.4rem)';
       submitBtn.style.width = 'auto';
-      submitBtn.style.zIndex = '1';
+      submitBtn.style.zIndex = '2';
+      submitBtn.style.minWidth = isMobile() ? '2.8rem' : '3.5rem';
       
-      // Inline button sizing (smaller)
+      // Inline button sizing (smaller and better aligned)
       if (iconOnly) {
-        submitBtn.style.padding = isMobile() ? '0.6rem' : '0.7rem';
+        submitBtn.style.padding = isMobile() ? '0.5rem' : '0.6rem';
+        submitBtn.style.minWidth = isMobile() ? '2.4rem' : '3rem';
       } else {
-        submitBtn.style.padding = isMobile() ? '0.5rem 0.8rem' : '0.6rem 1rem';
+        submitBtn.style.padding = isMobile() ? '0.4rem 0.6rem' : '0.5rem 0.8rem';
+        submitBtn.style.fontSize = isMobile() ? '14px' : '15px';
       }
     } else {
       // Standard layout sizing
@@ -615,6 +648,11 @@
     if (settings.thank_you_message) {
       const tyMsg = document.createElement('div');
       tyMsg.innerHTML = settings.thank_you_message;
+      tyMsg.style.fontSize = `${settings.thankyou_font_size || 18}px`;
+      tyMsg.style.fontWeight = settings.thankyou_font_weight || '600';
+      tyMsg.style.color = settings.thankyou_color || '#28a745';
+      tyMsg.style.marginBottom = '0.5em';
+      tyMsg.style.lineHeight = '1.3';
       thankYou.appendChild(tyMsg);
     }
     if (settings.enable_discount && settings.discount_code) {
