@@ -123,11 +123,7 @@
     const userAgent = navigator.userAgent;
     const width = window.innerWidth;
     
-    // Debug logging
-    console.log('Email Popup - Mobile Detection Debug:', {
-      userAgent: userAgent,
-      width: width
-    });
+    // Mobile detection logic (production version)
     
     // Very simple and reliable approach:
     // 1. If it's explicitly a tablet/iPad -> desktop design
@@ -138,7 +134,6 @@
                          (userAgent.includes('Android') && !userAgent.includes('Mobile'));
     
     if (isKnownTablet) {
-      console.log('Email Popup - Known tablet detected, using desktop design');
       return false;
     }
     
@@ -147,11 +142,7 @@
     // But allow up to 600px to catch larger phones
     const isPhoneSize = width <= 600;
     
-    console.log('Email Popup - Final decision:', {
-      isKnownTablet,
-      isPhoneSize,
-      decision: isPhoneSize ? 'bottom-sheet' : 'centered-modal'
-    });
+    // Return true for phone-sized screens, false for larger screens
     
     return isPhoneSize;
   }
@@ -236,7 +227,6 @@
       
       // Add slight delay to ensure mobile detection works correctly in preview
       setTimeout(() => {
-        console.log('Email Popup - Preview mode rendering with mobile detection');
         renderPopup();
         popupShown = true;
       }, 100);
@@ -320,7 +310,6 @@
     
     // Check mobile status at render time
     const isCurrentlyMobile = isMobile();
-    console.log('Email Popup - renderPopup() called, mobile status:', isCurrentlyMobile);
     
     // Modal container - mobile first approach
     const modal = document.createElement('div');
