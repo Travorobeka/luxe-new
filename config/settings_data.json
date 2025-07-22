@@ -122,6 +122,7 @@
     "geolocation_popup_preview_country": "FR",
     "email_popup_enable": true,
     "email_popup_preview_mode": true,
+    "email_popup_trigger_new_visitors_only": true,
     "enable_page_transition": true,
     "show_variant_swatch_image": true,
     "use_theme_currencies": true,
