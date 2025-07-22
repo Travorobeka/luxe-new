@@ -18,6 +18,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
+    border-radius: {{ block.settings.corner_radius }}px;
     {% if block.settings.border_top_enabled %}
       border-top: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
     {% endif %}
@@ -170,6 +171,9 @@
   @media screen and (max-width: 749px) {
     .ai-announcement-bar-{{ ai_gen_id }} {
       height: {{ block.settings.bar_height_mobile }}px;
+      width: calc(100% - {{ block.settings.mobile_margin | times: 2 }}px);
+      margin: 0 {{ block.settings.mobile_margin }}px;
+      border-radius: {{ block.settings.corner_radius_mobile }}px;
     }
     
     .ai-announcement-item-{{ ai_gen_id }} {
@@ -393,6 +397,37 @@
       "unit": "px",
       "label": "Bar height on mobile",
       "default": 36
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side margin",
+      "default": 16,
+      "info": "Space from screen edges on mobile"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "corner_radius_mobile",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Corner radius on mobile",
+      "default": 8
     },
     {
       "type": "header",
