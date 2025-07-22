@@ -19,7 +19,7 @@
         "columns_mobile": "1",
         "mobile_column_gap": 0,
         "mobile_column_alignment": "default",
-        "mobile_column_borders": false,
+        "mobile_column_borders": true,
         "tablet_columns": "3",
         "tablet_column_gap": 50,
         "column_spacing": 40,
