@@ -147,6 +147,7 @@
     "email_popup_button_icon_only": true,
     "email_popup_button_icon_position": "right",
     "email_popup_border_radius": 12,
+    "email_popup_show_agreement": true,
     "email_popup_enable_discount": true,
     "enable_page_transition": true,
     "show_variant_swatch_image": true,
