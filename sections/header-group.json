@@ -109,7 +109,7 @@
         "mb_drawer_padding_y": 24,
         "mb_drawer_animation_duration": 300,
         "mb_drawer_animation_easing": "ease-in-out",
-        "mb_show_currency_switcher": false,
+        "mb_show_currency_switcher": true,
         "mb_show_country_selector": true,
         "mb_show_language_switcher": true,
         "mb_drawer_icon_size": 25,
