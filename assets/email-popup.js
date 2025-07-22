@@ -33,6 +33,11 @@
         button_uppercase: window.theme.settings.email_popup_button_uppercase,
         button_font_size: window.theme.settings.email_popup_button_font_size,
         button_font_weight: window.theme.settings.email_popup_button_font_weight,
+        button_inline: window.theme.settings.email_popup_button_inline,
+        button_icon: window.theme.settings.email_popup_button_icon,
+        button_custom_svg: window.theme.settings.email_popup_button_custom_svg,
+        button_icon_only: window.theme.settings.email_popup_button_icon_only,
+        button_icon_position: window.theme.settings.email_popup_button_icon_position,
         font_family: window.theme.settings.email_popup_font_family,
         border_radius: window.theme.settings.email_popup_border_radius,
         shadow_strength: window.theme.settings.email_popup_shadow_strength,
@@ -138,6 +143,40 @@
       document.execCommand('copy');
       document.body.removeChild(temp);
     }
+  }
+
+  // Icon rendering functions
+  function getIconSVG(iconType, size = 20) {
+    const icons = {
+      arrow: `<svg width="${size}" height="${size}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7-7 7"/>
+              </svg>`,
+      plus: `<svg width="${size}" height="${size}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+             </svg>`,
+      send: `<svg width="${size}" height="${size}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+             </svg>`,
+      chevron: `<svg width="${size}" height="${size}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>`,
+      email: `<svg width="${size}" height="${size}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>`
+    };
+    return icons[iconType] || '';
+  }
+
+  function createButtonIcon(settings, size = 20) {
+    const iconType = settings.button_icon || 'none';
+    
+    if (iconType === 'none') return '';
+    
+    if (iconType === 'custom' && settings.button_custom_svg) {
+      return settings.button_custom_svg;
+    }
+    
+    return getIconSVG(iconType, size);
   }
 
   // State
@@ -251,15 +290,25 @@
       modal.style.padding = '1.5rem';
       modal.style.transform = 'translateY(0)';
     } else {
-      // Desktop: Centered modal
+      // Desktop: Centered modal with enhanced sizing
       modal.style.position = 'fixed';
       modal.style.top = '50%';
       modal.style.left = '50%';
       modal.style.transform = 'translate(-50%, -50%)';
       modal.style.width = '100%';
-      modal.style.maxWidth = '420px';
+      modal.style.minWidth = '400px';
+      modal.style.maxWidth = '480px';
       modal.style.borderRadius = `${settings.border_radius || 12}px`;
-      modal.style.padding = '2rem';
+      modal.style.padding = '2.5rem';
+      
+      // Enhanced desktop animation
+      modal.style.opacity = '0';
+      modal.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      setTimeout(() => {
+        modal.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        modal.style.opacity = '1';
+        modal.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 10);
     }
     
     // Common modal styles
@@ -318,19 +367,50 @@
       e.preventDefault();
       handleSubmit(form, modal);
     };
+    
+    // Check if inline layout is enabled
+    const isInline = settings.button_inline;
+    
+    // Input group container for inline layout
+    let inputGroup;
+    if (isInline) {
+      inputGroup = document.createElement('div');
+      inputGroup.className = 'email-popup-input-group';
+      inputGroup.style.position = 'relative';
+      inputGroup.style.display = 'flex';
+      inputGroup.style.marginBottom = '0.8em';
+    }
+    
     // Email input
     const emailInput = document.createElement('input');
     emailInput.type = 'email';
     emailInput.name = 'email';
     emailInput.placeholder = settings.email_placeholder || 'Enter your email';
     emailInput.required = true;
-    emailInput.style.width = '100%';
-    emailInput.style.marginBottom = '0.8em';
-    emailInput.style.padding = '0.8em';
-    emailInput.style.borderRadius = '6px';
-    emailInput.style.border = '1px solid #ccc';
     emailInput.style.fontSize = '1em';
-    form.appendChild(emailInput);
+    emailInput.style.border = '1px solid #ccc';
+    
+    if (isInline) {
+      // Inline layout: input takes most space, button is inside/adjacent
+      emailInput.style.width = '100%';
+      emailInput.style.padding = isMobile() ? '0.8em 4rem 0.8em 0.8em' : '0.8em 5rem 0.8em 1rem';
+      emailInput.style.borderRadius = '6px';
+      emailInput.style.paddingRight = isMobile() ? '3.5rem' : '4.5rem'; // Space for inline button
+    } else {
+      // Standard layout: full width input with bottom margin
+      emailInput.style.width = '100%';
+      emailInput.style.marginBottom = '0.8em';
+      emailInput.style.padding = isMobile() ? '0.8em' : '0.8em 1rem';
+      emailInput.style.borderRadius = '6px';
+    }
+    
+    // Append input to form or input group
+    if (isInline) {
+      inputGroup.appendChild(emailInput);
+      form.appendChild(inputGroup);
+    } else {
+      form.appendChild(emailInput);
+    }
     // Agreement
     if (settings.show_agreement && settings.agreement_text) {
       const agreeDiv = document.createElement('div');
@@ -349,24 +429,85 @@
       agreeDiv.appendChild(agreeLabel);
       form.appendChild(agreeDiv);
     }
-    // Submit button with advanced customization
+    // Submit button with advanced customization and icons
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.className = 'email-popup-submit';
     
-    // Button text with uppercase option
-    const buttonText = settings.submit_button || 'Subscribe';
-    submitBtn.innerText = settings.button_uppercase ? buttonText.toUpperCase() : buttonText;
-    
-    // Button styling based on style type
+    // Button styling variables
     const buttonStyle = settings.button_style || 'primary';
     const bgColor = settings.button_bg_color || '#007bff';
     const textColor = settings.button_text_color || '#ffffff';
     const borderColor = settings.button_border_color || bgColor;
     const borderWidth = settings.button_border_width || 1;
     const borderRadius = settings.button_border_radius || 6;
+    const buttonSize = settings.button_size || 'medium';
     
-    // Apply style-specific styling
+    // Icon and text setup
+    const hasIcon = settings.button_icon && settings.button_icon !== 'none';
+    const iconOnly = settings.button_icon_only && hasIcon;
+    const iconPosition = settings.button_icon_position || 'right';
+    const buttonText = settings.submit_button || 'Subscribe';
+    const displayText = settings.button_uppercase ? buttonText.toUpperCase() : buttonText;
+    
+    // Create button content with icon support
+    if (hasIcon && !iconOnly) {
+      // Button with text and icon
+      const iconSVG = createButtonIcon(settings, isMobile() ? 16 : 18);
+      if (iconPosition === 'left') {
+        submitBtn.innerHTML = `${iconSVG}<span style="margin-left: 0.5rem;">${displayText}</span>`;
+      } else {
+        submitBtn.innerHTML = `<span style="margin-right: 0.5rem;">${displayText}</span>${iconSVG}`;
+      }
+      submitBtn.style.display = 'flex';
+      submitBtn.style.alignItems = 'center';
+      submitBtn.style.justifyContent = 'center';
+    } else if (iconOnly) {
+      // Icon only button
+      submitBtn.innerHTML = createButtonIcon(settings, isMobile() ? 20 : 22);
+      submitBtn.style.display = 'flex';
+      submitBtn.style.alignItems = 'center';
+      submitBtn.style.justifyContent = 'center';
+      submitBtn.setAttribute('aria-label', displayText);
+    } else {
+      // Text only button
+      submitBtn.innerText = displayText;
+    }
+    
+    // Inline vs standard layout positioning
+    if (isInline) {
+      // Inline button positioning
+      submitBtn.style.position = 'absolute';
+      submitBtn.style.right = '0.25rem';
+      submitBtn.style.top = '50%';
+      submitBtn.style.transform = 'translateY(-50%)';
+      submitBtn.style.height = 'auto';
+      submitBtn.style.width = 'auto';
+      submitBtn.style.zIndex = '1';
+      
+      // Inline button sizing (smaller)
+      if (iconOnly) {
+        submitBtn.style.padding = isMobile() ? '0.6rem' : '0.7rem';
+      } else {
+        submitBtn.style.padding = isMobile() ? '0.5rem 0.8rem' : '0.6rem 1rem';
+      }
+    } else {
+      // Standard layout sizing
+      if (buttonSize === 'small') {
+        submitBtn.style.padding = iconOnly ? '0.5rem' : '0.5rem 1rem';
+      } else if (buttonSize === 'large') {
+        submitBtn.style.padding = iconOnly ? '1rem' : '1rem 1.5rem';
+      } else {
+        submitBtn.style.padding = iconOnly ? '0.75rem' : '0.75rem 1.25rem';
+      }
+      
+      // Full width option for standard layout
+      if (settings.button_full_width !== false && !iconOnly) {
+        submitBtn.style.width = '100%';
+      }
+    }
+    
+    // Apply button style
     if (buttonStyle === 'primary') {
       submitBtn.style.background = bgColor;
       submitBtn.style.color = textColor;
@@ -379,7 +520,7 @@
       submitBtn.style.background = 'transparent';
       submitBtn.style.color = borderColor;
       submitBtn.style.border = 'none';
-      submitBtn.style.textDecoration = 'underline';
+      if (!hasIcon) submitBtn.style.textDecoration = 'underline';
     }
     
     // Common button styles
@@ -388,21 +529,6 @@
     submitBtn.style.fontWeight = settings.button_font_weight || 500;
     submitBtn.style.cursor = 'pointer';
     submitBtn.style.transition = 'all 0.2s ease';
-    
-    // Button sizing
-    const buttonSize = settings.button_size || 'medium';
-    if (buttonSize === 'small') {
-      submitBtn.style.padding = '0.5rem 1rem';
-    } else if (buttonSize === 'large') {
-      submitBtn.style.padding = '1rem 1.5rem';
-    } else {
-      submitBtn.style.padding = '0.75rem 1.25rem';
-    }
-    
-    // Full width option
-    if (settings.button_full_width !== false) {
-      submitBtn.style.width = '100%';
-    }
     
     // Add hover effects
     const hoverBgColor = settings.button_hover_bg_color || '#0056b3';
@@ -431,7 +557,13 @@
         submitBtn.style.color = borderColor;
       }
     });
-    form.appendChild(submitBtn);
+    
+    // Append button to form or input group
+    if (isInline) {
+      inputGroup.appendChild(submitBtn);
+    } else {
+      form.appendChild(submitBtn);
+    }
     // Error message
     const errorMsg = document.createElement('div');
     errorMsg.className = 'email-popup-error';

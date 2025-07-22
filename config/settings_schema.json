@@ -3986,6 +3986,22 @@
       {"type": "checkbox", "id": "email_popup_button_uppercase", "label": "Uppercase button text", "default": false},
       {"type": "range", "id": "email_popup_button_font_size", "label": "Button font size (px)", "min": 12, "max": 20, "step": 1, "default": 16},
       {"type": "range", "id": "email_popup_button_font_weight", "label": "Button font weight", "min": 300, "max": 900, "step": 100, "default": 500},
+      {"type": "header", "content": "Button Layout & Icons"},
+      {"type": "checkbox", "id": "email_popup_button_inline", "label": "Inline button (inside email input)", "default": false},
+      {"type": "select", "id": "email_popup_button_icon", "label": "Button icon", "options": [
+        {"value": "none", "label": "No icon"},
+        {"value": "arrow", "label": "Arrow icon"},
+        {"value": "plus", "label": "Plus icon"},
+        {"value": "send", "label": "Send icon"},
+        {"value": "chevron", "label": "Chevron icon"},
+        {"value": "custom", "label": "Custom SVG"}
+      ], "default": "none"},
+      {"type": "textarea", "id": "email_popup_button_custom_svg", "label": "Custom SVG icon (if custom selected)", "default": ""},
+      {"type": "checkbox", "id": "email_popup_button_icon_only", "label": "Show icon only (hide button text)", "default": false},
+      {"type": "select", "id": "email_popup_button_icon_position", "label": "Icon position", "options": [
+        {"value": "left", "label": "Left of text"},
+        {"value": "right", "label": "Right of text"}
+      ], "default": "right"},
       {"type": "select", "id": "email_popup_font_family", "label": "Font family", "options": [
         {"value": "inherit", "label": "Inherit"},
         {"value": "sans-serif", "label": "Sans-serif"},
