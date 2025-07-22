@@ -1,129 +1,570 @@
-# Requirements Document
+{% doc %}
+  @prompt
+    Create CSS animation code to make an announcement bar text scroll continuously from right to left across the screen. The animation should be smooth, loop infinitely, and work well for promotional messages or announcements., spread out the text. maybe create 3 more announcent text section so that i can add text in differnt ones instead of putting all of it into 1 text box. or find a differrnt and effienct way, the text is still conjested together maybe put a tiny delay on each text and make the announcment bar seem never ending but its just displaying the same text in a never enedin gloop, put the separator at the start and add any cool customisations
 
-## Introduction
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
-This feature will implement an email popup system for the Shopify theme that captures visitor email addresses with sophisticated customization options, beautiful responsive design, and optimal performance. The popup will be highly configurable through the Shopify theme customizer, support multiple trigger conditions, and provide a seamless user experience across all devices.
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.bar_height }}px;
+    background: {{ block.settings.background_color }};
+    {% if block.settings.background_gradient != blank %}
+      background: {{ block.settings.background_gradient }};
+    {% endif %}
+    color: {{ block.settings.text_color }};
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    {% if block.settings.border_top_enabled %}
+      border-top: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    {% endif %}
+    {% if block.settings.border_bottom_enabled %}
+      border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    {% endif %}
+    {% if block.settings.text_shadow %}
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    {% endif %}
+  }
 
-## Requirements
+  .ai-announcement-track-{{ ai_gen_id }} {
+    display: flex;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ai-announcement-scroll-{{ ai_gen_id }} {{ block.settings.scroll_speed }}s linear infinite;
+    {% if block.settings.scroll_direction == 'left' %}
+      animation-direction: normal;
+    {% else %}
+      animation-direction: reverse;
+    {% endif %}
+  }
 
-### Requirement 1
+  .ai-announcement-item-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 {{ block.settings.item_spacing }}px;
+    font-size: {{ block.settings.text_size }}px;
+    font-weight: {{ block.settings.text_weight }};
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+    {% if block.settings.uppercase_text %}
+      text-transform: uppercase;
+    {% endif %}
+    {% if block.settings.glow_effect %}
+      filter: drop-shadow(0 0 8px {{ block.settings.glow_color }});
+    {% endif %}
+  }
 
-**User Story:** As a store owner, I want a customizable email popup that appears to visitors, so that I can capture email addresses for marketing campaigns and grow my subscriber base.
+  .ai-announcement-separator-{{ ai_gen_id }} {
+    margin: 0 {{ block.settings.separator_spacing }}px;
+    opacity: {{ block.settings.separator_opacity | divided_by: 100.0 }};
+    font-size: {{ block.settings.separator_size }}px;
+    {% if block.settings.separator_style == 'pulse' %}
+      animation: ai-announcement-pulse-{{ ai_gen_id }} 2s ease-in-out infinite;
+    {% elsif block.settings.separator_style == 'rotate' %}
+      animation: ai-announcement-rotate-{{ ai_gen_id }} 3s linear infinite;
+    {% elsif block.settings.separator_style == 'bounce' %}
+      animation: ai-announcement-bounce-{{ ai_gen_id }} 1.5s ease-in-out infinite;
+    {% endif %}
+    {% if block.settings.separator_color != blank %}
+      color: {{ block.settings.separator_color }};
+    {% endif %}
+  }
 
-#### Acceptance Criteria
+  {% if block.settings.rainbow_text %}
+    .ai-announcement-item-{{ ai_gen_id }} {
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: ai-announcement-rainbow-{{ ai_gen_id }} 3s ease infinite;
+    }
+  {% endif %}
 
-1. WHEN a visitor meets the trigger conditions THEN the system SHALL display an email popup overlay
-2. WHEN the popup is displayed THEN the system SHALL show a form with email input field and submit button
-3. WHEN a visitor submits a valid email THEN the system SHALL capture the email address and show a thank you message with optional discount code
-4. WHEN a visitor submits an invalid email THEN the system SHALL display appropriate validation errors
-5. WHEN a visitor closes the popup THEN the system SHALL respect the configured delay before showing again
+  @keyframes ai-announcement-scroll-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 
+  @keyframes ai-announcement-pulse-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: scale(1);
+      opacity: {{ block.settings.separator_opacity | divided_by: 100.0 }};
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
 
-### Requirement 2
+  @keyframes ai-announcement-rotate-{{ ai_gen_id }} {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 
-**User Story:** As a store owner, I want extensive customization options for the popup appearance, so that I can match my brand identity and create compelling designs.
+  @keyframes ai-announcement-bounce-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
 
-#### Acceptance Criteria
+  @keyframes ai-announcement-rainbow-{{ ai_gen_id }} {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
 
-1. WHEN configuring the popup THEN the system SHALL provide options for background colors, text colors, and accent colors through theme settings
-2. WHEN configuring the popup THEN the system SHALL provide typography options including font family, size, and weight through theme settings
-3. WHEN configuring the popup THEN the system SHALL provide layout options including popup size, positioning, and spacing through theme settings
-4. WHEN configuring the popup THEN the system SHALL provide options for custom images, logos, and background patterns through theme settings
-5. WHEN configuring the popup THEN the system SHALL provide animation and transition effect options through theme settings
-6. WHEN configuring the popup THEN the system SHALL provide border radius, shadow, and overlay opacity controls through theme settings
+  {% if block.settings.marquee_style == 'typewriter' %}
+    .ai-announcement-item-{{ ai_gen_id }} {
+      overflow: hidden;
+      border-right: 2px solid {{ block.settings.text_color }};
+      animation: ai-announcement-typewriter-{{ ai_gen_id }} 4s steps(40) infinite;
+    }
 
-### Requirement 3
+    @keyframes ai-announcement-typewriter-{{ ai_gen_id }} {
+      0%, 90%, 100% {
+        width: 100%;
+      }
+      95% {
+        border-right-color: transparent;
+      }
+    }
+  {% endif %}
 
-**User Story:** As a store owner, I want flexible trigger conditions for when the popup appears, so that I can optimize conversion rates and user experience.
+  @media (hover: hover) {
+    {% if block.settings.pause_on_hover %}
+      .ai-announcement-bar-{{ ai_gen_id }}:hover .ai-announcement-track-{{ ai_gen_id }} {
+        animation-play-state: paused;
+      }
+    {% endif %}
+    
+    {% if block.settings.hover_effect == 'zoom' %}
+      .ai-announcement-bar-{{ ai_gen_id }}:hover .ai-announcement-item-{{ ai_gen_id }} {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+      }
+    {% elsif block.settings.hover_effect == 'glow' %}
+      .ai-announcement-bar-{{ ai_gen_id }}:hover {
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+        transition: box-shadow 0.3s ease;
+      }
+    {% endif %}
+  }
 
-#### Acceptance Criteria
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-{{ ai_gen_id }} {
+      height: {{ block.settings.bar_height_mobile }}px;
+    }
+    
+    .ai-announcement-item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size_mobile }}px;
+      padding: 0 {{ block.settings.item_spacing | times: 0.8 }}px;
+    }
+    
+    .ai-announcement-separator-{{ ai_gen_id }} {
+      font-size: {{ block.settings.separator_size | times: 0.9 }}px;
+    }
+  }
 
-1. WHEN configuring triggers THEN the system SHALL provide time-based triggers (immediate, after X seconds, on scroll percentage)
-2. WHEN configuring triggers THEN the system SHALL provide behavior-based triggers (exit intent, page views, session duration)
-3. WHEN configuring triggers THEN the system SHALL provide page-specific targeting options
-4. WHEN configuring triggers THEN the system SHALL provide visitor type targeting (new vs returning visitors)
-5. WHEN configuring triggers THEN the system SHALL provide device-specific targeting options
+  @media (prefers-reduced-motion: reduce) {
+    .ai-announcement-track-{{ ai_gen_id }} {
+      animation-duration: {{ block.settings.scroll_speed | times: 2 }}s;
+    }
+  }
+{% endstyle %}
 
-### Requirement 4
+<div class="ai-announcement-bar-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-announcement-track-{{ ai_gen_id }}">
+    {% comment %} First set of announcements {% endcomment %}
+    {% for i in (1..4) %}
+      {% assign announcement_key = 'announcement_text_' | append: i %}
+      {% assign announcement = block.settings[announcement_key] %}
+      
+      {% if announcement != blank %}
+        {% if block.settings.separator != blank %}
+          <span class="ai-announcement-separator-{{ ai_gen_id }}">{{ block.settings.separator }}</span>
+        {% endif %}
+        <div class="ai-announcement-item-{{ ai_gen_id }}">
+          {{ announcement }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    
+    {% comment %} Duplicate set for seamless looping {% endcomment %}
+    {% for i in (1..4) %}
+      {% assign announcement_key = 'announcement_text_' | append: i %}
+      {% assign announcement = block.settings[announcement_key] %}
+      
+      {% if announcement != blank %}
+        {% if block.settings.separator != blank %}
+          <span class="ai-announcement-separator-{{ ai_gen_id }}">{{ block.settings.separator }}</span>
+        {% endif %}
+        <div class="ai-announcement-item-{{ ai_gen_id }}">
+          {{ announcement }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
 
-**User Story:** As a visitor, I want the popup to be responsive and fast-loading, so that I have a smooth experience regardless of my device or connection speed.
-
-#### Acceptance Criteria
-
-1. WHEN the popup loads THEN the system SHALL render within 100ms of trigger activation
-2. WHEN viewed on mobile devices THEN the popup SHALL adapt to screen size with appropriate touch targets
-3. WHEN viewed on tablet devices THEN the popup SHALL maintain optimal proportions and readability
-4. WHEN viewed on desktop THEN the popup SHALL utilize available screen space effectively
-5. WHEN loading assets THEN the system SHALL use optimized images and minimal CSS/JS payload
-
-### Requirement 5
-
-**User Story:** As a visitor, I want intuitive controls and clear messaging, so that I can easily understand and interact with the popup.
-
-#### Acceptance Criteria
-
-1. WHEN the popup appears THEN the system SHALL provide a clear close button that is easily accessible
-2. WHEN interacting with form elements THEN the system SHALL provide visual feedback for focus and hover states
-3. WHEN form validation occurs THEN the system SHALL display clear, helpful error messages
-4. WHEN the email is successfully submitted THEN the system SHALL show a thank you message with optional discount code display
-5. WHEN using keyboard navigation THEN the system SHALL support tab order and enter key submission
-
-### Requirement 6
-
-**User Story:** As a store owner, I want the popup to integrate with email marketing services, so that captured emails are automatically added to my marketing lists.
-
-#### Acceptance Criteria
-
-1. WHEN an email is captured THEN the system SHALL support integration with Shopify's customer database
-2. WHEN an email is captured THEN the system SHALL provide webhook support for third-party integrations
-3. WHEN configuring integrations THEN the system SHALL support popular email services (Mailchimp, Klaviyo, etc.)
-4. WHEN an email is submitted THEN the system SHALL handle duplicate email addresses gracefully
-5. WHEN integration fails THEN the system SHALL provide fallback storage and error handling
-
-### Requirement 7
-
-**User Story:** As a store owner, I want analytics and performance tracking, so that I can measure the effectiveness of my email popup campaigns.
-
-#### Acceptance Criteria
-
-1. WHEN the popup is displayed THEN the system SHALL track impression events
-2. WHEN emails are submitted THEN the system SHALL track conversion events
-3. WHEN the popup is closed THEN the system SHALL track dismissal events
-4. WHEN generating reports THEN the system SHALL provide conversion rate calculations
-5. WHEN tracking events THEN the system SHALL respect privacy settings and GDPR compliance
-
-### Requirement 8
-
-**User Story:** As a visitor, I want the popup to respect my preferences and not be intrusive, so that I can browse the site without constant interruptions.
-
-#### Acceptance Criteria
-
-1. WHEN I close the popup THEN the system SHALL remember my choice for the configured duration
-2. WHEN I have already subscribed THEN the system SHALL not show the popup again
-3. WHEN I'm on mobile THEN the popup SHALL not interfere with navigation or scrolling
-4. WHEN the popup appears THEN the system SHALL allow easy dismissal without accidental clicks
-5. WHEN I use accessibility tools THEN the popup SHALL be compatible with screen readers and keyboard navigation
-
-### Requirement 9
-
-**User Story:** As a store admin, I want a preview mode for the email popup, so that I can see how it looks and functions before making it live to customers.
-
-#### Acceptance Criteria
-
-1. WHEN I'm logged in as an admin THEN the system SHALL provide a preview mode toggle in the theme settings
-2. WHEN preview mode is enabled THEN the system SHALL show the popup regardless of trigger conditions
-3. WHEN in preview mode THEN the system SHALL display a visual indicator that this is a preview
-4. WHEN in preview mode THEN the system SHALL not capture or store email submissions
-5. WHEN I disable preview mode THEN the system SHALL return to normal trigger-based behavior
-
-### Requirement 10
-
-**User Story:** As a store owner, I want to offer discount codes through the email popup, so that I can incentivize email signups and drive immediate sales.
-
-#### Acceptance Criteria
-
-1. WHEN configuring the popup THEN the system SHALL provide options to enable/disable discount code offers
-2. WHEN a discount is enabled THEN the system SHALL allow configuration of discount code, percentage, or amount
-3. WHEN an email is successfully submitted THEN the system SHALL display the discount code prominently in the thank you message
-4. WHEN displaying the discount code THEN the system SHALL provide a copy-to-clipboard functionality
-5. WHEN a discount code is shown THEN the system SHALL include clear instructions on how to use it
+{% schema %}
+{
+  "name": "Scrolling Announcement",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement Messages"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_1",
+      "label": "Message 1",
+      "default": "Free shipping on all orders over $50"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_2",
+      "label": "Message 2",
+      "default": "Use code WELCOME10 for 10% off your first order"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_3",
+      "label": "Message 3",
+      "default": "Limited time offer - Shop now"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_4",
+      "label": "Message 4",
+      "default": "New arrivals every week"
+    },
+    {
+      "type": "header",
+      "content": "Separator"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator character",
+      "default": "★",
+      "info": "Character(s) to separate messages"
+    },
+    {
+      "type": "select",
+      "id": "separator_style",
+      "label": "Separator animation",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "pulse",
+          "label": "Pulse"
+        },
+        {
+          "value": "rotate",
+          "label": "Rotate"
+        },
+        {
+          "value": "bounce",
+          "label": "Bounce"
+        }
+      ],
+      "default": "pulse"
+    },
+    {
+      "type": "range",
+      "id": "separator_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "separator_opacity",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separator opacity",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Separator spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "info": "Leave blank to use text color"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "info": "Gradient overrides background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "rainbow_text",
+      "label": "Rainbow text effect",
+      "default": false,
+      "info": "Overrides text color"
+    },
+    {
+      "type": "checkbox",
+      "id": "glow_effect",
+      "label": "Text glow effect",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_shadow",
+      "label": "Text shadow",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bar height",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "bar_height_mobile",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Bar height on mobile",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size on mobile",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase_text",
+      "label": "Uppercase text",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Message spacing",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_top_enabled",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "border_bottom_enabled",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Right to left"
+        },
+        {
+          "value": "right",
+          "label": "Left to right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll speed (lower is faster)",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "zoom",
+          "label": "Zoom text"
+        },
+        {
+          "value": "glow",
+          "label": "Glow background"
+        }
+      ],
+      "default": "none"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling Announcement"
+    }
+  ]
+}
+{% endschema %}

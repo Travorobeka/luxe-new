@@ -1,21 +1,188 @@
-<script src="{{ 'announcement-bar.js' | asset_url }}" defer="defer"></script>
+{% assign section_id = section.id | replace: '_', '' | downcase %}
 
-{% liquid
-  assign enable_slider = false
-  if section.blocks.size > 1
-    assign enable_slider = true
-  endif
+{% style %}
+  .m-scrolling-announcement-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ section.settings.bar_height }}px;
+    background: {{ section.settings.background_color }};
+    {% if section.settings.background_gradient != blank %}
+      background: {{ section.settings.background_gradient }};
+    {% endif %}
+    color: {{ section.settings.text_color }};
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    {% if section.settings.border_top_enabled %}
+      border-top: {{ section.settings.border_width }}px solid {{ section.settings.border_color }};
+    {% endif %}
+    {% if section.settings.border_bottom_enabled %}
+      border-bottom: {{ section.settings.border_width }}px solid {{ section.settings.border_color }};
+    {% endif %}
+    {% if section.settings.text_shadow %}
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    {% endif %}
+  }
 
-  assign autorotate = section.settings.autorotate
-  assign autorotate_speed = section.settings.autorotate_speed
-  assign show_divider = section.settings.show_divider
-  assign show_nav = section.settings.show_nav
+  .m-scrolling-announcement__track-{{ section_id }} {
+    display: flex;
+    white-space: nowrap;
+    will-change: transform;
+    animation: m-scrolling-announcement-scroll-{{ section_id }} {{ section.settings.scroll_speed }}s linear infinite;
+    {% if section.settings.scroll_direction == 'left' %}
+      animation-direction: normal;
+    {% else %}
+      animation-direction: reverse;
+    {% endif %}
+  }
 
-  assign container = section.settings.container
-  if container == 'w-full'
-    assign container = 'container-full'
-  endif
-%}
+  .m-scrolling-announcement__item-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 {{ section.settings.item_spacing }}px;
+    font-size: {{ section.settings.text_size }}px;
+    font-weight: {{ section.settings.text_weight }};
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+    {% if section.settings.uppercase_text %}
+      text-transform: uppercase;
+    {% endif %}
+    {% if section.settings.glow_effect %}
+      filter: drop-shadow(0 0 8px {{ section.settings.glow_color }});
+    {% endif %}
+  }
+
+  .m-scrolling-announcement__separator-{{ section_id }} {
+    margin: 0 {{ section.settings.separator_spacing }}px;
+    opacity: {{ section.settings.separator_opacity | divided_by: 100.0 }};
+    font-size: {{ section.settings.separator_size }}px;
+    {% if section.settings.separator_style == 'pulse' %}
+      animation: m-scrolling-announcement-pulse-{{ section_id }} 2s ease-in-out infinite;
+    {% elsif section.settings.separator_style == 'rotate' %}
+      animation: m-scrolling-announcement-rotate-{{ section_id }} 3s linear infinite;
+    {% elsif section.settings.separator_style == 'bounce' %}
+      animation: m-scrolling-announcement-bounce-{{ section_id }} 1.5s ease-in-out infinite;
+    {% endif %}
+    {% if section.settings.separator_color != blank %}
+      color: {{ section.settings.separator_color }};
+    {% endif %}
+  }
+
+  {% if section.settings.rainbow_text %}
+    .m-scrolling-announcement__item-{{ section_id }} {
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: m-scrolling-announcement-rainbow-{{ section_id }} 3s ease infinite;
+    }
+  {% endif %}
+
+  @keyframes m-scrolling-announcement-scroll-{{ section_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes m-scrolling-announcement-pulse-{{ section_id }} {
+    0%, 100% {
+      transform: scale(1);
+      opacity: {{ section.settings.separator_opacity | divided_by: 100.0 }};
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes m-scrolling-announcement-rotate-{{ section_id }} {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes m-scrolling-announcement-bounce-{{ section_id }} {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+
+  @keyframes m-scrolling-announcement-rainbow-{{ section_id }} {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  {% if section.settings.marquee_style == 'typewriter' %}
+    .m-scrolling-announcement__item-{{ section_id }} {
+      overflow: hidden;
+      border-right: 2px solid {{ section.settings.text_color }};
+      animation: m-scrolling-announcement-typewriter-{{ section_id }} 4s steps(40) infinite;
+    }
+
+    @keyframes m-scrolling-announcement-typewriter-{{ section_id }} {
+      0%, 90%, 100% {
+        width: 100%;
+      }
+      95% {
+        border-right-color: transparent;
+      }
+    }
+  {% endif %}
+
+  @media (hover: hover) {
+    {% if section.settings.pause_on_hover %}
+      .m-scrolling-announcement-{{ section_id }}:hover .m-scrolling-announcement__track-{{ section_id }} {
+        animation-play-state: paused;
+      }
+    {% endif %}
+    
+    {% if section.settings.hover_effect == 'zoom' %}
+      .m-scrolling-announcement-{{ section_id }}:hover .m-scrolling-announcement__item-{{ section_id }} {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+      }
+    {% elsif section.settings.hover_effect == 'glow' %}
+      .m-scrolling-announcement-{{ section_id }}:hover {
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+        transition: box-shadow 0.3s ease;
+      }
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .m-scrolling-announcement-{{ section_id }} {
+      height: {{ section.settings.bar_height_mobile }}px;
+    }
+    
+    .m-scrolling-announcement__item-{{ section_id }} {
+      font-size: {{ section.settings.text_size_mobile }}px;
+      padding: 0 {{ section.settings.item_spacing | times: 0.8 }}px;
+    }
+    
+    .m-scrolling-announcement__separator-{{ section_id }} {
+      font-size: {{ section.settings.separator_size | times: 0.9 }}px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-scrolling-announcement__track-{{ section_id }} {
+      animation-duration: {{ section.settings.scroll_speed | times: 2 }}s;
+    }
+  }
+{% endstyle %}
 
 {% if section.settings.show_announcement %}
   {% if section.settings.homepage_only == false or request.page_type == 'index' %}
@@ -23,53 +190,57 @@
       id="m-announcement--{{ section.id }}"
       data-section-id="{{ section.id }}"
       data-section-type="announcement"
-      class="m-announcement-bar m-gradient m-color-{{ section.settings.color_scheme }}"
-      {% if show_divider %}
-        style="--border-width: 1px"
-      {% endif %}
+      class="m-scrolling-announcement-{{ section_id }}"
+      {{ section.shopify_attributes }}
     >
-      <m-announcement-bar
-        data-enable-slider="{{ enable_slider }}"
-        {% if enable_slider %}
-          data-enable-autoplay="{{ autorotate }}"
-          data-autoplay-speed="{{ autorotate_speed }}"
-        {% endif %}
-      >
-        <div class="m-announcement-bar__container {{ container }}">
-          <div class="m-announcement-bar__wrapper{% if enable_slider %} swiper-container{% endif %}">
-            <div class="m-announcement-bar__inner{% if enable_slider %} swiper-wrapper{% endif %}">
-              {% for block in section.blocks %}
-                <div class="m-announcement-bar__item{% if enable_slider %} swiper-slide{% endif %}">
-                  {% if block.settings.message_link != blank %}
-                    <a href="{{ block.settings.message_link }}" class="m-announcement-bar__link"></a>
-                  {% endif %}
-                  {% if block.settings.message != blank %}
-                    <div class="m-announcement-bar__content">{{ block.settings.message }}</div>
-                  {% endif %}
-                </div>
-              {% endfor %}
+      <div class="m-scrolling-announcement__track-{{ section_id }}">
+        {% comment %} First set of announcements {% endcomment %}
+        {% for i in (1..4) %}
+          {% assign announcement_key = 'announcement_text_' | append: i %}
+          {% assign announcement = section.settings[announcement_key] %}
+          
+          {% if announcement != blank %}
+            {% if section.settings.separator != blank %}
+              <span class="m-scrolling-announcement__separator-{{ section_id }}">{{ section.settings.separator }}</span>
+            {% endif %}
+            <div class="m-scrolling-announcement__item-{{ section_id }}">
+              {{ announcement }}
             </div>
-          </div>
-          {% if enable_slider %}
-            {% render 'slider-controls', show_nav: show_nav, absolute: true, container: container %}
           {% endif %}
-        </div>
-      </m-announcement-bar>
+        {% endfor %}
+        
+        {% comment %} Duplicate set for seamless looping {% endcomment %}
+        {% for i in (1..4) %}
+          {% assign announcement_key = 'announcement_text_' | append: i %}
+          {% assign announcement = section.settings[announcement_key] %}
+          
+          {% if announcement != blank %}
+            {% if section.settings.separator != blank %}
+              <span class="m-scrolling-announcement__separator-{{ section_id }}">{{ section.settings.separator }}</span>
+            {% endif %}
+            <div class="m-scrolling-announcement__item-{{ section_id }}">
+              {{ announcement }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
       {% if section.settings.show_close %}
-        <div class="m-announcement-bar__close m:flex m:items-center">
+        <div class="m-announcement-bar__close m:flex m:items-center" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 10;">
           <svg
             class="m-svg-icon--medium"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
+            style="width: 20px; height: 20px;"
           >
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </div>
         <script>
           document.querySelector('.m-announcement-bar__close').addEventListener('click', function () {
-            document.querySelector('.m-announcement-bar').remove();
+            document.querySelector('.m-scrolling-announcement-{{ section_id }}').remove();
             document.documentElement.style.setProperty('--m-announcement-height', '0px');
           });
         </script>
@@ -80,43 +251,15 @@
 
 {% schema %}
 {
-  "name": "Announcement bar",
+  "name": "Scrolling Announcement",
   "enabled_on": {
     "groups": ["header"]
   },
+  "tag": null,
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "[Watch tutorial](https://foxecom.link/zDfFJy)"
-    },
     {
       "type": "header",
       "content": "General"
-    },
-    {
-      "type": "select",
-      "id": "container",
-      "label": "Container type",
-      "default": "container",
-      "options": [
-        {
-          "value": "container-fluid",
-          "label": "Default"
-        },
-        {
-          "value": "w-full",
-          "label": "Full width"
-        },
-        {
-          "value": "container",
-          "label": "Use container box"
-        }
-      ]
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme"
     },
     {
       "type": "checkbox",
@@ -128,7 +271,7 @@
       "type": "checkbox",
       "id": "homepage_only",
       "label": "Home page only",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",
@@ -137,70 +280,341 @@
       "default": true
     },
     {
-      "type": "checkbox",
-      "id": "show_divider",
-      "label": "Show divider",
-      "default": false
+      "type": "header",
+      "content": "Announcement Messages"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_1",
+      "label": "Message 1",
+      "default": "Free shipping on all orders over $50"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_2",
+      "label": "Message 2",
+      "default": "Use code WELCOME10 for 10% off your first order"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_3",
+      "label": "Message 3",
+      "default": "Limited time offer - Shop now"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_4",
+      "label": "Message 4",
+      "default": "New arrivals every week"
     },
     {
       "type": "header",
-      "content": "Slider settings"
+      "content": "Separator"
     },
     {
-      "type": "paragraph",
-      "content": "Slider work when more than more 2 items"
+      "type": "text",
+      "id": "separator",
+      "label": "Separator character",
+      "default": "★",
+      "info": "Character(s) to separate messages"
+    },
+    {
+      "type": "select",
+      "id": "separator_style",
+      "label": "Separator animation",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "pulse",
+          "label": "Pulse"
+        },
+        {
+          "value": "rotate",
+          "label": "Rotate"
+        },
+        {
+          "value": "bounce",
+          "label": "Bounce"
+        }
+      ],
+      "default": "pulse"
+    },
+    {
+      "type": "range",
+      "id": "separator_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "separator_opacity",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separator opacity",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Separator spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "info": "Leave blank to use text color"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "info": "Gradient overrides background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
     },
     {
       "type": "checkbox",
-      "id": "show_nav",
-      "label": "Show navigation",
+      "id": "rainbow_text",
+      "label": "Rainbow text effect",
+      "default": false,
+      "info": "Overrides text color"
+    },
+    {
+      "type": "checkbox",
+      "id": "glow_effect",
+      "label": "Text glow effect",
       "default": false
     },
     {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#FFFFFF"
+    },
+    {
       "type": "checkbox",
-      "id": "autorotate",
-      "label": "Auto-rotate slides",
+      "id": "text_shadow",
+      "label": "Text shadow",
       "default": false
     },
     {
       "type": "range",
-      "id": "autorotate_speed",
-      "label": "Change slides every",
-      "max": 10,
-      "min": 2,
-      "step": 1,
-      "unit": "s",
-      "default": 3
-    }
-  ],
-  "blocks": [
+      "id": "bar_height",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bar height",
+      "default": 40
+    },
     {
-      "type": "item",
-      "name": "Announcement item",
-      "settings": [
+      "type": "range",
+      "id": "bar_height_mobile",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Bar height on mobile",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size on mobile",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
         {
-          "type": "textarea",
-          "id": "message",
-          "label": "Message",
-          "default": "Free shipping for all orders from $60+"
+          "value": "300",
+          "label": "Light"
         },
         {
-          "type": "url",
-          "id": "message_link",
-          "label": "Link"
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
         }
-      ]
+      ],
+      "default": "500"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase_text",
+      "label": "Uppercase text",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Message spacing",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_top_enabled",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "border_bottom_enabled",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Right to left"
+        },
+        {
+          "value": "right",
+          "label": "Left to right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll speed (lower is faster)",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "zoom",
+          "label": "Zoom text"
+        },
+        {
+          "value": "glow",
+          "label": "Glow background"
+        }
+      ],
+      "default": "none"
     }
   ],
   "presets": [
     {
-      "name": "Announcement bar",
-      "category": "Image",
-      "blocks": [
-        {
-          "type": "item"
-        }
-      ]
+      "name": "Scrolling Announcement"
     }
   ]
 }
