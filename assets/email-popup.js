@@ -2,8 +2,59 @@
 // Handles triggers, display, validation, analytics, integration, accessibility
 
 (function() {
-  // Utility: get settings from Liquid
+  // Utility: get settings from Liquid or theme settings
   function getSettings() {
+    // Prefer theme settings if available
+    if (window.theme && window.theme.settings && window.theme.settings.email_popup_enable !== undefined) {
+      return {
+        enable: window.theme.settings.email_popup_enable,
+        preview_mode: window.theme.settings.email_popup_preview_mode,
+        trigger_type: window.theme.settings.email_popup_trigger_type,
+        trigger_delay: window.theme.settings.email_popup_trigger_delay,
+        trigger_scroll: window.theme.settings.email_popup_trigger_scroll,
+        trigger_new_visitors_only: window.theme.settings.email_popup_trigger_new_visitors_only,
+        trigger_returning_visitors_only: window.theme.settings.email_popup_trigger_returning_visitors_only,
+        trigger_mobile_only: window.theme.settings.email_popup_trigger_mobile_only,
+        trigger_desktop_only: window.theme.settings.email_popup_trigger_desktop_only,
+        exclude_urls: window.theme.settings.email_popup_exclude_urls,
+        resurface_delay: window.theme.settings.email_popup_resurface_delay,
+        bg_color: window.theme.settings.email_popup_bg_color,
+        text_color: window.theme.settings.email_popup_text_color,
+        accent_color: window.theme.settings.email_popup_accent_color,
+        overlay_color: window.theme.settings.email_popup_overlay_color,
+        overlay_opacity: window.theme.settings.email_popup_overlay_opacity,
+        font_family: window.theme.settings.email_popup_font_family,
+        border_radius: window.theme.settings.email_popup_border_radius,
+        shadow_strength: window.theme.settings.email_popup_shadow_strength,
+        popup_image: window.theme.settings.email_popup_image,
+        heading: window.theme.settings.email_popup_heading,
+        description: window.theme.settings.email_popup_description,
+        email_placeholder: window.theme.settings.email_popup_email_placeholder,
+        submit_button: window.theme.settings.email_popup_submit_button,
+        show_agreement: window.theme.settings.email_popup_show_agreement,
+        agreement_text: window.theme.settings.email_popup_agreement_text,
+        thank_you_message: window.theme.settings.email_popup_thank_you_message,
+        enable_discount: window.theme.settings.email_popup_enable_discount,
+        discount_code: window.theme.settings.email_popup_discount_code,
+        discount_instructions: window.theme.settings.email_popup_discount_instructions,
+        show_copy_button: window.theme.settings.email_popup_show_copy_button,
+        integrate_shopify_customers: window.theme.settings.email_popup_integrate_shopify_customers,
+        enable_webhook: window.theme.settings.email_popup_enable_webhook,
+        webhook_url: window.theme.settings.email_popup_webhook_url,
+        enable_mailchimp: window.theme.settings.email_popup_enable_mailchimp,
+        mailchimp_api_key: window.theme.settings.email_popup_mailchimp_api_key,
+        mailchimp_list_id: window.theme.settings.email_popup_mailchimp_list_id,
+        enable_klaviyo: window.theme.settings.email_popup_enable_klaviyo,
+        klaviyo_api_key: window.theme.settings.email_popup_klaviyo_api_key,
+        klaviyo_list_id: window.theme.settings.email_popup_klaviyo_list_id,
+        fallback_storage: window.theme.settings.email_popup_fallback_storage,
+        enable_analytics: window.theme.settings.email_popup_enable_analytics,
+        gdpr_compliance: window.theme.settings.email_popup_gdpr_compliance,
+        enable_keyboard_nav: window.theme.settings.email_popup_enable_keyboard_nav,
+        enable_screen_reader: window.theme.settings.email_popup_enable_screen_reader,
+        custom_class: window.theme.settings.email_popup_custom_class
+      };
+    }
     if (window.emailPopupSettings) return window.emailPopupSettings;
     // Fallback: read from data attribute or window object
     try {
@@ -85,10 +136,22 @@
   let popupRoot = document.getElementById('email-popup-root');
   let cookieName = 'EmailPopupDismissed';
 
-  // Preview mode: always show popup immediately if enabled
-  if (settings.enable && settings.preview_mode) {
-    renderPopup();
-    popupShown = true;
+  // Helper to show preview in theme editor
+  function maybeShowPreview() {
+    settings = getSettings(); // re-fetch in case settings changed
+    if (popupShown) return;
+    if (settings.enable && settings.preview_mode && window.Shopify && window.Shopify.designMode === true) {
+      renderPopup();
+      popupShown = true;
+    }
+  }
+
+  // Preview mode: only show in theme editor (admin)
+  if (settings.enable && settings.preview_mode && window.Shopify && window.Shopify.designMode === true) {
+    document.addEventListener('DOMContentLoaded', maybeShowPreview);
+    document.addEventListener('shopify:section:load', maybeShowPreview);
+    // Also try immediately in case designMode is already set
+    maybeShowPreview();
     return;
   }
 
