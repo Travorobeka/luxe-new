@@ -118,17 +118,17 @@
         "contact_title": "Contact Us",
         "contact_info": "<p>123 Main Street<br/>City, State 12345<br/>Phone: (555) 123-4567<br/>Email: info@example.com</p>",
         "show_social_icons": true,
-        "social_icon_size": 36,
+        "social_icon_size": 24,
         "social_icon_inner_size": 18,
         "social_icon_spacing": 15,
         "social_icon_border_radius": 18,
-        "social_bg_color": "#eeeeee",
+        "social_bg_color": "#fbf7f0",
         "social_icon_color": "#333333",
         "social_hover_bg_color": "#000000",
         "social_hover_icon_color": "#ffffff",
         "social_hover_transition": 0.2,
         "social_hover_scale": 1,
-        "social_hover_rotate": 0,
+        "social_hover_rotate": 360,
         "show_facebook": true,
         "show_twitter": true,
         "show_instagram": true,
@@ -145,8 +145,8 @@
         "show_line": false,
         "copyright_text": "<p>© 2024 Your Store. All rights reserved.</p>",
         "show_payment_icons": true,
-        "payment_icon_size": 30,
-        "footer_bottom_alignment": "space-between"
+        "payment_icon_size": 22,
+        "footer_bottom_alignment": "left-right"
       }
     },
     "mobile-sticky-bar": {
