@@ -25,7 +25,7 @@
         "column_spacing": 40,
         "section_spacing": 40,
         "desktop_column_gap": 40,
-        "column_distribution": "wide_first",
+        "column_distribution": "custom",
         "custom_column_widths": "2fr 1fr 1fr",
         "column_alignment": "center",
         "column_justify": "space-evenly",
