@@ -112,17 +112,22 @@
   // Utility: check if mobile (phones only, not tablets/iPads)
   function isMobile() {
     const userAgent = navigator.userAgent;
-    const isPhoneWidth = window.innerWidth <= 768;
     
-    // Exclude iPads and tablets - they should use desktop design
+    // First check if it's explicitly a tablet/iPad - these should use desktop design
     const isTablet = /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent) || 
                      (userAgent.includes('Android') && !userAgent.includes('Mobile'));
     
-    // Only return true for actual mobile phones
+    if (isTablet) return false;
+    
+    // Check for mobile width (important for responsive behavior)
+    const isMobileWidth = window.innerWidth <= 768;
+    
+    // Check for mobile devices
     const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
     
-    // Must be both mobile width AND mobile device, but NOT a tablet
-    return isPhoneWidth && isMobileDevice && !isTablet;
+    // Return true if either mobile width OR mobile device (but not tablet)
+    // This ensures we catch edge cases where user agent detection might fail
+    return isMobileWidth || isMobileDevice;
   }
 
   // Utility: focus trap
