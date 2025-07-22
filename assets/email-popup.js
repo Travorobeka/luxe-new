@@ -20,9 +20,19 @@
         resurface_delay: window.theme.settings.email_popup_resurface_delay,
         bg_color: window.theme.settings.email_popup_bg_color,
         text_color: window.theme.settings.email_popup_text_color,
-        accent_color: window.theme.settings.email_popup_accent_color,
-        overlay_color: window.theme.settings.email_popup_overlay_color,
-        overlay_opacity: window.theme.settings.email_popup_overlay_opacity,
+        button_bg_color: window.theme.settings.email_popup_button_bg_color,
+        button_text_color: window.theme.settings.email_popup_button_text_color,
+        button_border_color: window.theme.settings.email_popup_button_border_color,
+        button_hover_bg_color: window.theme.settings.email_popup_button_hover_bg_color,
+        button_hover_text_color: window.theme.settings.email_popup_button_hover_text_color,
+        button_style: window.theme.settings.email_popup_button_style,
+        button_size: window.theme.settings.email_popup_button_size,
+        button_border_radius: window.theme.settings.email_popup_button_border_radius,
+        button_border_width: window.theme.settings.email_popup_button_border_width,
+        button_full_width: window.theme.settings.email_popup_button_full_width,
+        button_uppercase: window.theme.settings.email_popup_button_uppercase,
+        button_font_size: window.theme.settings.email_popup_button_font_size,
+        button_font_weight: window.theme.settings.email_popup_button_font_weight,
         font_family: window.theme.settings.email_popup_font_family,
         border_radius: window.theme.settings.email_popup_border_radius,
         shadow_strength: window.theme.settings.email_popup_shadow_strength,
@@ -216,42 +226,49 @@
       break;
   }
 
-  // Modal rendering
+  // Mobile-first popup rendering (no overlay)
   function renderPopup() {
     // Remove any existing
     popupRoot.innerHTML = '';
     popupRoot.style.display = 'block';
-    // Overlay
-    const overlay = document.createElement('div');
-    overlay.className = 'email-popup-overlay';
-    overlay.style.background = settings.overlay_color || '#000';
-    overlay.style.opacity = (settings.overlay_opacity || 40) / 100;
-    overlay.style.position = 'fixed';
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = '100vw';
-    overlay.style.height = '100vh';
-    overlay.style.zIndex = 99998;
-    overlay.onclick = closePopup;
-    // Modal
+    
+    // Modal container - mobile first approach
     const modal = document.createElement('div');
     modal.className = 'email-popup-modal ' + (settings.custom_class || '');
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
-    modal.style.position = 'fixed';
-    modal.style.left = '50%';
-    modal.style.top = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
+    
+    // Mobile-first responsive positioning
+    if (isMobile()) {
+      // Mobile: Bottom sheet style
+      modal.style.position = 'fixed';
+      modal.style.bottom = '0';
+      modal.style.left = '0';
+      modal.style.right = '0';
+      modal.style.width = '100%';
+      modal.style.maxWidth = 'none';
+      modal.style.borderRadius = `${settings.border_radius || 12}px ${settings.border_radius || 12}px 0 0`;
+      modal.style.padding = '1.5rem';
+      modal.style.transform = 'translateY(0)';
+    } else {
+      // Desktop: Centered modal
+      modal.style.position = 'fixed';
+      modal.style.top = '50%';
+      modal.style.left = '50%';
+      modal.style.transform = 'translate(-50%, -50%)';
+      modal.style.width = '100%';
+      modal.style.maxWidth = '420px';
+      modal.style.borderRadius = `${settings.border_radius || 12}px`;
+      modal.style.padding = '2rem';
+    }
+    
+    // Common modal styles
     modal.style.background = settings.bg_color || '#fff';
     modal.style.color = settings.text_color || '#222';
-    modal.style.borderRadius = (settings.border_radius || 12) + 'px';
-    modal.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
-    modal.style.maxWidth = '95vw';
-    modal.style.width = '100%';
-    modal.style.maxWidth = '400px';
-    modal.style.zIndex = 99999;
+    modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.15)';
+    modal.style.zIndex = '9999';
     modal.style.fontFamily = settings.font_family || 'inherit';
-    modal.style.padding = isMobile() ? '1.2em 1em' : '2em 2em';
+    modal.style.border = '1px solid rgba(0,0,0,0.1)';
     modal.tabIndex = -1;
     // Close button
     const closeBtn = document.createElement('button');
@@ -332,19 +349,88 @@
       agreeDiv.appendChild(agreeLabel);
       form.appendChild(agreeDiv);
     }
-    // Submit button
+    // Submit button with advanced customization
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.className = 'email-popup-submit';
-    submitBtn.innerText = settings.submit_button || 'Subscribe';
-    submitBtn.style.background = settings.accent_color || '#007bff';
-    submitBtn.style.color = '#fff';
-    submitBtn.style.border = 'none';
-    submitBtn.style.borderRadius = '6px';
-    submitBtn.style.padding = '0.8em 1.2em';
-    submitBtn.style.fontSize = '1em';
-    submitBtn.style.width = '100%';
+    
+    // Button text with uppercase option
+    const buttonText = settings.submit_button || 'Subscribe';
+    submitBtn.innerText = settings.button_uppercase ? buttonText.toUpperCase() : buttonText;
+    
+    // Button styling based on style type
+    const buttonStyle = settings.button_style || 'primary';
+    const bgColor = settings.button_bg_color || '#007bff';
+    const textColor = settings.button_text_color || '#ffffff';
+    const borderColor = settings.button_border_color || bgColor;
+    const borderWidth = settings.button_border_width || 1;
+    const borderRadius = settings.button_border_radius || 6;
+    
+    // Apply style-specific styling
+    if (buttonStyle === 'primary') {
+      submitBtn.style.background = bgColor;
+      submitBtn.style.color = textColor;
+      submitBtn.style.border = `${borderWidth}px solid ${borderColor}`;
+    } else if (buttonStyle === 'secondary') {
+      submitBtn.style.background = 'transparent';
+      submitBtn.style.color = borderColor;
+      submitBtn.style.border = `${borderWidth}px solid ${borderColor}`;
+    } else if (buttonStyle === 'minimal') {
+      submitBtn.style.background = 'transparent';
+      submitBtn.style.color = borderColor;
+      submitBtn.style.border = 'none';
+      submitBtn.style.textDecoration = 'underline';
+    }
+    
+    // Common button styles
+    submitBtn.style.borderRadius = `${borderRadius}px`;
+    submitBtn.style.fontSize = `${settings.button_font_size || 16}px`;
+    submitBtn.style.fontWeight = settings.button_font_weight || 500;
     submitBtn.style.cursor = 'pointer';
+    submitBtn.style.transition = 'all 0.2s ease';
+    
+    // Button sizing
+    const buttonSize = settings.button_size || 'medium';
+    if (buttonSize === 'small') {
+      submitBtn.style.padding = '0.5rem 1rem';
+    } else if (buttonSize === 'large') {
+      submitBtn.style.padding = '1rem 1.5rem';
+    } else {
+      submitBtn.style.padding = '0.75rem 1.25rem';
+    }
+    
+    // Full width option
+    if (settings.button_full_width !== false) {
+      submitBtn.style.width = '100%';
+    }
+    
+    // Add hover effects
+    const hoverBgColor = settings.button_hover_bg_color || '#0056b3';
+    const hoverTextColor = settings.button_hover_text_color || '#ffffff';
+    
+    submitBtn.addEventListener('mouseenter', function() {
+      if (buttonStyle === 'primary') {
+        submitBtn.style.background = hoverBgColor;
+        submitBtn.style.color = hoverTextColor;
+      } else if (buttonStyle === 'secondary') {
+        submitBtn.style.background = borderColor;
+        submitBtn.style.color = '#ffffff';
+      } else if (buttonStyle === 'minimal') {
+        submitBtn.style.color = hoverBgColor;
+      }
+    });
+    
+    submitBtn.addEventListener('mouseleave', function() {
+      if (buttonStyle === 'primary') {
+        submitBtn.style.background = bgColor;
+        submitBtn.style.color = textColor;
+      } else if (buttonStyle === 'secondary') {
+        submitBtn.style.background = 'transparent';
+        submitBtn.style.color = borderColor;
+      } else if (buttonStyle === 'minimal') {
+        submitBtn.style.color = borderColor;
+      }
+    });
     form.appendChild(submitBtn);
     // Error message
     const errorMsg = document.createElement('div');
@@ -383,13 +469,15 @@
         copyBtn.type = 'button';
         copyBtn.innerText = 'Copy code';
         copyBtn.style.marginLeft = '0.7em';
-        copyBtn.style.background = settings.accent_color || '#007bff';
-        copyBtn.style.color = '#fff';
-        copyBtn.style.border = 'none';
-        copyBtn.style.borderRadius = '6px';
+        copyBtn.style.background = settings.button_bg_color || '#007bff';
+        copyBtn.style.color = settings.button_text_color || '#fff';
+        copyBtn.style.border = `${settings.button_border_width || 1}px solid ${settings.button_border_color || settings.button_bg_color || '#007bff'}`;
+        copyBtn.style.borderRadius = `${settings.button_border_radius || 6}px`;
         copyBtn.style.padding = '0.4em 0.8em';
-        copyBtn.style.fontSize = '0.95em';
+        copyBtn.style.fontSize = `${Math.max((settings.button_font_size || 16) - 2, 12)}px`;
+        copyBtn.style.fontWeight = settings.button_font_weight || 500;
         copyBtn.style.cursor = 'pointer';
+        copyBtn.style.transition = 'all 0.2s ease';
         copyBtn.onclick = function() { copyToClipboard(settings.discount_code); copyBtn.innerText = 'Copied!'; setTimeout(() => { copyBtn.innerText = 'Copy code'; }, 1200); };
         thankYou.appendChild(copyBtn);
       }
@@ -402,19 +490,50 @@
       }
     }
     modal.appendChild(thankYou);
-    // Append
+    // Append close button and modal (no overlay)
     modal.appendChild(closeBtn);
-    popupRoot.appendChild(overlay);
     popupRoot.appendChild(modal);
+    
+    // Add animation for mobile bottom sheet
+    if (isMobile()) {
+      modal.style.transform = 'translateY(100%)';
+      setTimeout(() => {
+        modal.style.transition = 'transform 0.3s ease-out';
+        modal.style.transform = 'translateY(0)';
+      }, 10);
+    }
+    
     // Focus trap
     trapFocus(modal);
     setTimeout(() => { modal.focus(); }, 100);
   }
 
-  // Close logic
+  // Close logic with mobile animation
   function closePopup() {
-    popupRoot.style.display = 'none';
-    popupRoot.innerHTML = '';
+    const modal = popupRoot.querySelector('.email-popup-modal');
+    if (modal) {
+      // Animate out on mobile
+      if (isMobile()) {
+        modal.style.transition = 'transform 0.3s ease-in';
+        modal.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+          popupRoot.style.display = 'none';
+          popupRoot.innerHTML = '';
+        }, 300);
+      } else {
+        // Fade out on desktop
+        modal.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
+        modal.style.opacity = '0';
+        modal.style.transform = 'translate(-50%, -50%) scale(0.95)';
+        setTimeout(() => {
+          popupRoot.style.display = 'none';
+          popupRoot.innerHTML = '';
+        }, 200);
+      }
+    } else {
+      popupRoot.style.display = 'none';
+      popupRoot.innerHTML = '';
+    }
     setCookie(cookieName, '1', settings.resurface_delay || 24); // hours
   }
 

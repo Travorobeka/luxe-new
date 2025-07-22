@@ -3964,9 +3964,28 @@
       {"type": "range", "id": "email_popup_resurface_delay", "label": "Delay before showing again after close (hours)", "min": 1, "max": 72, "step": 1, "default": 24},
       {"type": "color", "id": "email_popup_bg_color", "label": "Background color", "default": "#ffffff"},
       {"type": "color", "id": "email_popup_text_color", "label": "Text color", "default": "#222222"},
-      {"type": "color", "id": "email_popup_accent_color", "label": "Accent color (button)", "default": "#007bff"},
-      {"type": "color", "id": "email_popup_overlay_color", "label": "Overlay color", "default": "#000000"},
-      {"type": "range", "id": "email_popup_overlay_opacity", "label": "Overlay opacity (%)", "min": 0, "max": 100, "step": 5, "default": 40},
+      {"type": "header", "content": "Button Styling"},
+      {"type": "color", "id": "email_popup_button_bg_color", "label": "Button background color", "default": "#007bff"},
+      {"type": "color", "id": "email_popup_button_text_color", "label": "Button text color", "default": "#ffffff"},
+      {"type": "color", "id": "email_popup_button_border_color", "label": "Button border color", "default": "#007bff"},
+      {"type": "color", "id": "email_popup_button_hover_bg_color", "label": "Button hover background color", "default": "#0056b3"},
+      {"type": "color", "id": "email_popup_button_hover_text_color", "label": "Button hover text color", "default": "#ffffff"},
+      {"type": "select", "id": "email_popup_button_style", "label": "Button style", "options": [
+        {"value": "primary", "label": "Primary (filled)"},
+        {"value": "secondary", "label": "Secondary (outline)"},
+        {"value": "minimal", "label": "Minimal (text only)"}
+      ], "default": "primary"},
+      {"type": "select", "id": "email_popup_button_size", "label": "Button size", "options": [
+        {"value": "small", "label": "Small"},
+        {"value": "medium", "label": "Medium"},
+        {"value": "large", "label": "Large"}
+      ], "default": "medium"},
+      {"type": "range", "id": "email_popup_button_border_radius", "label": "Button border radius (px)", "min": 0, "max": 50, "step": 2, "default": 6},
+      {"type": "range", "id": "email_popup_button_border_width", "label": "Button border width (px)", "min": 0, "max": 5, "step": 1, "default": 1},
+      {"type": "checkbox", "id": "email_popup_button_full_width", "label": "Full width button", "default": true},
+      {"type": "checkbox", "id": "email_popup_button_uppercase", "label": "Uppercase button text", "default": false},
+      {"type": "range", "id": "email_popup_button_font_size", "label": "Button font size (px)", "min": 12, "max": 20, "step": 1, "default": 16},
+      {"type": "range", "id": "email_popup_button_font_weight", "label": "Button font weight", "min": 300, "max": 900, "step": 100, "default": 500},
       {"type": "select", "id": "email_popup_font_family", "label": "Font family", "options": [
         {"value": "inherit", "label": "Inherit"},
         {"value": "sans-serif", "label": "Sans-serif"},
