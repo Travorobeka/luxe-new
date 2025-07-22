@@ -109,9 +109,20 @@
     return settings.exclude_urls.split('\n').some(url => url && path.startsWith(url.trim()));
   }
 
-  // Utility: check if mobile
+  // Utility: check if mobile (phones only, not tablets/iPads)
   function isMobile() {
-    return window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent);
+    const userAgent = navigator.userAgent;
+    const isPhoneWidth = window.innerWidth <= 768;
+    
+    // Exclude iPads and tablets - they should use desktop design
+    const isTablet = /iPad|Tablet|PlayBook|Silk|Kindle/i.test(userAgent) || 
+                     (userAgent.includes('Android') && !userAgent.includes('Mobile'));
+    
+    // Only return true for actual mobile phones
+    const isMobileDevice = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|webOS|Opera Mini/i.test(userAgent);
+    
+    // Must be both mobile width AND mobile device, but NOT a tablet
+    return isPhoneWidth && isMobileDevice && !isTablet;
   }
 
   // Utility: focus trap
@@ -277,9 +288,9 @@
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     
-    // Mobile-first responsive positioning
+    // Device-specific responsive positioning
     if (isMobile()) {
-      // Mobile: Bottom sheet style
+      // Mobile phones only: Bottom sheet style for touch optimization
       modal.style.position = 'fixed';
       modal.style.bottom = '0';
       modal.style.left = '0';
@@ -290,7 +301,7 @@
       modal.style.padding = '1.5rem';
       modal.style.transform = 'translateY(0)';
     } else {
-      // Desktop: Centered modal with enhanced sizing
+      // Desktop, tablets, and iPads: Centered modal with enhanced sizing
       modal.style.position = 'fixed';
       modal.style.top = '50%';
       modal.style.left = '50%';
@@ -301,7 +312,7 @@
       modal.style.borderRadius = `${settings.border_radius || 12}px`;
       modal.style.padding = '2.5rem';
       
-      // Enhanced desktop animation
+      // Enhanced desktop animation with bounce effect
       modal.style.opacity = '0';
       modal.style.transform = 'translate(-50%, -50%) scale(0.9)';
       setTimeout(() => {
