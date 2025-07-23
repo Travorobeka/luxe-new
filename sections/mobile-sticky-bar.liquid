@@ -50,13 +50,14 @@
     {% endif %}
     {% if section_settings.show_search_icon %}
       {%- liquid
-        # Get icon customization settings for mobile search
-        assign search_icon_type = section.settings.search_icon_type | default: 'default'
-        assign search_icon_size_override = section.settings.search_icon_size_override | default: false
-        assign search_icon_size = section.settings.search_icon_size | default: 24
-        assign header_icon_size = section.settings.header_icon_size | default: 24
-        assign header_icon_weight = section.settings.header_icon_weight | default: '2'
-        assign search_icon_svg = section.settings.search_icon_svg
+        # Get icon customization settings from header section
+        assign header_section = sections['header']
+        assign search_icon_type = header_section.settings.search_icon_type | default: 'default'
+        assign search_icon_size_override = header_section.settings.search_icon_size_override | default: false
+        assign search_icon_size = header_section.settings.search_icon_size | default: 24
+        assign header_icon_size = header_section.settings.header_icon_size | default: 24
+        assign header_icon_weight = header_section.settings.header_icon_weight | default: '2'
+        assign search_icon_svg = header_section.settings.search_icon_svg
 
         # Determine final icon size
         if search_icon_size_override
@@ -108,13 +109,14 @@
     {% if shop.customer_accounts_enabled or shop.customer_accounts_optional %}
       {% if section_settings.show_account_icon %}
         {%- liquid
-          # Get icon customization settings for mobile account icon
-          assign account_icon_type = section.settings.account_icon_type | default: 'default'
-          assign account_icon_size_override = section.settings.account_icon_size_override | default: false
-          assign account_icon_size = section.settings.account_icon_size | default: 24
-          assign header_icon_size = section.settings.header_icon_size | default: 24
-          assign header_icon_weight = section.settings.header_icon_weight | default: '2'
-          assign account_icon_svg = section.settings.account_icon_svg
+          # Get icon customization settings from header section
+          assign header_section = sections['header']
+          assign account_icon_type = header_section.settings.account_icon_type | default: 'default'
+          assign account_icon_size_override = header_section.settings.account_icon_size_override | default: false
+          assign account_icon_size = header_section.settings.account_icon_size | default: 24
+          assign header_icon_size = header_section.settings.header_icon_size | default: 24
+          assign header_icon_weight = header_section.settings.header_icon_weight | default: '2'
+          assign account_icon_svg = header_section.settings.account_icon_svg
 
           # Determine final icon size
           if account_icon_size_override
