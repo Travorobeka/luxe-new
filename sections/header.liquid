@@ -75,6 +75,63 @@
     --logo-width-sticky: {{ section.settings.sticky_logo_max_width }}px;
     --logo-height-sticky: {{ section.settings.sticky_logo_max_width | divided_by: logo_aspect_ratio }}px;
     --header-transparent-text-color: {{ section.settings.transparent_text_color.red }}, {{ section.settings.transparent_text_color.green }}, {{ section.settings.transparent_text_color.blue }};
+    
+    /* Desktop Header Customization Variables */
+    --desktop-header-height: {{ section.settings.desktop_header_height | default: 80 }}px;
+    --desktop-header-padding-x: {{ section.settings.desktop_header_padding_x | default: 20 }}px;
+    --desktop-header-padding-y: {{ section.settings.desktop_header_padding_y | default: 10 }}px;
+    --desktop-header-border-radius: {{ section.settings.desktop_header_border_radius | default: 0 }}px;
+    --desktop-header-element-spacing: {{ section.settings.desktop_header_element_spacing | default: 20 }}px;
+    --desktop-header-max-width: {{ section.settings.desktop_header_max_width | default: 1200 }}px;
+    --desktop-header-shadow-opacity: {{ section.settings.desktop_header_shadow_opacity | default: 10 | divided_by: 100.0 }};
+    --desktop-header-border-color: {{ section.settings.desktop_header_border_color | default: '#e5e5e5' }};
+    --desktop-header-border-width: {{ section.settings.desktop_header_border_width | default: 1 }}px;
+  }
+
+  /* Desktop Header Custom Styling */
+  @media screen and (min-width: 1024px) {
+    .m-header__desktop {
+      {% if section.settings.desktop_header_shadow %}
+        box-shadow: 0 2px 10px rgba(0, 0, 0, var(--desktop-header-shadow-opacity));
+      {% else %}
+        box-shadow: none;
+      {% endif %}
+      
+      {% if section.settings.desktop_header_border %}
+        border-bottom: var(--desktop-header-border-width) solid var(--desktop-header-border-color);
+      {% endif %}
+      
+      border-radius: var(--desktop-header-border-radius);
+      padding: var(--desktop-header-padding-y) var(--desktop-header-padding-x);
+    }
+
+    .m-header__container {
+      {% case section.settings.desktop_header_width_type %}
+        {% when 'custom' %}
+          max-width: var(--desktop-header-max-width);
+          margin: 0 auto;
+        {% when 'boxed' %}
+          max-width: 1200px;
+          margin: 0 auto;
+        {% else %}
+          max-width: none;
+          width: 100%;
+      {% endcase %}
+    }
+
+    .m-header__inner {
+      min-height: var(--desktop-header-height);
+      gap: var(--desktop-header-element-spacing);
+      
+      {% case section.settings.desktop_header_alignment %}
+        {% when 'left' %}
+          justify-content: flex-start;
+        {% when 'center' %}
+          justify-content: center;
+        {% else %}
+          justify-content: space-between;
+      {% endcase %}
+    }
   }
 {% endstyle %}
 <m-header
@@ -97,7 +154,12 @@
       data-screen="m-header__mobile"
       data-transparent="{{ transparent_on_top }}"
     >
-      <span class="m-menu-button m:flex m:flex-1 m:w-3/12">
+      <div class="m-menu-button m:flex m:flex-1 m:w-3/12 m:items-center">
+        {% if show_wishlist_icon %}
+          <div class="m-mobile-wishlist-icon m:flex m:items-center m:mr-2">
+            {% render 'header-option-item__wishlist', display_by: 'icon', header_settings: section.settings %}
+          </div>
+        {% endif %}
         <button class="m-hamburger-box"
           style="
             width: {{ section.settings.mb_drawer_icon_size | default: 44 }}px;
@@ -143,7 +205,7 @@
             {% endcase %}
           </span>
         </button>
-      </span>
+      </div>
       {% comment %} Header-logo-mobile {% endcomment %}
       {% liquid
         assign class = 'm-logo m-logo--mobile m:justify-center ' | append: 'm:w-6/12'
@@ -747,6 +809,152 @@
       "id": "transparent_text_color",
       "default": "#ffffff",
       "info": "The text color when the header is transparent"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Header Customization"
+    },
+    {
+      "type": "paragraph",
+      "content": "Customize the desktop header appearance and layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_height",
+      "min": 60,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop header height",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_padding_x",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop header horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_padding_y",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop header vertical padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop header border radius",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "desktop_header_width_type",
+      "label": "Desktop header width",
+      "options": [
+        {
+          "value": "full_width",
+          "label": "Full width"
+        },
+        {
+          "value": "boxed",
+          "label": "Boxed (container)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom max width"
+        }
+      ],
+      "default": "full_width"
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_max_width",
+      "min": 800,
+      "max": 2000,
+      "step": 20,
+      "unit": "px",
+      "label": "Custom max width (when custom is selected)",
+      "default": 1200
+    },
+    {
+      "type": "select",
+      "id": "desktop_header_alignment",
+      "label": "Desktop header content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left aligned"
+        },
+        {
+          "value": "center",
+          "label": "Center aligned"
+        },
+        {
+          "value": "space_between",
+          "label": "Space between elements"
+        }
+      ],
+      "default": "space_between"
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_element_spacing",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing between header elements",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_header_shadow",
+      "label": "Enable header shadow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_shadow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Header shadow opacity",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_header_border",
+      "label": "Enable header border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "desktop_header_border_color",
+      "label": "Header border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "desktop_header_border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Header border width",
+      "default": 1
     },
     {
       "type": "header",

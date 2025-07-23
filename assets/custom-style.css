@@ -151,3 +151,32 @@
     align-items: center;
   }
 }
+
+/* Mobile Wishlist Icon Styling */
+@media screen and (max-width: 1023px) {
+  .m-mobile-wishlist-icon {
+    padding: 8px;
+  }
+  
+  .m-mobile-wishlist-icon .m-header__wishlist {
+    padding: 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .m-mobile-wishlist-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Ensure proper spacing between wishlist and hamburger */
+  .m-menu-button {
+    gap: 8px;
+  }
+  
+  /* Hide tooltip on mobile */
+  .m-mobile-wishlist-icon .m-tooltip {
+    display: none;
+  }
+}
