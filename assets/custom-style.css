@@ -180,3 +180,128 @@
     display: none;
   }
 }
+
+/* Wishlist Drawer Styles */
+.m-wishlist-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, var(--m-bg-opacity, 0));
+  z-index: 999;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.m-wishlist-drawer--active {
+  visibility: visible;
+}
+
+.m-wishlist-drawer__inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(var(--translate-x, 100%));
+  transition: transform 0.3s ease;
+}
+
+.m-wishlist-drawer__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.m-wishlist-drawer__close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.m-wishlist-drawer__close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.m-wishlist-drawer__header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.m-wishlist-drawer__title {
+  margin: 0;
+  padding-right: 40px;
+}
+
+.m-wishlist-drawer__body {
+  overflow-y: auto;
+  height: calc(100% - 140px);
+}
+
+.m-wishlist-drawer__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #666;
+}
+
+.m-wishlist-drawer__empty {
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.m-wishlist-drawer__empty svg {
+  margin: 0 auto 16px;
+  opacity: 0.3;
+}
+
+.m-wishlist-drawer__item {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.m-wishlist-drawer__item:last-child {
+  border-bottom: none;
+}
+
+.m-wishlist-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.m-wishlist-remove-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.m-wishlist-drawer__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e5e5;
+  background: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .m-wishlist-drawer__inner {
+    width: 100%;
+    max-width: 100%;
+  }
+}
