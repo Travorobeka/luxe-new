@@ -111,12 +111,11 @@
                 background: {{ section.settings.mb_menu_btn_bg | default: '#fff' }};
                 border: {{ section.settings.mb_menu_btn_border_width | default: 1 }}px solid {{ section.settings.mb_menu_btn_border_color | default: '#e5e5e5' }};
                 border-radius: {{ section.settings.mb_menu_btn_radius | default: 8 }}px;
-                font-family: {{ section.settings.mb_menu_btn_font_family | default: 'roboto_n4' }};
-                font-size: {{ section.settings.mb_menu_btn_font_size | default: 16 }}px;
-                font-weight: {{ section.settings.mb_menu_btn_font_weight | default: 500 }};
-                font-style: {{ section.settings.mb_menu_btn_font_style | default: 'normal' }};
-                letter-spacing: {{ section.settings.mb_menu_btn_letter_spacing | default: 0.2 }}px;
-                text-transform: {{ section.settings.mb_menu_btn_text_transform | default: 'none' }};
+                font-family: var(--font-stack-body);
+                font-size: calc(var(--font-base-size, 16) * 1px);
+                font-weight: var(--font-weight-body);
+                letter-spacing: var(--body-letter-spacing, 0px);
+                text-transform: var(--body-text-transform, none);
                 padding: {{ section.settings.mb_menu_btn_padding_v | default: 12 }}px {{ section.settings.mb_menu_btn_padding_h | default: 16 }}px;
                 display: flex; align-items: center; justify-content: space-between;
                 transition: background 0.2s;
@@ -141,9 +140,11 @@
             {% if link.links != blank %}
               <div class="m-accordion--item-content" style="
                 margin-top: {{ section.settings.mb_menu_sub_top_offset | default: 8 }}px;
-                font-size: {{ section.settings.mb_menu_sub_font_size | default: 14 }}px;
+                font-size: calc(var(--font-base-size, 16) * 0.875 * 1px);
                 color: {{ section.settings.mb_menu_sub_font_color | default: '#222' }};
-                font-weight: {{ section.settings.mb_menu_sub_font_weight | default: 400 }};
+                font-weight: var(--font-weight-body);
+                font-family: var(--font-stack-body);
+                line-height: var(--base-line-height, 1.5);
               ">
                 <ul class="m-link-lists">
                   {% for child in link.links %}
