@@ -393,13 +393,6 @@
     "scrolling_promotion_jjrFyf": {
       "type": "scrolling-promotion",
       "blocks": {
-        "image_LqzGfW": {
-          "type": "image",
-          "settings": {
-            "image_height": 80,
-            "image_link": ""
-          }
-        },
         "announcement_w3tNiH": {
           "type": "announcement",
           "settings": {
@@ -446,7 +439,6 @@
         }
       },
       "block_order": [
-        "image_LqzGfW",
         "announcement_w3tNiH",
         "image_HiyPPp",
         "announcement_nafDhJ",
