@@ -1,13 +1,14 @@
 {%- liquid
   # Get icon customization settings
   assign cart_icon_type = section.settings.cart_icon_type | default: 'default'
-  assign cart_icon_size = section.settings.cart_icon_size | default: 0
+  assign cart_icon_size_override = section.settings.cart_icon_size_override | default: false
+  assign cart_icon_size = section.settings.cart_icon_size | default: 24
   assign header_icon_size = section.settings.header_icon_size | default: 24
   assign header_icon_weight = section.settings.header_icon_weight | default: '2'
   assign cart_icon_svg = section.settings.cart_icon_svg
 
   # Determine final icon size
-  if cart_icon_size > 0
+  if cart_icon_size_override
     assign final_icon_size = cart_icon_size
   else
     assign final_icon_size = header_icon_size

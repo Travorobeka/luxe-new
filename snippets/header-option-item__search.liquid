@@ -18,13 +18,14 @@
 
   # Get icon customization settings
   assign search_icon_type = header_settings.search_icon_type | default: 'default'
-  assign search_icon_size = header_settings.search_icon_size | default: 0
+  assign search_icon_size_override = header_settings.search_icon_size_override | default: false
+  assign search_icon_size = header_settings.search_icon_size | default: 24
   assign header_icon_size = header_settings.header_icon_size | default: 24
   assign header_icon_weight = header_settings.header_icon_weight | default: '2'
   assign search_icon_svg = header_settings.search_icon_svg
 
   # Determine final icon size
-  if search_icon_size > 0
+  if search_icon_size_override
     assign final_icon_size = search_icon_size
   else
     assign final_icon_size = header_icon_size
