@@ -23,6 +23,11 @@
   assign header_icon_size = header_settings.header_icon_size | default: 24
   assign header_icon_weight = header_settings.header_icon_weight | default: '2'
   assign search_icon_svg = header_settings.search_icon_svg
+  
+  # Get textbox settings
+  assign search_textbox_placeholder = header_settings.search_textbox_placeholder | default: 'Search products...'
+  assign search_textbox_width = header_settings.search_textbox_width | default: 300
+  assign search_textbox_border_radius = header_settings.search_textbox_border_radius | default: 8
 
   # Determine final icon size
   if search_icon_size_override

@@ -35,3 +35,119 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
+/* Desktop Header Spacing and Alignment Fixes */
+@media screen and (min-width: 1024px) {
+  /* Improve header inner container alignment */
+  .m-header__inner {
+    align-items: center;
+    min-height: 80px; /* Ensure consistent header height */
+  }
+
+  /* Fix header element spacing and alignment */
+  .m-header__left,
+  .m-header__center, 
+  .m-header__right {
+    align-items: center;
+    height: 100%;
+  }
+
+  /* Standardize menu link padding for better spacing */
+  .m-menu {
+    --main-link-px: 18px;
+    --main-link-py: 24px;
+  }
+
+  /* Improve responsive menu padding */
+  @media(max-width: 1440px) {
+    .m-menu {
+      --main-link-px: 16px;
+    }
+  }
+
+  /* Fix logo alignment and consistent spacing */
+  .m-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  /* Improve header account/wishlist/cart icon alignment */
+  .m-header .ssw-link-fave-menu,
+  .m-header__compare,
+  .m-header__account,
+  .m-header__wishlist {
+    display: flex;
+    align-items: center;
+    padding: 16px 10px;
+    height: 100%;
+  }
+
+  /* Fix search form alignment */
+  .m-header__search {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  /* Improve center layout alignment */
+  .both-center .m-header__inner {
+    justify-content: space-between;
+  }
+
+  .both-center .m-header__left,
+  .both-center .m-header__right {
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+  }
+
+  .both-center .m-header__center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+
+  /* Fix logo-left-menu-center layout spacing */
+  .logo-left-menu-center .m-header__left {
+    min-width: 200px;
+  }
+
+  .logo-left-menu-center .m-header__center {
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  .logo-left-menu-center .m-header__right {
+    min-width: 200px;
+    justify-content: flex-end;
+  }
+
+  /* Fix two-level header layouts */
+  .logo-left__2l .m-header__inner,
+  .logo-center__2l .m-header__inner {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    align-items: center;
+  }
+
+  /* Improve mega menu container alignment */
+  .m-mega-menu__container.w-full {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  /* Fix cart icon spacing */
+  .m-cart-icon-bubble {
+    margin-right: 18px;
+  }
+
+  /* Ensure consistent vertical alignment for all header elements */
+  .m-header__desktop .m-header__inner > * {
+    display: flex;
+    align-items: center;
+  }
+}
