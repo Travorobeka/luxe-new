@@ -140,7 +140,7 @@
         "mb_show_language_switcher": true,
         "mb_drawer_icon_size": 25,
         "mb_drawer_icon_weight": "1",
-        "mb_drawer_icon_animation_style": "morph",
+        "mb_drawer_icon_animation_style": "rotate",
         "mb_drawer_icon_animate": true,
         "mb_drawer_hamburger_icon_type": "classic",
         "mb_drawer_hamburger_icon_svg": "<svg></svg>",
