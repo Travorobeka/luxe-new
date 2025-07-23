@@ -4,22 +4,28 @@
 <m-wishlist-drawer
   id="MinimogWishlistDrawer"
   class="m-wishlist-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="wishlist-drawer-title"
+  aria-hidden="true"
 >
-  <div class="m-wishlist-drawer__inner m:h-full m-gradient m-color-{{ settings.drawer_popup_color_scheme }}">
-    <button class="m-wishlist-drawer__close" aria-label="Close">
+  <div class="m-wishlist-drawer__inner m:h-full m-gradient m-color-{{ settings.drawer_popup_color_scheme }}" role="document">
+    <button class="m-wishlist-drawer__close" aria-label="Close wishlist drawer" title="Close wishlist drawer">
       <svg
         class="m-svg-icon--large"
         fill="currentColor"
         stroke="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 320 512"
+        aria-hidden="true"
+        focusable="false"
       >
         <path d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"/>
       </svg>
     </button>
     <div class="m:flex m:flex-col m:h-full" id="MinimogWishlistDrawerHeader">
       <div class="m-wishlist-drawer__header">
-        <h3 class="m-wishlist-drawer__title m:text-xl md:m:text-2xl m:font-medium">{{ 'layout.wishlist.title' | t }}</h3>
+        <h3 id="wishlist-drawer-title" class="m-wishlist-drawer__title m:text-xl md:m:text-2xl m:font-medium">{{ 'layout.wishlist.title' | t }}</h3>
       </div>
       <div
         class="m-wishlist-drawer__body m-scrollbar--vertical m:flex m:flex-col m:flex-1"
@@ -27,13 +33,13 @@
       >
         <div class="m-wishlist-drawer__items" id="wishlist-drawer-items">
           <!-- Wishlist items will be populated by JavaScript -->
-          <div class="m-wishlist-drawer__loading m:text-center m:py-8">
+          <div class="m-wishlist-drawer__loading m:text-center m:py-8" role="status" aria-live="polite" aria-label="Loading wishlist items">
             <p>{{ 'general.loading' | t }}</p>
           </div>
         </div>
-        <div class="m-wishlist-drawer__empty m:hidden m:text-center m:py-8">
+        <div class="m-wishlist-drawer__empty m:hidden m:text-center m:py-8" role="status" aria-live="polite">
           <div class="m:mb-4">
-            <svg width="48" height="48" fill="currentColor" opacity="0.3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <svg width="48" height="48" fill="currentColor" opacity="0.3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
               <path d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3zm-23.6 187.5L259.4 430.5c-2.4 2.4-4.4 2.4-6.8 0L77.2 251.8c-36.5-37.2-43.9-107.6 7.3-150.7 38.9-32.7 98.9-27.8 136.5 10.5l35 35.7 35-35.7c37.8-38.5 97.8-43.2 136.5-10.6 51.1 43.1 43.5 113.9 7.3 150.8z"/>
             </svg>
           </div>

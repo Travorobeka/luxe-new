@@ -45,6 +45,8 @@ class MWishlistDrawer extends HTMLElement {
     wishlistTriggers.forEach((trigger) => {
       trigger.setAttribute("role", "button");
       trigger.setAttribute("aria-haspopup", "dialog");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("aria-controls", "MinimogWishlistDrawer");
       trigger.addEventListener("click", (event) => {
         event.preventDefault();
         this.open(trigger);
@@ -53,8 +55,12 @@ class MWishlistDrawer extends HTMLElement {
   }
 
   open(triggeredBy) {
-    if (triggeredBy) this.setActiveElement(triggeredBy);
+    if (triggeredBy) {
+      this.setActiveElement(triggeredBy);
+      triggeredBy.setAttribute("aria-expanded", "true");
+    }
     this.classList.add("m-wishlist-drawer--active");
+    this.setAttribute("aria-hidden", "false");
     document.documentElement.classList.add("prevent-scroll");
     
     // Load wishlist items if not already loaded
@@ -66,6 +72,10 @@ class MWishlistDrawer extends HTMLElement {
       requestAnimationFrame(() => {
         this.style.setProperty("--m-bg-opacity", "0.5");
         this.style.setProperty("--translate-x", "0");
+        
+        // Focus management
+        this.trapFocus();
+        this.wishlistDrawerCloseIcon.focus();
       });
     });
   }
@@ -73,9 +83,23 @@ class MWishlistDrawer extends HTMLElement {
   close() {
     this.style.setProperty("--m-bg-opacity", "0");
     this.style.setProperty("--translate-x", "100%");
+    this.setAttribute("aria-hidden", "true");
+    
+    // Update trigger aria-expanded
+    if (this.activeElement) {
+      this.activeElement.setAttribute("aria-expanded", "false");
+    }
+    
     setTimeout(() => {
       this.classList.remove("m-wishlist-drawer--active");
       document.documentElement.classList.remove("prevent-scroll");
+      
+      // Return focus to trigger element
+      if (this.activeElement) {
+        this.activeElement.focus();
+      }
+      
+      this.removeFocusTrap();
     }, 300);
   }
 
@@ -169,9 +193,10 @@ class MWishlistDrawer extends HTMLElement {
               <button 
                 class="m-wishlist-remove-btn m:text-gray-400 hover:m:text-red-500 m:transition-colors"
                 data-product-id="${product.id}"
-                aria-label="Remove from wishlist"
+                aria-label="Remove ${product.title} from wishlist"
+                title="Remove ${product.title} from wishlist"
               >
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
@@ -180,6 +205,7 @@ class MWishlistDrawer extends HTMLElement {
               <button 
                 class="m-button m-button--small m-button--secondary m:text-xs"
                 onclick="this.closest('.m-wishlist-drawer__item').querySelector('form').submit()"
+                aria-label="Add ${product.title} to cart"
               >
                 Add to Cart
               </button>
@@ -264,6 +290,36 @@ class MWishlistDrawer extends HTMLElement {
   formatMoney(cents) {
     // Simple money formatting - you may want to use Shopify's money format
     return '$' + (cents / 100).toFixed(2);
+  }
+
+  trapFocus() {
+    this.focusableElements = this.querySelectorAll(
+      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
+    );
+    this.firstFocusableElement = this.focusableElements[0];
+    this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];
+
+    this.addEventListener('keydown', this.handleFocusTrap.bind(this));
+  }
+
+  removeFocusTrap() {
+    this.removeEventListener('keydown', this.handleFocusTrap.bind(this));
+  }
+
+  handleFocusTrap(e) {
+    if (e.key !== 'Tab') return;
+
+    if (e.shiftKey) {
+      if (document.activeElement === this.firstFocusableElement) {
+        this.lastFocusableElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === this.lastFocusableElement) {
+        this.firstFocusableElement.focus();
+        e.preventDefault();
+      }
+    }
   }
 }
 
