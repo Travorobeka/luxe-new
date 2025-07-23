@@ -521,5 +521,13 @@
         "error_heading": "Please adjust the following:"
       }
     }
+  },
+  "wishlist": {
+    "general": {
+      "empty_title": "Your wishlist is empty",
+      "empty_description": "Start adding items you love to your wishlist",
+      "continue_shopping": "Continue shopping",
+      "view_all": "View All Wishlist Items"
+    }
   }
 }
