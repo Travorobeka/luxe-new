@@ -155,6 +155,52 @@
       data-transparent="{{ transparent_on_top }}"
     >
       <div class="m-menu-button m:flex m:flex-1 m:w-3/12 m:items-center">
+        <button class="m-hamburger-box"
+          style="
+            width: {{ section.settings.mb_drawer_icon_size | default: 44 }}px;
+            height: {{ section.settings.mb_drawer_icon_size | default: 44 }}px;
+            border: none;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: none;
+            margin-right: 8px;
+          "
+          aria-label="Open menu"
+          type="button"
+          data-active="false"
+          data-anim="{{ section.settings.mb_drawer_icon_animation_style | default: 'fade' }}"
+        >
+          <span class="m-hamburger-icon" data-state="hamburger">
+            {% case section.settings.mb_drawer_hamburger_icon_type %}
+              {% when 'dots-horizontal' %}
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              {% when 'dots-vertical' %}
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+              {% when 'custom' %}
+                {{ section.settings.mb_drawer_hamburger_icon_svg }}
+              {% else %}
+                <!-- Classic hamburger icon -->
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="21" y2="7"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="17" x2="21" y2="17"></line></svg>
+            {% endcase %}
+          </span>
+          <span class="m-hamburger-icon m-hamburger-close" data-state="close" style="display:none;">
+            {% case section.settings.mb_drawer_close_icon_type %}
+              {% when 'arrow-left' %}
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              {% when 'arrow-right' %}
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              {% when 'plus' %>
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              {% when 'custom' %}
+                {{ section.settings.mb_drawer_close_icon_svg }}
+              {% else %}
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            {% endcase %}
+          </span>
+        </button>
         {% if show_wishlist_icon %}
           <button 
             class="m-wishlist-drawer-trigger"
@@ -170,7 +216,6 @@
               justify-content: center;
               cursor: pointer;
               transition: none;
-              margin-right: 8px;
             "
           >
             {% case section.settings.wishlist_icon_type | default: 'default' %}
@@ -209,51 +254,6 @@
             {% endcase %}
           </button>
         {% endif %}
-        <button class="m-hamburger-box"
-          style="
-            width: {{ section.settings.mb_drawer_icon_size | default: 44 }}px;
-            height: {{ section.settings.mb_drawer_icon_size | default: 44 }}px;
-            border: none;
-            background: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: none;
-          "
-          aria-label="Open menu"
-          type="button"
-          data-active="false"
-          data-anim="{{ section.settings.mb_drawer_icon_animation_style | default: 'fade' }}"
-        >
-          <span class="m-hamburger-icon" data-state="hamburger">
-            {% case section.settings.mb_drawer_hamburger_icon_type %}
-              {% when 'dots-horizontal' %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-              {% when 'dots-vertical' %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
-              {% when 'custom' %}
-                {{ section.settings.mb_drawer_hamburger_icon_svg }}
-              {% else %}
-                <!-- Classic hamburger icon -->
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="21" y2="7"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="17" x2="21" y2="17"></line></svg>
-            {% endcase %}
-          </span>
-          <span class="m-hamburger-icon m-hamburger-close" data-state="close" style="display:none;">
-            {% case section.settings.mb_drawer_close_icon_type %}
-              {% when 'arrow-left' %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-              {% when 'arrow-right' %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              {% when 'plus' %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              {% when 'custom' %}
-                {{ section.settings.mb_drawer_close_icon_svg }}
-              {% else %}
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ section.settings.mb_drawer_icon_weight | default: 2 }}" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            {% endcase %}
-          </span>
-        </button>
       </div>
       {% comment %} Header-logo-mobile {% endcomment %}
       {% liquid
