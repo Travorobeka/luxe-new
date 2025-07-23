@@ -1,18 +1,70 @@
+{%- liquid
+  # Get icon customization settings
+  assign cart_icon_type = section.settings.cart_icon_type | default: 'default'
+  assign cart_icon_size = section.settings.cart_icon_size | default: 0
+  assign header_icon_size = section.settings.header_icon_size | default: 24
+  assign header_icon_weight = section.settings.header_icon_weight | default: '2'
+  assign cart_icon_svg = section.settings.cart_icon_svg
+
+  # Determine final icon size
+  if cart_icon_size > 0
+    assign final_icon_size = cart_icon_size
+  else
+    assign final_icon_size = header_icon_size
+  endif
+
+  # Build icon classes and styles
+  assign icon_classes = 'm-svg-icon--custom'
+  assign icon_style = 'width: ' | append: final_icon_size | append: 'px; height: ' | append: final_icon_size | append: 'px; stroke-width: ' | append: header_icon_weight | append: ';'
+-%}
+
 <a
   href="{{ routes.cart_url }}"
   class="m-cart-icon-bubble"
   aria-label="{{ cart.item_count }}"
 >
   <span class="m-tooltip m:block m-tooltip--bottom m-tooltip--style-2">
-    <svg
-      class="m-svg-icon--medium"
-      fill="currentColor"
-      stroke="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 448 512"
-    >
-      <path d="M352 128C352 57.42 294.579 0 224 0 153.42 0 96 57.42 96 128H0v304c0 44.183 35.817 80 80 80h288c44.183 0 80-35.817 80-80V128h-96zM224 48c44.112 0 80 35.888 80 80H144c0-44.112 35.888-80 80-80zm176 384c0 17.645-14.355 32-32 32H80c-17.645 0-32-14.355-32-32V176h48v40c0 13.255 10.745 24 24 24s24-10.745 24-24v-40h160v40c0 13.255 10.745 24 24 24s24-10.745 24-24v-40h48v256z"/>
-    </svg>
+    {% case cart_icon_type %}
+      {% when 'cart' %}
+        <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+      {% when 'basket' %}
+        <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      {% when 'minimal' %}
+        <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="m16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      {% when 'outlined' %}
+        <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
+        </svg>
+      {% when 'custom' %}
+        {% if cart_icon_svg != blank %}
+          {{ cart_icon_svg | replace: '<svg', '<svg class="' | append: icon_classes | append: '" style="' | append: icon_style | append: '"' }}
+        {% else %}
+          <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="m16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        {% endif %}
+      {% else %}
+        <svg
+          class="{{ icon_classes }}"
+          style="{{ icon_style }}"
+          fill="currentColor"
+          stroke="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+        >
+          <path d="M352 128C352 57.42 294.579 0 224 0 153.42 0 96 57.42 96 128H0v304c0 44.183 35.817 80 80 80h288c44.183 0 80-35.817 80-80V128h-96zM224 48c44.112 0 80 35.888 80 80H144c0-44.112 35.888-80 80-80zm176 384c0 17.645-14.355 32-32 32H80c-17.645 0-32-14.355-32-32V176h48v40c0 13.255 10.745 24 24 24s24-10.745 24-24v-40h160v40c0 13.255 10.745 24 24 24s24-10.745 24-24v-40h48v256z"/>
+        </svg>
+    {% endcase %}
     <span class="m-tooltip__content">{{ 'layout.cart.title' | t }}</span>
   </span>
   <m-cart-count class="m-cart-count-bubble m-cart-count{% if cart == empty %} m:hidden{% endif %}">

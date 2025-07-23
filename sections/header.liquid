@@ -896,6 +896,137 @@
     },
     {
       "type": "header",
+      "content": "Header icons customization"
+    },
+    {
+      "type": "range",
+      "id": "header_icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "header_icon_weight",
+      "label": "Icon weight",
+      "options": [
+        { "value": "1", "label": "Extra Thin" },
+        { "value": "1.5", "label": "Thin" },
+        { "value": "2", "label": "Regular (default)" },
+        { "value": "2.5", "label": "Medium" },
+        { "value": "3", "label": "Thick" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Search icon"
+    },
+    {
+      "type": "select",
+      "id": "search_icon_type",
+      "label": "Search icon style",
+      "options": [
+        { "value": "default", "label": "Default (magnifying glass)" },
+        { "value": "minimal", "label": "Minimal search" },
+        { "value": "outlined", "label": "Outlined search" },
+        { "value": "custom", "label": "Custom SVG" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "search_icon_svg",
+      "label": "Search custom SVG (if selected)",
+      "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.35-4.35\"/></svg>"
+    },
+    {
+      "type": "range",
+      "id": "search_icon_size",
+      "label": "Search icon size (override)",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Set to 0 to use global icon size"
+    },
+    {
+      "type": "header",
+      "content": "Cart icon"
+    },
+    {
+      "type": "select",
+      "id": "cart_icon_type",
+      "label": "Cart icon style",
+      "options": [
+        { "value": "default", "label": "Default (shopping bag)" },
+        { "value": "cart", "label": "Shopping cart" },
+        { "value": "basket", "label": "Shopping basket" },
+        { "value": "minimal", "label": "Minimal bag" },
+        { "value": "outlined", "label": "Outlined bag" },
+        { "value": "custom", "label": "Custom SVG" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "cart_icon_svg",
+      "label": "Cart custom SVG (if selected)",
+      "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"/><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/><path d=\"m16 10a4 4 0 0 1-8 0\"/></svg>"
+    },
+    {
+      "type": "range",
+      "id": "cart_icon_size",
+      "label": "Cart icon size (override)",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Set to 0 to use global icon size"
+    },
+    {
+      "type": "header",
+      "content": "Wishlist icon"
+    },
+    {
+      "type": "select",
+      "id": "wishlist_icon_type",
+      "label": "Wishlist icon style",
+      "options": [
+        { "value": "default", "label": "Default (heart outline)" },
+        { "value": "filled", "label": "Filled heart" },
+        { "value": "minimal", "label": "Minimal heart" },
+        { "value": "star", "label": "Star outline" },
+        { "value": "star-filled", "label": "Filled star" },
+        { "value": "bookmark", "label": "Bookmark" },
+        { "value": "custom", "label": "Custom SVG" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "wishlist_icon_svg",
+      "label": "Wishlist custom SVG (if selected)",
+      "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z\"/></svg>"
+    },
+    {
+      "type": "range",
+      "id": "wishlist_icon_size",
+      "label": "Wishlist icon size (override)",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Set to 0 to use global icon size"
+    },
+    {
+      "type": "header",
       "content": "Instructions"
     },
     {
