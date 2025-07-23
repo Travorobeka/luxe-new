@@ -19,7 +19,7 @@
       "settings": {
         "show_announcement": true,
         "homepage_only": false,
-        "show_close": true,
+        "show_close": false,
         "announcement_text_1": "Free shipping on all orders over $50",
         "announcement_text_2": "Use code WELCOME10 for 10% off your first order",
         "announcement_text_3": "Limited time offer - Shop now",
