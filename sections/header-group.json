@@ -114,7 +114,7 @@
         "show_language_switcher": false,
         "header_icon_size": 21,
         "header_icon_weight": "1",
-        "search_icon_type": "outlined",
+        "search_icon_type": "minimal",
         "search_icon_svg": "<svg viewbox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.35-4.35\"></path></svg>",
         "search_icon_size_override": false,
         "search_icon_size": 24,
