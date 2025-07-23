@@ -168,7 +168,7 @@
         "mb_menu_btn_border_width": 1,
         "mb_menu_btn_radius": 8,
         "mb_menu_btn_font_family": "host_grotesk_n3",
-        "mb_menu_btn_font_size": 20,
+        "mb_menu_btn_font_size": 12,
         "mb_menu_btn_font_weight": "400",
         "mb_menu_btn_font_style": "normal",
         "mb_menu_btn_letter_spacing": 0.2,
