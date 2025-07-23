@@ -1,20 +1,70 @@
 {% if shop.customer_accounts_enabled or shop.customer_accounts_optional %}
   {% if display_by == 'icon' %}
+    {%- liquid
+      # Get icon customization settings for account icon
+      assign account_icon_type = section.settings.account_icon_type | default: 'default'
+      assign account_icon_size_override = section.settings.account_icon_size_override | default: false
+      assign account_icon_size = section.settings.account_icon_size | default: 24
+      assign header_icon_size = section.settings.header_icon_size | default: 24
+      assign header_icon_weight = section.settings.header_icon_weight | default: '2'
+      assign account_icon_svg = section.settings.account_icon_svg
+
+      # Determine final icon size
+      if account_icon_size_override
+        assign final_icon_size = account_icon_size
+      else
+        assign final_icon_size = header_icon_size
+      endif
+
+      # Build icon classes and styles
+      assign icon_classes = 'm-svg-icon--custom'
+      assign icon_style = 'width: ' | append: final_icon_size | append: 'px; height: ' | append: final_icon_size | append: 'px; stroke-width: ' | append: header_icon_weight | append: ';'
+    -%}
     <a
       href="{{ routes.account_url }}"
       class="m-header__account{% if box_size != blank %} {{ box_size }}{% endif %}"
       aria-label="{{ 'layout.customer.account' | t  }}"
     >
       <span class="m-tooltip m:block m-tooltip--bottom m-tooltip--style-2">
-        <svg
-          class="m-svg-icon--medium"
-          fill="currentColor"
-          stroke="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
-          <path d="M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z"/>
-        </svg>
+        {% case account_icon_type %}
+          {% when 'filled' %}
+            <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+            </svg>
+          {% when 'minimal' %}
+            <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          {% when 'circle' %}
+            <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+          {% when 'profile' %}
+            <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5ZM12.75 9a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0ZM8.25 15.75a2.25 2.25 0 0 1 4.5 0v.75h-4.5v-.75Z" />
+            </svg>
+          {% when 'custom' %}
+            {% if account_icon_svg != blank %}
+              {{ account_icon_svg | replace: '<svg', '<svg class="' | append: icon_classes | append: '" style="' | append: icon_style | append: '"' }}
+            {% else %}
+              <svg class="{{ icon_classes }}" style="{{ icon_style }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            {% endif %}
+          {% else %}
+            <svg
+              class="{{ icon_classes }}"
+              style="{{ icon_style }}"
+              fill="currentColor"
+              stroke="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+            >
+              <path d="M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z"/>
+            </svg>
+        {% endcase %}
         <span class="m-tooltip__content">{{ 'layout.customer.account' | t }}</span>
       </span>
     </a>

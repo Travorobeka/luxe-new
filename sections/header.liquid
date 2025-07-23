@@ -1042,6 +1042,46 @@
     },
     {
       "type": "header",
+      "content": "Account icon"
+    },
+    {
+      "type": "select",
+      "id": "account_icon_type",
+      "label": "Account icon style",
+      "options": [
+        { "value": "default", "label": "Default (user outline)" },
+        { "value": "filled", "label": "Filled user" },
+        { "value": "minimal", "label": "Minimal user" },
+        { "value": "circle", "label": "User in circle" },
+        { "value": "profile", "label": "Profile card" },
+        { "value": "custom", "label": "Custom SVG" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "account_icon_svg",
+      "label": "Account custom SVG (if selected)",
+      "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
+    },
+    {
+      "type": "checkbox",
+      "id": "account_icon_size_override",
+      "label": "Override account icon size",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "account_icon_size",
+      "label": "Account icon size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
       "content": "Instructions"
     },
     {
