@@ -405,6 +405,45 @@
   }
 }
 
+/* Wishlist icon state management */
+.m-wishlist-button .m-wishlist-icon {
+  fill: none;
+  stroke: currentColor;
+  transition: all 0.2s ease;
+}
+
+/* Filled state when item is in wishlist */
+.m-wishlist-button.added-to-wishlist .m-wishlist-icon {
+  fill: currentColor;
+}
+
+/* Special handling for star icons */
+.m-wishlist-button .m-wishlist-icon[viewBox*="24 24"] path[d*="11.48 3.499"] {
+  fill: none;
+  stroke: currentColor;
+}
+
+.m-wishlist-button.added-to-wishlist .m-wishlist-icon[viewBox*="24 24"] path[d*="11.48 3.499"] {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Ensure consistent styling across all wishlist icons */
+.m-wishlist-icon {
+  transition: all 0.2s ease;
+}
+
+/* Mobile sticky bar wishlist icon consistency */
+.m-mobile-sticky-bar--wishlist .m-wishlist-icon {
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Header wishlist icon consistency */
+.m-header__wishlist .m-wishlist-icon {
+  transition: all 0.2s ease;
+}
+
 
 /* Collection tabs mobile optimization */
 @media (max-width: 767px) {
