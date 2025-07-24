@@ -228,6 +228,16 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Enhanced close button for mobile */
+.m-wishlist-drawer__close {
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: auto !important;
+}
+
 .m-wishlist-drawer__close svg {
   width: 20px;
   height: 20px;
@@ -301,20 +311,41 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .m-wishlist-drawer__inner {
-    width: 100%;
-    max-width: 100%;
+    width: 90%;
+    max-width: 400px;
     transform: translateX(var(--translate-x, 100%));
     -webkit-transform: translateX(var(--translate-x, 100%));
+    border-radius: 20px 0 0 20px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
   }
   
   .m-wishlist-drawer__header {
     padding: 20px 20px 12px;
+    border-radius: 20px 0 0 0;
   }
   
   .m-wishlist-drawer__close {
     top: 16px;
     right: 16px;
     z-index: 20;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  .m-wishlist-drawer__close:hover {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .m-wishlist-drawer__footer {
+    border-radius: 0 0 0 20px;
   }
   
   /* Ensure wishlist trigger is clickable on mobile */

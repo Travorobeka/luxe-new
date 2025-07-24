@@ -29,11 +29,13 @@ class MWishlistDrawer extends HTMLElement {
     // Delay initialization to ensure DOM is ready
     setTimeout(() => {
       this.setHeaderWishlistIconAccessibility();
+      this.setupCloseButton();
       this.isInitialized = true;
     }, 100);
     
     this.addEventListener("click", (event) => {
-      if (event.target.closest(".m-wishlist-drawer__inner") !== this.wishlistDrawerInner || event.target === this.wishlistDrawerCloseIcon) {
+      // Close if clicking outside the drawer inner content
+      if (!event.target.closest(".m-wishlist-drawer__inner")) {
         this.close();
       }
     });
@@ -44,6 +46,28 @@ class MWishlistDrawer extends HTMLElement {
         this.close();
       }
     });
+  }
+
+  setupCloseButton() {
+    const closeButton = this.wishlistDrawerCloseIcon;
+    if (closeButton) {
+      const handleCloseEvent = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('Close button clicked');
+        this.close();
+      };
+
+      closeButton.addEventListener("click", handleCloseEvent);
+      closeButton.addEventListener("touchend", handleCloseEvent);
+      
+      // Ensure close button is properly styled for touch
+      closeButton.style.cursor = 'pointer';
+      closeButton.style.touchAction = 'manipulation';
+      closeButton.style.userSelect = 'none';
+      closeButton.style.webkitUserSelect = 'none';
+      closeButton.style.webkitTapHighlightColor = 'transparent';
+    }
   }
 
   setHeaderWishlistIconAccessibility() {
@@ -358,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Fallback: Initializing wishlist drawer');
     setTimeout(() => {
       wishlistDrawer.setHeaderWishlistIconAccessibility();
+      wishlistDrawer.setupCloseButton();
       wishlistDrawer.isInitialized = true;
     }, 500);
   }
@@ -369,6 +394,7 @@ window.addEventListener('load', function() {
   if (wishlistDrawer && !wishlistDrawer.isInitialized) {
     console.log('Window load: Initializing wishlist drawer');
     wishlistDrawer.setHeaderWishlistIconAccessibility();
+    wishlistDrawer.setupCloseButton();
     wishlistDrawer.isInitialized = true;
   }
 });
