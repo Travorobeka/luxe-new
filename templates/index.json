@@ -469,7 +469,7 @@
           "settings": {
             "collection": "",
             "heading": "Sweaters & Cardigans",
-            "heading_size": "h4",
+            "heading_size": "h3",
             "text": "<p>This snuggly soft Cloud Relaxed Cardigan serves a relaxed fit, with saddle shoulders—where the armhole seams curve towards the neckline so that the sleeve seamlessly hugs your shoulder</p>"
           }
         },
@@ -501,7 +501,7 @@
         "container": "container-fluid",
         "color_scheme": "",
         "header_alignment": "left",
-        "heading": "Beautifully functional <br>consciously crafted",
+        "heading": "Beautifully functional consciously crafted",
         "heading_size": "h2",
         "subheading": "Hot This Week",
         "description": "",
