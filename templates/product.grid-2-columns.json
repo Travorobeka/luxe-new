@@ -103,8 +103,8 @@
       ],
       "settings": {
         "container": "container-fluid",
-        "layout": "layout-3",
-        "show_atwl": true,
+        "layout": "layout-2",
+        "show_atwl": false,
         "enable_history_state": true,
         "enable_variant_group_images": false,
         "disable_selected_variant_default": false,
@@ -302,6 +302,8 @@
         "columns": 5,
         "column_gap": 30,
         "enable_slider": true,
+        "show_pagination": false,
+        "show_navigation": true,
         "use_scroll_mobile": true,
         "padding_top": 100,
         "padding_bottom": 100,
@@ -342,11 +344,13 @@
         "iconbox_pJbJGA": {
           "type": "iconbox",
           "settings": {
+            "card_color_scheme": "",
             "image_by_url": "",
             "title": "100 Days Return",
             "description": "<p>Enjoy a seamless shopping experience, facilitated<br/> by our complimentary shipping.</p>",
             "link": "",
             "button_label": "Learn more [arrow]",
+            "button_link": "",
             "button_style": "m-button--plain",
             "button_size": ""
           }
@@ -354,11 +358,13 @@
         "iconbox_RW46nE": {
           "type": "iconbox",
           "settings": {
+            "card_color_scheme": "",
             "image_by_url": "",
             "title": "Lifetime Warranty",
             "description": "<p>Our dedicated team provides timely assistance, <br/>committed to addressing your queries.</p>",
             "link": "",
             "button_label": "Learn more [arrow]",
+            "button_link": "",
             "button_style": "m-button--plain",
             "button_size": ""
           }
@@ -366,11 +372,13 @@
         "iconbox_EiwgTg": {
           "type": "iconbox",
           "settings": {
+            "card_color_scheme": "",
             "image_by_url": "",
             "title": "Customers Services",
             "description": "<p>Invest in our activewear with absolute confidence, backed by our 30-day satisfaction guarantee.</p>",
             "link": "",
             "button_label": "Learn more [arrow]",
+            "button_link": "",
             "button_style": "m-button--plain",
             "button_size": ""
           }

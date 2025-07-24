@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "breadcrumb": {
-      "type": "breadcrumb",
-      "settings": {
-        "container": "container",
-        "text_alignment": "center",
-        "hide_current": false,
-        "hide_on_mb": false,
-        "animations": "inherit"
-      }
-    },
     "main": {
       "type": "main-product",
       "blocks": {
@@ -425,7 +415,6 @@
     }
   },
   "order": [
-    "breadcrumb",
     "main",
     "product-details-tabs",
     "scrolling_promotion_MVNN6Q",
