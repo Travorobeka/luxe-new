@@ -384,8 +384,8 @@
 .m-wishlist-drawer__close:focus,
 .m-wishlist-remove-btn:focus,
 [data-open-wishlist-drawer]:focus {
-  outline: 2px solid #005fcc;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
 }
 
