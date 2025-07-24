@@ -2,6 +2,7 @@ class MWishlistDrawer extends HTMLElement {
   constructor() {
     super();
     this.isLoaded = false;
+    this.isInitialized = false;
   }
 
   get wishlistDrawerInner() {
@@ -25,7 +26,12 @@ class MWishlistDrawer extends HTMLElement {
   }
 
   connectedCallback() {
-    this.setHeaderWishlistIconAccessibility();
+    // Delay initialization to ensure DOM is ready
+    setTimeout(() => {
+      this.setHeaderWishlistIconAccessibility();
+      this.isInitialized = true;
+    }, 100);
+    
     this.addEventListener("click", (event) => {
       if (event.target.closest(".m-wishlist-drawer__inner") !== this.wishlistDrawerInner || event.target === this.wishlistDrawerCloseIcon) {
         this.close();
@@ -42,19 +48,37 @@ class MWishlistDrawer extends HTMLElement {
 
   setHeaderWishlistIconAccessibility() {
     const wishlistTriggers = document.querySelectorAll("[data-open-wishlist-drawer]");
+    console.log('Found wishlist triggers:', wishlistTriggers.length);
+    
     wishlistTriggers.forEach((trigger) => {
       trigger.setAttribute("role", "button");
       trigger.setAttribute("aria-haspopup", "dialog");
       trigger.setAttribute("aria-expanded", "false");
       trigger.setAttribute("aria-controls", "MinimogWishlistDrawer");
-      trigger.addEventListener("click", (event) => {
+      
+      // Handle both click and touch events for mobile
+      const handleTriggerEvent = (event) => {
         event.preventDefault();
+        event.stopPropagation();
+        console.log('Wishlist trigger activated');
         this.open(trigger);
-      });
+      };
+      
+      trigger.addEventListener("click", handleTriggerEvent);
+      trigger.addEventListener("touchend", handleTriggerEvent);
+      
+      // Ensure proper cursor and touch styles
+      trigger.style.cursor = 'pointer';
+      trigger.style.touchAction = 'manipulation';
+      trigger.style.userSelect = 'none';
+      trigger.style.webkitUserSelect = 'none';
+      trigger.style.webkitTapHighlightColor = 'transparent';
     });
   }
 
   open(triggeredBy) {
+    console.log('Opening wishlist drawer');
+    
     if (triggeredBy) {
       this.setActiveElement(triggeredBy);
       triggeredBy.setAttribute("aria-expanded", "true");
@@ -75,7 +99,9 @@ class MWishlistDrawer extends HTMLElement {
         
         // Focus management
         this.trapFocus();
-        this.wishlistDrawerCloseIcon.focus();
+        if (this.wishlistDrawerCloseIcon) {
+          this.wishlistDrawerCloseIcon.focus();
+        }
       });
     });
   }
@@ -324,3 +350,25 @@ class MWishlistDrawer extends HTMLElement {
 }
 
 customElements.define("m-wishlist-drawer", MWishlistDrawer);
+
+// Fallback initialization for mobile
+document.addEventListener('DOMContentLoaded', function() {
+  const wishlistDrawer = document.querySelector('#MinimogWishlistDrawer');
+  if (wishlistDrawer && !wishlistDrawer.isInitialized) {
+    console.log('Fallback: Initializing wishlist drawer');
+    setTimeout(() => {
+      wishlistDrawer.setHeaderWishlistIconAccessibility();
+      wishlistDrawer.isInitialized = true;
+    }, 500);
+  }
+});
+
+// Additional fallback for slow loading
+window.addEventListener('load', function() {
+  const wishlistDrawer = document.querySelector('#MinimogWishlistDrawer');
+  if (wishlistDrawer && !wishlistDrawer.isInitialized) {
+    console.log('Window load: Initializing wishlist drawer');
+    wishlistDrawer.setHeaderWishlistIconAccessibility();
+    wishlistDrawer.isInitialized = true;
+  }
+});

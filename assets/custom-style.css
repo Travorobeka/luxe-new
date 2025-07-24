@@ -320,14 +320,33 @@
   /* Ensure wishlist trigger is clickable on mobile */
   .m-wishlist-drawer-trigger,
   [data-open-wishlist-drawer] {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    min-height: 44px;
-    min-width: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+    background: none !important;
+    border: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
   }
+}
+
+/* Global mobile fixes for wishlist trigger */
+.m-wishlist-drawer-trigger,
+[data-open-wishlist-drawer] {
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
 }
 
 /* Focus styles for accessibility */
