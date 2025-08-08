@@ -95,7 +95,7 @@
                 {%- assign label_weight = section.settings[key] | default: 500 -%}
                 {%- assign key = 'mb_drawer_product_image_' | append: i | append: '_label_color' -%}
                 {%- assign label_color = section.settings[key] | default: '#222' -%}
-                <span class="m-menu-drawer__product-image-label" style="font-size: {{ label_size }}px; font-weight: {{ label_weight }}; color: {{ label_color }}; margin-top: 6px; text-align: center; display: block;">
+                <span class="m-menu-drawer__product-image-label" style="font-size: calc(var(--caption-text-size, {{ label_size }}px) * 1px); font-weight: var(--font-weight-body, {{ label_weight }}); color: {{ label_color }}; margin-top: 6px; text-align: center; display: block; font-family: var(--font-stack-body, inherit); text-transform: var(--caption-text-transform, none);">
                   {{ label }}
                 </span>
               {%- endif -%}
@@ -111,12 +111,12 @@
                 background: {{ section.settings.mb_menu_btn_bg | default: '#fff' }};
                 border: {{ section.settings.mb_menu_btn_border_width | default: 1 }}px solid {{ section.settings.mb_menu_btn_border_color | default: '#e5e5e5' }};
                 border-radius: {{ section.settings.mb_menu_btn_radius | default: 8 }}px;
-                font-family: {{ section.settings.mb_menu_btn_font_family | default: 'inherit' }};
-                font-size: {{ section.settings.mb_menu_btn_font_size | default: 16 }}px;
-                font-weight: {{ section.settings.mb_menu_btn_font_weight | default: 'inherit' }};
-                font-style: {{ section.settings.mb_menu_btn_font_style | default: 'normal' }};
-                letter-spacing: {{ section.settings.mb_menu_btn_letter_spacing | default: 0.2 }}px;
-                text-transform: {{ section.settings.mb_menu_btn_text_transform | default: 'none' }};
+                font-family: var(--font-stack-header, {{ section.settings.mb_menu_btn_font_family | default: 'inherit' }});
+                font-size: calc(var(--font-base-size, {{ section.settings.mb_menu_btn_font_size | default: 16 }}) * 1px);
+                font-weight: var(--font-weight-header, {{ section.settings.mb_menu_btn_font_weight | default: 'inherit' }});
+                font-style: var(--heading-font-style, {{ section.settings.mb_menu_btn_font_style | default: 'normal' }});
+                letter-spacing: var(--body-letter-spacing, {{ section.settings.mb_menu_btn_letter_spacing | default: 0.2 }}px);
+                text-transform: var(--text-transform-headings, {{ section.settings.mb_menu_btn_text_transform | default: 'none' }});
                 padding: {{ section.settings.mb_menu_btn_padding_v | default: 12 }}px {{ section.settings.mb_menu_btn_padding_h | default: 16 }}px;
                 display: flex; align-items: center; justify-content: space-between;
                 transition: background 0.2s;
@@ -141,9 +141,11 @@
             {% if link.links != blank %}
               <div class="m-accordion--item-content" style="
                 margin-top: {{ section.settings.mb_menu_sub_top_offset | default: 8 }}px;
-                font-size: {{ section.settings.mb_menu_sub_font_size | default: 14 }}px;
+                font-size: calc(var(--font-base-size, {{ section.settings.mb_menu_sub_font_size | default: 14 }}) * 0.875 * 1px);
                 color: {{ section.settings.mb_menu_sub_font_color | default: '#222' }};
-                font-weight: {{ section.settings.mb_menu_sub_font_weight | default: 400 }};
+                font-weight: var(--font-weight-body, {{ section.settings.mb_menu_sub_font_weight | default: 400 }});
+                font-family: var(--font-stack-body, inherit);
+                letter-spacing: var(--body-letter-spacing, 0);
               ">
                 <ul class="m-link-lists">
                   {% for child in link.links %}
@@ -232,10 +234,11 @@
             <li>
               <a href="{{ link.url }}" class="m-menu-drawer__secondary-link" style="
                 color: {{ section.settings.mb_drawer_secondary_font_color | default: '#222' }};
-                font-weight: {{ section.settings.mb_drawer_secondary_font_weight | default: 400 }};
-                text-transform: {{ section.settings.mb_drawer_secondary_text_transform | default: 'none' }};
-                letter-spacing: {{ section.settings.mb_drawer_secondary_letter_spacing | default: 0.2 }}px;
-                font-size: {{ section.settings.mb_drawer_secondary_font_size | default: 16 }}px;
+                font-weight: var(--font-weight-body, {{ section.settings.mb_drawer_secondary_font_weight | default: 400 }});
+                text-transform: var(--body-text-transform, {{ section.settings.mb_drawer_secondary_text_transform | default: 'none' }});
+                letter-spacing: var(--body-letter-spacing, {{ section.settings.mb_drawer_secondary_letter_spacing | default: 0.2 }}px);
+                font-size: calc(var(--font-base-size, {{ section.settings.mb_drawer_secondary_font_size | default: 16 }}) * 1px);
+                font-family: var(--font-stack-body, inherit);
                 padding: {{ section.settings.mb_drawer_secondary_padding_v | default: 10 }}px {{ section.settings.mb_drawer_secondary_padding_h | default: 16 }}px;
                 display: block;
               ">
