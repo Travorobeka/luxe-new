@@ -111,12 +111,12 @@
                 background: {{ section.settings.mb_menu_btn_bg | default: '#fff' }};
                 border: {{ section.settings.mb_menu_btn_border_width | default: 1 }}px solid {{ section.settings.mb_menu_btn_border_color | default: '#e5e5e5' }};
                 border-radius: {{ section.settings.mb_menu_btn_radius | default: 8 }}px;
-                font-family: var(--font-stack-header, {{ section.settings.mb_menu_btn_font_family | default: 'inherit' }});
-                font-size: calc(var(--font-base-size, {{ section.settings.mb_menu_btn_font_size | default: 16 }}) * 1px);
-                font-weight: var(--font-weight-header, {{ section.settings.mb_menu_btn_font_weight | default: 'inherit' }});
-                font-style: var(--heading-font-style, {{ section.settings.mb_menu_btn_font_style | default: 'normal' }});
-                letter-spacing: var(--body-letter-spacing, {{ section.settings.mb_menu_btn_letter_spacing | default: 0.2 }}px);
-                text-transform: var(--text-transform-headings, {{ section.settings.mb_menu_btn_text_transform | default: 'none' }});
+                font-family: {% if section.settings.mb_menu_btn_font_family != blank %}{{ section.settings.mb_menu_btn_font_family }}{% else %}var(--font-stack-header, inherit){% endif %};
+                font-size: {% if section.settings.mb_menu_btn_font_size != blank %}{{ section.settings.mb_menu_btn_font_size }}px{% else %}calc(var(--font-base-size, 16) * 1px){% endif %};
+                font-weight: {% if section.settings.mb_menu_btn_font_weight != blank and section.settings.mb_menu_btn_font_weight != 'inherit' %}{{ section.settings.mb_menu_btn_font_weight }}{% else %}var(--font-weight-header, inherit){% endif %};
+                font-style: {% if section.settings.mb_menu_btn_font_style != blank and section.settings.mb_menu_btn_font_style != 'normal' %}{{ section.settings.mb_menu_btn_font_style }}{% else %}var(--heading-font-style, normal){% endif %};
+                letter-spacing: {% if section.settings.mb_menu_btn_letter_spacing != blank %}{{ section.settings.mb_menu_btn_letter_spacing }}px{% else %}var(--body-letter-spacing, 0.2px){% endif %};
+                text-transform: {% if section.settings.mb_menu_btn_text_transform != blank and section.settings.mb_menu_btn_text_transform != 'none' %}{{ section.settings.mb_menu_btn_text_transform }}{% else %}var(--text-transform-headings, none){% endif %};
                 padding: {{ section.settings.mb_menu_btn_padding_v | default: 12 }}px {{ section.settings.mb_menu_btn_padding_h | default: 16 }}px;
                 display: flex; align-items: center; justify-content: space-between;
                 transition: background 0.2s;
@@ -141,9 +141,9 @@
             {% if link.links != blank %}
               <div class="m-accordion--item-content" style="
                 margin-top: {{ section.settings.mb_menu_sub_top_offset | default: 8 }}px;
-                font-size: calc(var(--font-base-size, {{ section.settings.mb_menu_sub_font_size | default: 14 }}) * 0.875 * 1px);
+                font-size: {% if section.settings.mb_menu_sub_font_size != blank %}{{ section.settings.mb_menu_sub_font_size }}px{% else %}calc(var(--font-base-size, 14) * 0.875 * 1px){% endif %};
                 color: {{ section.settings.mb_menu_sub_font_color | default: '#222' }};
-                font-weight: var(--font-weight-body, {{ section.settings.mb_menu_sub_font_weight | default: 400 }});
+                font-weight: {% if section.settings.mb_menu_sub_font_weight != blank %}{{ section.settings.mb_menu_sub_font_weight }}{% else %}var(--font-weight-body, 400){% endif %};
                 font-family: var(--font-stack-body, inherit);
                 letter-spacing: var(--body-letter-spacing, 0);
               ">
@@ -234,10 +234,10 @@
             <li>
               <a href="{{ link.url }}" class="m-menu-drawer__secondary-link" style="
                 color: {{ section.settings.mb_drawer_secondary_font_color | default: '#222' }};
-                font-weight: var(--font-weight-body, {{ section.settings.mb_drawer_secondary_font_weight | default: 400 }});
-                text-transform: var(--body-text-transform, {{ section.settings.mb_drawer_secondary_text_transform | default: 'none' }});
-                letter-spacing: var(--body-letter-spacing, {{ section.settings.mb_drawer_secondary_letter_spacing | default: 0.2 }}px);
-                font-size: calc(var(--font-base-size, {{ section.settings.mb_drawer_secondary_font_size | default: 16 }}) * 1px);
+                font-weight: {% if section.settings.mb_drawer_secondary_font_weight != blank %}{{ section.settings.mb_drawer_secondary_font_weight }}{% else %}var(--font-weight-body, 400){% endif %};
+                text-transform: {% if section.settings.mb_drawer_secondary_text_transform != blank and section.settings.mb_drawer_secondary_text_transform != 'none' %}{{ section.settings.mb_drawer_secondary_text_transform }}{% else %}var(--body-text-transform, none){% endif %};
+                letter-spacing: {% if section.settings.mb_drawer_secondary_letter_spacing != blank %}{{ section.settings.mb_drawer_secondary_letter_spacing }}px{% else %}var(--body-letter-spacing, 0.2px){% endif %};
+                font-size: {% if section.settings.mb_drawer_secondary_font_size != blank %}{{ section.settings.mb_drawer_secondary_font_size }}px{% else %}calc(var(--font-base-size, 16) * 1px){% endif %};
                 font-family: var(--font-stack-body, inherit);
                 padding: {{ section.settings.mb_drawer_secondary_padding_v | default: 10 }}px {{ section.settings.mb_drawer_secondary_padding_h | default: 16 }}px;
                 display: block;
