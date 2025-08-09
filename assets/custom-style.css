@@ -868,53 +868,9 @@
   }
 }
 
-/* Cart/Wishlist dot indicators */
-/* Render counters as a small dot at the icon's top-right */
-.m-cart-icon-bubble,
-.m-header__wishlist,
-.m-wishlist-drawer-trigger {
-  position: relative;
-}
-
-/* Cart count → dot */
-.m-cart-count-bubble {
-  position: absolute !important;
-  top: 8px !important;
-  right: 4px !important;
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: currentColor !important; /* inherit icon color */
-  border: none !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-  font-size: 0 !important; /* hide numbers */
-  color: transparent !important;
-  display: inline-block !important;
-  min-width: auto !important;
-}
-
-/* Wishlist count → dot */
-.m-wishlist-count {
-  position: absolute !important;
-  top: 8px !important;
-  right: 4px !important;
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: currentColor !important;
-  border: none !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-  font-size: 0 !important;
-  color: transparent !important;
-  display: inline-block; /* JS toggles visibility */
-  min-width: auto !important;
-}
-
-/* Mobile sticky bar overrides so dots sit tight to icons */
-.m-mobile-sticky-bar--item .m-cart-count-bubble,
-.m-mobile-sticky-bar--item .m-wishlist-count {
-  top: 8px !important;
-  right: 4px !important;
+/* Hide all existing count elements since we're using ::after pseudo-elements */
+.m-cart-count-bubble,
+.m-wishlist-count,
+sup.m-wishlist-count {
+  display: none !important;
 }

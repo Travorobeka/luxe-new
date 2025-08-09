@@ -28,3 +28,26 @@
 .ssw-counter-fave-menu {
   display: none !important;
 }
+
+/* Always show indicators for cart and wishlist using ::after pseudo-elements */
+.m-header__wishlist::after,
+.m-cart-icon-bubble::after,
+.ssw-link-fave-menu::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Ensure parent elements are positioned for absolute positioning */
+.m-header__wishlist,
+.m-cart-icon-bubble,
+.ssw-link-fave-menu {
+  position: relative;
+}
