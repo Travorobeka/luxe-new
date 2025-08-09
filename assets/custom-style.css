@@ -879,13 +879,13 @@
 /* Cart count → dot */
 .m-cart-count-bubble {
   position: absolute !important;
-  top: -2px !important;
-  right: -2px !important;
-  width: 10px !important;
-  height: 10px !important;
+  top: 4px !important;
+  right: 0px !important;
+  width: 6px !important;
+  height: 6px !important;
   border-radius: 50% !important;
   background: currentColor !important; /* inherit icon color */
-  border: 2px solid rgb(var(--color-background)) !important; /* ring */
+  border: none !important;
   padding: 0 !important;
   line-height: 1 !important;
   font-size: 0 !important; /* hide numbers */
@@ -896,13 +896,13 @@
 /* Wishlist count → dot */
 .m-wishlist-count {
   position: absolute !important;
-  top: -2px !important;
-  right: -2px !important;
-  width: 10px !important;
-  height: 10px !important;
+  top: 4px !important;
+  right: 0px !important;
+  width: 6px !important;
+  height: 6px !important;
   border-radius: 50% !important;
   background: currentColor !important;
-  border: 2px solid rgb(var(--color-background)) !important;
+  border: none !important;
   padding: 0 !important;
   line-height: 1 !important;
   font-size: 0 !important;
@@ -913,6 +913,6 @@
 /* Mobile sticky bar overrides so dots sit tight to icons */
 .m-mobile-sticky-bar--item .m-cart-count-bubble,
 .m-mobile-sticky-bar--item .m-wishlist-count {
-  top: -2px !important;
-  right: -2px !important;
+  top: 4px !important;
+  right: 0px !important;
 }
