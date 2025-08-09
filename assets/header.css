@@ -8,3 +8,10 @@
 }
 
 .m-menu-customer__wrapper { display: flex; flex-direction: column; gap: var(--account-section-gap, 12px); }
+
+/* Remove border from search icon button on desktop */
+@media screen and (min-width: 1024px) {
+  .m-search-form__button {
+    border: none;
+  }
+}
