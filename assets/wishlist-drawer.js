@@ -46,6 +46,17 @@ class MWishlistDrawer extends HTMLElement {
         this.close();
       }
     });
+
+    // Listen for storage changes to sync with main wishlist
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'm-wishlist-products' && this.isLoaded) {
+        console.log('Wishlist storage updated, refreshing drawer...');
+        this.isLoaded = false; // Force reload
+        if (this.classList.contains('m-wishlist-drawer--active')) {
+          this.loadWishlistItems();
+        }
+      }
+    });
   }
 
   setupCloseButton() {
@@ -162,12 +173,23 @@ class MWishlistDrawer extends HTMLElement {
     this.wishlistLoadingState.style.display = 'block';
     this.wishlistEmptyState.classList.add('m:hidden');
 
-    // Get wishlist from localStorage (mimicking existing wishlist.js functionality)
+    // Get wishlist from localStorage using same storage key as main wishlist system
     let wishlistItems = [];
     try {
-      const stored = localStorage.getItem('minimog-wishlist') || localStorage.getItem('wishlist');
+      const stored = localStorage.getItem('m-wishlist-products');
       if (stored) {
         wishlistItems = JSON.parse(stored);
+      }
+      
+      // Migration: Check for old storage formats and migrate if needed
+      if (wishlistItems.length === 0) {
+        const oldStored = localStorage.getItem('minimog-wishlist') || localStorage.getItem('wishlist');
+        if (oldStored) {
+          const oldItems = JSON.parse(oldStored);
+          // Convert product IDs to handles by fetching product data
+          this.migrateOldWishlistData(oldItems);
+          return;
+        }
       }
     } catch (e) {
       console.warn('Error loading wishlist:', e);
@@ -178,14 +200,14 @@ class MWishlistDrawer extends HTMLElement {
       return;
     }
 
-    // Fetch product data for wishlist items
+    // Fetch product data for wishlist items (handles)
     this.fetchWishlistProducts(wishlistItems);
   }
 
-  async fetchWishlistProducts(productIds) {
+  async fetchWishlistProducts(productHandles) {
     try {
-      const productPromises = productIds.map(id => 
-        fetch(`/products/${id}.js`)
+      const productPromises = productHandles.map(handle => 
+        fetch(`/products/${handle}.js`)
           .then(response => response.json())
           .catch(() => null)
       );
@@ -222,7 +244,7 @@ class MWishlistDrawer extends HTMLElement {
     const comparePrice = variant.compare_at_price ? this.formatMoney(variant.compare_at_price) : null;
 
     return `
-      <div class="m-wishlist-drawer__item" data-product-id="${product.id}">
+      <div class="m-wishlist-drawer__item" data-product-handle="${product.handle}">
         <div class="m:flex m:gap-4 m:p-4 m:border-b">
           <div class="m:flex-shrink-0">
             <a href="${product.url}" class="m:block">
@@ -242,7 +264,7 @@ class MWishlistDrawer extends HTMLElement {
               </div>
               <button 
                 class="m-wishlist-remove-btn m:text-gray-400 hover:m:text-red-500 m:transition-colors"
-                data-product-id="${product.id}"
+                data-product-handle="${product.handle}"
                 aria-label="Remove ${product.title} from wishlist"
                 title="Remove ${product.title} from wishlist"
               >
@@ -275,27 +297,26 @@ class MWishlistDrawer extends HTMLElement {
     removeButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
-        const productId = button.dataset.productId;
-        this.removeFromWishlist(productId);
+        const productHandle = button.dataset.productHandle;
+        this.removeFromWishlist(productHandle);
       });
     });
   }
 
-  removeFromWishlist(productId) {
+  removeFromWishlist(productHandle) {
     try {
-      // Remove from localStorage
+      // Remove from localStorage using the same storage key as main wishlist
       let wishlistItems = [];
-      const stored = localStorage.getItem('minimog-wishlist') || localStorage.getItem('wishlist');
+      const stored = localStorage.getItem('m-wishlist-products');
       if (stored) {
         wishlistItems = JSON.parse(stored);
       }
       
-      wishlistItems = wishlistItems.filter(id => id != productId);
-      localStorage.setItem('minimog-wishlist', JSON.stringify(wishlistItems));
-      localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
+      wishlistItems = wishlistItems.filter(handle => handle !== productHandle);
+      localStorage.setItem('m-wishlist-products', JSON.stringify(wishlistItems));
 
       // Remove from DOM
-      const itemElement = this.querySelector(`[data-product-id="${productId}"]`);
+      const itemElement = this.querySelector(`[data-product-handle="${productHandle}"]`);
       if (itemElement) {
         itemElement.remove();
       }
@@ -306,8 +327,9 @@ class MWishlistDrawer extends HTMLElement {
         this.showEmptyState();
       }
 
-      // Update wishlist counter if it exists
+      // Update wishlist counter and sync with main wishlist system
       this.updateWishlistCounter();
+      this.syncWithMainWishlist(productHandle, 'remove');
 
     } catch (error) {
       console.error('Error removing from wishlist:', error);
@@ -320,20 +342,100 @@ class MWishlistDrawer extends HTMLElement {
     this.wishlistEmptyState.classList.remove('m:hidden');
   }
 
+  addToWishlist(productHandle) {
+    try {
+      let wishlistItems = [];
+      const stored = localStorage.getItem('m-wishlist-products');
+      if (stored) {
+        wishlistItems = JSON.parse(stored);
+      }
+      
+      if (!wishlistItems.includes(productHandle)) {
+        wishlistItems.push(productHandle);
+        localStorage.setItem('m-wishlist-products', JSON.stringify(wishlistItems));
+        this.updateWishlistCounter();
+        this.syncWithMainWishlist(productHandle, 'add');
+      }
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+    }
+  }
+
   updateWishlistCounter() {
     // Update any wishlist counters on the page
     const wishlistCounters = document.querySelectorAll('.m-wishlist-count');
     try {
-      const stored = localStorage.getItem('minimog-wishlist') || localStorage.getItem('wishlist');
+      const stored = localStorage.getItem('m-wishlist-products');
       const count = stored ? JSON.parse(stored).length : 0;
       wishlistCounters.forEach(counter => {
         counter.textContent = count;
         counter.style.display = count > 0 ? 'inline' : 'none';
+        // Remove hidden class if count > 0
+        if (count > 0) {
+          counter.classList.remove('m:hidden');
+        } else {
+          counter.classList.add('m:hidden');
+        }
       });
+      
+      // Update body class for wishlist state
+      const method = count > 0 ? 'add' : 'remove';
+      document.body.classList[method]('wishlist-has-item');
+      
     } catch (e) {
       wishlistCounters.forEach(counter => {
         counter.style.display = 'none';
+        counter.classList.add('m:hidden');
       });
+    }
+  }
+
+  async migrateOldWishlistData(productIds) {
+    try {
+      console.log('Migrating old wishlist data...');
+      const handlePromises = productIds.map(async (id) => {
+        try {
+          const response = await fetch(`/products/${id}.js`);
+          const product = await response.json();
+          return product.handle;
+        } catch (e) {
+          console.warn(`Failed to migrate product ID ${id}:`, e);
+          return null;
+        }
+      });
+      
+      const handles = await Promise.all(handlePromises);
+      const validHandles = handles.filter(handle => handle !== null);
+      
+      if (validHandles.length > 0) {
+        localStorage.setItem('m-wishlist-products', JSON.stringify(validHandles));
+        // Clean up old storage
+        localStorage.removeItem('minimog-wishlist');
+        localStorage.removeItem('wishlist');
+        
+        // Load the migrated data
+        this.loadWishlistItems();
+      } else {
+        this.showEmptyState();
+      }
+    } catch (error) {
+      console.error('Error migrating wishlist data:', error);
+      this.showEmptyState();
+    }
+  }
+
+  syncWithMainWishlist(productHandle, action) {
+    // Trigger events to sync with main wishlist system
+    if (window.MinimogTheme && window.MinimogTheme.Wishlist) {
+      if (action === 'remove') {
+        window.MinimogTheme.Wishlist.removeFromWishlist(productHandle);
+        window.MinimogTheme.Wishlist.updateWishlistCount();
+        window.MinimogTheme.Wishlist.setWishlistButtonsState();
+      } else if (action === 'add') {
+        window.MinimogTheme.Wishlist.addToWishlist(productHandle);
+        window.MinimogTheme.Wishlist.updateWishlistCount();
+        window.MinimogTheme.Wishlist.setWishlistButtonsState();
+      }
     }
   }
 

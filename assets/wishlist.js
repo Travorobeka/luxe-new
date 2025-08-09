@@ -31,6 +31,22 @@ class Wishlist {
     this.setWishlistButtonsState()
     this.addEventToWishlistButtons()
     this.updateWishlistCount()
+    this.addStorageEventListener()
+  }
+
+  addStorageEventListener = () => {
+    // Listen for storage changes to sync between tabs and drawer
+    window.addEventListener('storage', (e) => {
+      if (e.key === this.storageKey) {
+        try {
+          this.products = Array.from(new Set(Array.from(JSON.parse(e.newValue || '[]'))))
+          this.setWishlistButtonsState()
+          this.updateWishlistCount()
+        } catch (error) {
+          console.warn('Error syncing wishlist from storage:', error)
+        }
+      }
+    })
   }
 
   saveToStorage = () => {
@@ -78,6 +94,17 @@ class Wishlist {
     })
     const method = size ? 'add' : 'remove'
     document.body.classList[method](this.hasItemClass)
+    
+    // Sync with wishlist drawer if it exists
+    this.syncWithWishlistDrawer()
+  }
+
+  syncWithWishlistDrawer = () => {
+    // Update wishlist drawer counter if it exists and is loaded
+    const wishlistDrawer = document.querySelector('#MinimogWishlistDrawer');
+    if (wishlistDrawer && wishlistDrawer.updateWishlistCounter) {
+      wishlistDrawer.updateWishlistCounter();
+    }
   }
 
   addEventToWishlistButtons = () => {
