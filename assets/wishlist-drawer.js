@@ -257,9 +257,23 @@ class MWishlistDrawer extends HTMLElement {
                 <h4 class="m-wishlist-drawer__product-title">
                   <a href="${product.url}" class="m-wishlist-drawer__product-link">${product.title}</a>
                 </h4>
-                <div class="m-wishlist-drawer__price-container">
-                  ${comparePrice ? `<span class="m-wishlist-drawer__compare-price">${comparePrice}</span>` : ''}
-                  <span class="m-wishlist-drawer__current-price">${price}</span>
+                <div class="m-wishlist-drawer__price-actions">
+                  <div class="m-wishlist-drawer__price-container">
+                    ${comparePrice ? `<span class="m-wishlist-drawer__compare-price">${comparePrice}</span>` : ''}
+                    <span class="m-wishlist-drawer__current-price">${price}</span>
+                  </div>
+                  <button 
+                    class="m-button m-button--small m-button--secondary m-wishlist-drawer__add-to-cart"
+                    onclick="this.closest('.m-wishlist-drawer__item').querySelector('form').submit()"
+                    aria-label="Add ${product.title} to cart"
+                    type="button"
+                  >
+                    Add to Cart
+                  </button>
+                  <form action="/cart/add" method="post" enctype="multipart/form-data" class="m:hidden" aria-hidden="true">
+                    <input type="hidden" name="id" value="${variant.id}">
+                    <input type="hidden" name="quantity" value="1">
+                  </form>
                 </div>
               </div>
               <button 
@@ -273,20 +287,6 @@ class MWishlistDrawer extends HTMLElement {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
-            </div>
-            <div class="m-wishlist-drawer__item-actions">
-              <button 
-                class="m-button m-button--small m-button--secondary m-wishlist-drawer__add-to-cart"
-                onclick="this.closest('.m-wishlist-drawer__item').querySelector('form').submit()"
-                aria-label="Add ${product.title} to cart"
-                type="button"
-              >
-                Add to Cart
-              </button>
-              <form action="/cart/add" method="post" enctype="multipart/form-data" class="m:hidden" aria-hidden="true">
-                <input type="hidden" name="id" value="${variant.id}">
-                <input type="hidden" name="quantity" value="1">
-              </form>
             </div>
           </div>
         </div>

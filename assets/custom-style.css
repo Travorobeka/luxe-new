@@ -374,13 +374,21 @@
   color: rgb(var(--color-link));
 }
 
-/* Price Styling */
+/* Price and Actions Container */
+.m-wishlist-drawer__price-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
 .m-wishlist-drawer__price-container {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 4px;
 }
 
 .m-wishlist-drawer__price-container span {
@@ -434,44 +442,31 @@
   transition: all 0.2s ease;
 }
 
-/* Add to Cart Button Container */
-.m-wishlist-drawer__item-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 4px;
-}
-
 /* Enhanced Add to Cart Button */
 .m-wishlist-drawer__add-to-cart {
-  padding: 8px 16px;
-  font-size: 0.8125rem;
+  padding: 6px 12px;
+  font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
-  overflow: hidden;
   min-width: auto;
   height: auto;
   line-height: 1.2;
-  background-color: rgb(var(--color-background-secondary));
+  background-color: transparent;
   color: rgb(var(--color-foreground));
-  border: 1px solid rgba(var(--color-border), 0.2);
+  border: 1px solid rgba(var(--color-border), 0.4);
   cursor: pointer;
-}
-
-.m-wishlist-drawer__add-to-cart.m-button--small {
-  padding: 6px 12px;
-  font-size: 0.75rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .m-wishlist-drawer__add-to-cart:hover {
-  background-color: rgb(var(--color-foreground));
-  color: rgb(var(--color-background));
+  border-color: rgba(var(--color-border), 0.6);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--color-foreground), 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .m-wishlist-drawer__footer {
@@ -598,14 +593,21 @@
     margin-bottom: 6px !important;
   }
   
+  .m-wishlist-drawer__price-actions {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  
   .m-wishlist-drawer__price-container span {
     font-size: 0.8125rem !important;
   }
   
   .m-wishlist-drawer__add-to-cart {
-    padding: 8px 14px !important;
-    font-size: 0.75rem !important;
-    min-height: 36px !important;
+    padding: 6px 10px !important;
+    font-size: 0.7rem !important;
+    min-height: auto !important;
+    align-self: flex-start !important;
   }
   
   .m-wishlist-remove-btn {
@@ -654,6 +656,14 @@
   
   .m-wishlist-drawer__product-title {
     font-size: 0.9rem;
+  }
+  
+  .m-wishlist-drawer__price-actions {
+    gap: 10px;
+  }
+  
+  .m-wishlist-drawer__add-to-cart {
+    font-size: 0.7125rem;
   }
 }
 
