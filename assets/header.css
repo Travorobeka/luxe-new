@@ -11,5 +11,8 @@
 
 /* Remove border from search icon button to match other header icons */
 .m-search-form__button {
-  border: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
