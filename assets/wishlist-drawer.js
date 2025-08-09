@@ -244,44 +244,46 @@ class MWishlistDrawer extends HTMLElement {
     const comparePrice = variant.compare_at_price ? this.formatMoney(variant.compare_at_price) : null;
 
     return `
-      <div class="m-wishlist-drawer__item" data-product-handle="${product.handle}">
-        <div class="m:flex m:gap-4 m:p-4 m:border-b">
-          <div class="m:flex-shrink-0">
-            <a href="${product.url}" class="m:block">
-              <img src="${image}" alt="${product.title}" class="m:w-16 m:h-16 m:object-cover m:rounded">
+      <div class="m-wishlist-drawer__item" data-product-handle="${product.handle}" role="listitem">
+        <div class="m-wishlist-drawer__item-content">
+          <div class="m-wishlist-drawer__item-image">
+            <a href="${product.url}" class="m-wishlist-drawer__item-link" aria-label="View ${product.title}">
+              <img src="${image}" alt="${product.title}" class="m-wishlist-drawer__product-image" loading="lazy">
             </a>
           </div>
-          <div class="m:flex-grow m:min-w-0">
-            <div class="m:flex m:justify-between m:items-start">
-              <div class="m:flex-grow m:pr-4">
-                <h4 class="m:text-sm m:font-medium m:line-clamp-2">
-                  <a href="${product.url}" class="m:text-current m:no-underline">${product.title}</a>
+          <div class="m-wishlist-drawer__item-details">
+            <div class="m-wishlist-drawer__item-header">
+              <div class="m-wishlist-drawer__item-info">
+                <h4 class="m-wishlist-drawer__product-title">
+                  <a href="${product.url}" class="m-wishlist-drawer__product-link">${product.title}</a>
                 </h4>
-                <div class="m:mt-1 m:text-sm">
-                  ${comparePrice ? `<span class="m:line-through m:opacity-60">${comparePrice}</span>` : ''}
-                  <span class="m:font-medium">${price}</span>
+                <div class="m-wishlist-drawer__price-container">
+                  ${comparePrice ? `<span class="m-wishlist-drawer__compare-price">${comparePrice}</span>` : ''}
+                  <span class="m-wishlist-drawer__current-price">${price}</span>
                 </div>
               </div>
               <button 
-                class="m-wishlist-remove-btn m:text-gray-400 hover:m:text-red-500 m:transition-colors"
+                class="m-wishlist-remove-btn"
                 data-product-handle="${product.handle}"
                 aria-label="Remove ${product.title} from wishlist"
-                title="Remove ${product.title} from wishlist"
+                title="Remove from wishlist"
+                type="button"
               >
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
             </div>
-            <div class="m:mt-3">
+            <div class="m-wishlist-drawer__item-actions">
               <button 
-                class="m-button m-button--small m-button--secondary m:text-xs"
+                class="m-button m-button--small m-button--secondary m-wishlist-drawer__add-to-cart"
                 onclick="this.closest('.m-wishlist-drawer__item').querySelector('form').submit()"
                 aria-label="Add ${product.title} to cart"
+                type="button"
               >
                 Add to Cart
               </button>
-              <form action="/cart/add" method="post" enctype="multipart/form-data" class="m:hidden">
+              <form action="/cart/add" method="post" enctype="multipart/form-data" class="m:hidden" aria-hidden="true">
                 <input type="hidden" name="id" value="${variant.id}">
                 <input type="hidden" name="quantity" value="1">
               </form>
