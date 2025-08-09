@@ -23,3 +23,23 @@
 .m-search-form__button .m-tooltip__content {
   display: none !important;
 }
+
+/* Add small indicator badges to cart and wishlist icons */
+.m-header__wishlist::after,
+.m-cart-icon-bubble::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* Position the parent elements for absolute positioning */
+.m-header__wishlist,
+.m-cart-icon-bubble {
+  position: relative;
+}
