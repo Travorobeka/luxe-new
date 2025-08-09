@@ -19,27 +19,27 @@
 }
 
 /* Ensure search icon tooltip works like other header icons */
-.m-search-form__button .m-tooltip {
+.m-search-form__button {
   position: relative;
 }
 
 .m-search-form__button .m-tooltip__content {
-  position: fixed;
-  bottom: auto;
-  top: calc(100% + 10px);
+  position: absolute;
+  top: calc(100% + 5px);
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 10000;
+  min-width: max-content;
 }
 
 .m-search-form__button:hover .m-tooltip__content {
