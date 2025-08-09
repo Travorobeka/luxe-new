@@ -24,9 +24,18 @@
   display: none !important;
 }
 
+/* Hide existing count badges and use custom indicators */
+.m-wishlist-count,
+.m-cart-count,
+.ssw-counter-fave-menu,
+sup.m-wishlist-count {
+  display: none !important;
+}
+
 /* Add small indicator badges to cart and wishlist icons */
 .m-header__wishlist::after,
-.m-cart-icon-bubble::after {
+.m-cart-icon-bubble::after,
+.ssw-link-fave-menu::after {
   content: '';
   position: absolute;
   top: 10px;
@@ -40,6 +49,7 @@
 
 /* Position the parent elements for absolute positioning */
 .m-header__wishlist,
-.m-cart-icon-bubble {
+.m-cart-icon-bubble,
+.ssw-link-fave-menu {
   position: relative;
 }
