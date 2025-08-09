@@ -88,50 +88,6 @@
     --desktop-header-border-width: {{ section.settings.desktop_header_border_width | default: 1 }}px;
   }
 
-  /* Header count badges customization (applies to all viewports) */
-  m-header[data-section-id="{{ section.id }}"] .m-cart-icon-bubble,
-  m-header[data-section-id="{{ section.id }}"] .m-header__wishlist {
-    position: relative;
-  }
-
-  m-header[data-section-id="{{ section.id }}"] .m-cart-count-bubble {
-    position: absolute;
-    top: {{ section.settings.cart_badge_top_offset | default: -6 }}px;
-    right: {{ section.settings.cart_badge_right_offset | default: -10 }}px;
-    min-width: {{ section.settings.count_badge_size | default: 18 }}px;
-    height: {{ section.settings.count_badge_size | default: 18 }}px;
-    padding: 0 4px;
-    background-color: {{ section.settings.count_badge_bg_color | default: '#111111' }};
-    color: {{ section.settings.count_badge_text_color | default: '#ffffff' }};
-    border-radius: 9999px;
-    font-size: {{ section.settings.count_badge_font_size | default: 11 }}px;
-    line-height: 1;
-    align-items: center;
-    justify-content: center;
-  }
-
-  m-header[data-section-id="{{ section.id }}"] .m-header__wishlist .m-wishlist-count {
-    position: absolute;
-    top: {{ section.settings.wishlist_badge_top_offset | default: -6 }}px;
-    right: {{ section.settings.wishlist_badge_right_offset | default: -10 }}px;
-    min-width: {{ section.settings.count_badge_size | default: 18 }}px;
-    height: {{ section.settings.count_badge_size | default: 18 }}px;
-    padding: 0 4px;
-    background-color: {{ section.settings.count_badge_bg_color | default: '#111111' }};
-    color: {{ section.settings.count_badge_text_color | default: '#ffffff' }};
-    border-radius: 9999px;
-    font-size: {{ section.settings.count_badge_font_size | default: 11 }}px;
-    line-height: 1;
-    font-weight: 600;
-    align-items: center;
-    justify-content: center;
-  }
-
-  m-header[data-section-id="{{ section.id }}"].hide-cart-count-badge .m-cart-count-bubble,
-  m-header[data-section-id="{{ section.id }}"].hide-wishlist-count-badge .m-wishlist-count {
-    display: none !important;
-  }
-
   /* Desktop Header Custom Styling */
   @media screen and (min-width: 1024px) {
     .m-header__desktop {
@@ -186,7 +142,7 @@
   {% if request.design_mode == true %}
     data-design-mode="true"
   {% endif %}
-  class="m-header m:block{% if transparent_on_top %} transparent-on-top{% endif %}{% unless section.settings.show_cart_count_badge %} hide-cart-count-badge{% endunless %}{% unless section.settings.show_wishlist_count_badge %} hide-wishlist-count-badge{% endunless %}"
+  class="m-header m:block{% if transparent_on_top %} transparent-on-top{% endif %}"
   data-transparent="{{ transparent_on_top }}"
   data-sticky="{{ section.settings.sticky_header }}"
 >
@@ -1291,94 +1247,6 @@
         { "value": "custom", "label": "Custom SVG" }
       ],
       "default": "default"
-    },
-    {
-      "type": "header",
-      "content": "Cart/Wishlist count badge"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_cart_count_badge",
-      "label": "Show cart count badge",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_wishlist_count_badge",
-      "label": "Show wishlist count badge",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "count_badge_bg_color",
-      "label": "Badge background color",
-      "default": "#111111"
-    },
-    {
-      "type": "color",
-      "id": "count_badge_text_color",
-      "label": "Badge text color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "count_badge_size",
-      "label": "Badge size (diameter)",
-      "min": 12,
-      "max": 28,
-      "step": 1,
-      "unit": "px",
-      "default": 18
-    },
-    {
-      "type": "range",
-      "id": "count_badge_font_size",
-      "label": "Badge font size",
-      "min": 9,
-      "max": 16,
-      "step": 1,
-      "unit": "px",
-      "default": 11
-    },
-    {
-      "type": "range",
-      "id": "cart_badge_top_offset",
-      "label": "Cart badge top offset",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": -6
-    },
-    {
-      "type": "range",
-      "id": "cart_badge_right_offset",
-      "label": "Cart badge right offset",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": -10
-    },
-    {
-      "type": "range",
-      "id": "wishlist_badge_top_offset",
-      "label": "Wishlist badge top offset",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": -6
-    },
-    {
-      "type": "range",
-      "id": "wishlist_badge_right_offset",
-      "label": "Wishlist badge right offset",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": -10
     },
     {
       "type": "textarea",

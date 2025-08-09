@@ -867,3 +867,52 @@
     padding: 0 15px 15px 0 !important;
   }
 }
+
+/* Cart/Wishlist dot indicators */
+/* Render counters as a small dot at the icon's top-right */
+.m-cart-icon-bubble,
+.m-header__wishlist,
+.m-wishlist-drawer-trigger {
+  position: relative;
+}
+
+/* Cart count → dot */
+.m-cart-count-bubble {
+  position: absolute !important;
+  top: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: currentColor !important; /* inherit icon color */
+  border: 2px solid rgb(var(--color-background)) !important; /* ring */
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 0 !important; /* hide numbers */
+  color: transparent !important;
+  display: inline-block !important;
+}
+
+/* Wishlist count → dot */
+.m-wishlist-count {
+  position: absolute !important;
+  top: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: currentColor !important;
+  border: 2px solid rgb(var(--color-background)) !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  display: inline-block; /* JS toggles visibility */
+}
+
+/* Mobile sticky bar overrides so dots sit tight to icons */
+.m-mobile-sticky-bar--item .m-cart-count-bubble,
+.m-mobile-sticky-bar--item .m-wishlist-count {
+  top: -2px !important;
+  right: -2px !important;
+}
