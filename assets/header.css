@@ -18,31 +18,8 @@
   padding: 14px 8px !important;
 }
 
-/* Ensure search icon tooltip works like other header icons */
-.m-search-form__button {
-  position: relative;
-}
-
+/* Remove all tooltips from header icons */
+.m-header .m-tooltip__content,
 .m-search-form__button .m-tooltip__content {
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  pointer-events: none;
-  z-index: 10000;
-  min-width: max-content;
-}
-
-.m-search-form__button:hover .m-tooltip__content {
-  opacity: 1;
-  visibility: visible;
+  display: none !important;
 }
